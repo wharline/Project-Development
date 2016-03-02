@@ -1,0 +1,33 @@
+Design Document: “Grid Game”
+
+Basic Edition
+
+---
+
+HIGH CONCEPT
+
+Two players send units across a grid to attack each other. The goal is to kill the opposing player’s units.
+
+DESCRIPTION
+
+As the game begins, two players decide on a size for the game board/grid. Once selected, two sets of units are placed on their end of the grid, each set under one player’s control. Players then take turns moving their units around the grid. As units are coordinated around the grid, players attempt to kill all enemy units. A player wins when all of the opposing player’s units have been eliminated.
+
+GRID
+
+The game will be played on a square grid ranging in size from 16x16 to 32x32 squares. Two arrays will hold values aligned to the X and Y values across the grid. Units controlled by the player will each hold a specific X and Y position on the grid using arrays.
+
+UNITS
+
+Every unit has certain specific traits: Position, Move Distance, Health, Attack Damage, and Image. A unit’s Position is equal to its X and Y values in the array that represents the grid. Move Distance resembles the maximum number of spaces a unit can move across the grid per turn. A unit’s Health displays how much damage it can take before it dies. Attack Damage represents how much damage a unit will deal to enemy units per attack. Every unit will have an Image in the form of a sprite that both players will see.
+
+Bonus: Units will be divided into three categories or classes. Each class will have one special ability it can do in place of its unit’s attack during any turn. Class abilities will be decided at a later time.
+
+PLAYER TURNS
+
+When a player’s turn begins, he may select one of his units.
+
+Selecting a unit begins the first of two phases: Moving. The unit can be moved a distance up to or equal to its Move Distance trait. This is done by allowing the player to move the unit across its X or Y axis by one point at a time. Each time a unit tries to move to a new space on the grid, the game checks if the grid is occupied. If it is, the unit will not move; if it is empty, the unit moves. After moving, if the unit hasn’t moved its full Move Distance value, it may move again. The player can end a unit’s moving phase early by selecting the space where it is already standing. (Optional: When a unit’s moving phase ends, the player has the option to commit to the movement, or return the unit to its original space with full Move Distance points.)
+
+Once a unit’s moving phase has ended, it begins its action phase. During the unit’s action phase, the player can select any space on the grid within one X and/or Y position of the player. Once a space is selected, the game will check if the space is occupied by an enemy. If it is not, the player selects a new space in the same range. If an enemy is occupying the selected space, the unit attacks, dealing its Attack Damage against the enemy unit’s Health. If an enemy unit’s Health becomes equal to or less than zero, it dies, and its position on the grid becomes empty. After attacking, the unit’s action phase ends.
+
+This completes the selected unit’s phases, and the unit is then locked for the rest of the player’s turn. The player is free to select another unit and repeat the process. Once all units have been used, the player’s turn ends.
