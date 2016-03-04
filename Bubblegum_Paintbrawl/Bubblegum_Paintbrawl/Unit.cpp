@@ -18,21 +18,48 @@ Unit::~Unit()
 {
 
 }
-void Unit::initUnit()
+void Unit::initUnit(ClassType unitClass, int x, int y)
 {
-
+	switch(unitClass)
+	{
+	case Bruiser: initBruiser(x, y); break;
+	case Ranger: initRanger( x, y); break;
+	case Balanced: initBalanced( x, y); break;
+	default: break;
+	}
 }
-void Unit::initUnit(int x, int y, int allegiance)
+void Unit::initBalanced(int x, int y)
 {
-	int positionX = x;
-	int positionY = y;
-
-	int maxMove = 5;
-	int currentMove = maxMove;
-	int maxHealth = 10;
-	int currentHealth = maxHealth;
-	int attackDamage = 1;
-	bool locked = false;
+	positionX = x;
+	positionY = y;
+	maxMove = 5;
+	currentMove = maxMove;
+	maxHealth = 10;
+	currentHealth = maxHealth;
+	attackDamage = 5;
+	locked = true;
+}
+void Unit::initBruiser(int x, int y)
+{
+	positionX = x;
+	positionY = y;
+	maxMove = 3;
+	currentMove = maxMove;
+	maxHealth = 15;
+	currentHealth = maxHealth;
+	attackDamage = 10;
+	locked = false;
+}
+void Unit::initRanger(int x, int y)
+{
+	positionX = x;
+	positionY = y;
+	maxMove = 5;
+	currentMove = 5;
+	maxHealth = 5;
+	currentHealth = maxHealth;
+	attackDamage = 5;
+	locked = false;
 }
 void Unit::move(Direction dir)
 {
@@ -46,19 +73,16 @@ void Unit::move(Direction dir)
 	default:            break;
 	}
 }
-void Unit::attack(Unit enemyUnit)
+void Unit::attack(Unit* enemyUnit)
 {
-	enemyUnit.currentHealth -= attackDamage;
+	enemyUnit->takeDamage(attackDamage);
 }
-bool Unit::select()
-{
-	return 0;
-}
+
 void Unit::takeDamage(int damage)
 {
 	currentHealth -= damage;
 }
-int Unit::checkAllegiance(Unit currentUnit)
+int Unit::checkAllegiance(Unit& currentUnit)
 {
 	return 0;
 }
@@ -66,6 +90,7 @@ void Unit::lockUnit()
 {
 	locked = true;
 }
+
 
 
 
