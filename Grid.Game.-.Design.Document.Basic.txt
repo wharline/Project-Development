@@ -1,4 +1,4 @@
-Design Document: ìGrid Gameî
+Design Document: ‚ÄúGrid Game‚Äù
 
 Basic Edition
 
@@ -7,15 +7,15 @@ Basic Edition
 HIGH CONCEPT
 
 Two players send units across a grid to attack each other.
-The goal is to kill the opposing playerís units.
+The goal is to kill the opposing player‚Äôs units.
 
 DESCRIPTION
 
 As the game begins, two players decide on a size for the game board/grid.
 Once selected, two sets of units are placed on their end of the grid, 
-each set under one playerís control. Players then take turns moving their units around the grid.
+each set under one player‚Äôs control. Players then take turns moving their units around the grid.
  As units are coordinated around the grid, players attempt to kill all enemy units. 
-A player wins when all of the opposing playerís units have been eliminated.
+A player wins when all of the opposing player‚Äôs units have been eliminated.
 
 GRID
 
@@ -23,43 +23,70 @@ The game will be played on a square grid ranging in size from 16x16 to 32x32 squ
 Two arrays will hold values aligned to the X and Y values across the grid. 
 Units controlled by the player will each hold a specific X and Y position on the grid using arrays.
 
+Grid will keep track of every unit's position.  Every space should know if it's occupied.
+Grid should know it's boundaries.  No units can exist outside boundaries.
+When a unit moves it has to ask the grid if it's a valid movement.
+When a unit attacks, it asks grid if another unit is within attack range.
+When a unit dies, it lays down and blocks that space.  Alies can step over dead bodies.
+
+
+TILE
+
+Holds state of space on map (occupied, blocked, etc.)
+Holds the sprite image of the space.
+
 UNITS
 
-Every unit has certain specific traits: Position, Move Distance, Health, Attack Damage, and Image. 
-A unitís Position is equal to its X and Y values in the array that represents the grid. 
-Move Distance resembles the maximum number of spaces a unit can move across the grid per turn. 
-A unitís Health displays how much damage it can take before it dies. 
+Every unit has certain specific traits: Position, Move Distance, Locked, Health, Attack Damage, Image, and Allegiance
+A unit‚Äôs Position is equal to its X and Y values in the array that represents the grid. 
+Move Distance resembles the maximum number of spaces a unit can move across the grid per turn.
+If unit is locked, it cannot move or attack this turn.
+A unit‚Äôs Health displays how much damage it can take before it dies. 
 Attack Damage represents how much damage a unit will deal to enemy units per attack. 
 Every unit will have an Image in the form of a sprite that both players will see.
+Allegiance will determine which team the unit is on.
 
 Bonus: Units will be divided into three categories or classes. 
-Each class will have one special ability it can do in place of its unitís attack during any turn.
+Each class will have one special ability it can do in place of its unit‚Äôs attack during any turn.
 Class abilities will be decided at a later time.
+
+All units can attack within one x and y unit of their position.
+Units of the same allegiance cannot attack each other.
+Selected units can move one x or y unit at a time.  After unit moves and attacks, it is locked until next turn.
+Certain terrain spaces may lock a unit when it passes over it.
+
+
+GAME MANAGER
+
+Keeps track of player turns, how many units are on each team.
+Two arrays, one for each player.  When a unit dies, it's deleted from the array.
+If an array is empty, that player loses.
+Tells the units when a turn starts.
 
 PLAYER TURNS
 
-When a playerís turn begins, he may select one of his units.
+When a player‚Äôs turn begins, he may select one of his units.
 
 Selecting a unit begins the first of two phases: Moving. 
 The unit can be moved a distance up to or equal to its Move Distance trait. 
 This is done by allowing the player to move the unit across its X or Y axis by one point at a time. 
 Each time a unit tries to move to a new space on the grid, the game checks if the grid is occupied. 
 If it is, the unit will not move; if it is empty, the unit moves. 
-After moving, if the unit hasnít moved its full Move Distance value, it may move again. 
-The player can end a unitís moving phase early by selecting the space where it is already standing. 
-(Optional: When a unitís moving phase ends, the player has the option to commit to the movement, 
+After moving, if the unit hasn‚Äôt moved its full Move Distance value, it may move again. 
+The player can end a unit‚Äôs moving phase early by selecting the space where it is already standing. 
+(Optional: When a unit‚Äôs moving phase ends, the player has the option to commit to the movement, 
 or return the unit to its original space with full Move Distance points.)
 
-Once a unitís moving phase has ended, it begins its action phase. 
-During the unitís action phase, the player can select any space 
+Once a unit‚Äôs moving phase has ended, it begins its action phase. 
+During the unit‚Äôs action phase, the player can select any space 
 on the grid within one X and/or Y position of the player. 
 Once a space is selected, the game will check if the space is occupied by an enemy. 
 If it is not, the player selects a new space in the same range. 
 If an enemy is occupying the selected space, the unit attacks, 
-dealing its Attack Damage against the enemy unitís Health. 
-If an enemy unitís Health becomes equal to or less than zero, it dies, 
-and its position on the grid becomes empty. After attacking, the unitís action phase ends.
+dealing its Attack Damage against the enemy unit‚Äôs Health. 
+If an enemy unit‚Äôs Health becomes equal to or less than zero, it dies, 
+and its position on the grid becomes empty. After attacking, the unit‚Äôs action phase ends.
 
-This completes the selected unitís phases, and the unit is then locked for the rest of the playerís turn. 
+This completes the selected unit‚Äôs phases, and the unit is then locked for the rest of the player‚Äôs turn. 
 The player is free to select another unit and repeat the process. 
-Once all units have been used, the playerís turn ends.
+Once all units have been used, the player‚Äôs turn ends.
