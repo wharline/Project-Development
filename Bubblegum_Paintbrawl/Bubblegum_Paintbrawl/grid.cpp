@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "grid.h"
 
 Grid::Grid ()
@@ -22,13 +23,23 @@ void Grid::init ( int rowNum, int colNum )
 
 		for ( int c = 0; c < m_colNum; c++ )
 		{
-			m_grid[r][c].x = r;
-			m_grid[r][c].y = c;
+			m_grid[r][c].setXPos( r );
+			m_grid[r][c].setYPos( c );
 		}
 	}
 }
 
-Grid::Tile* Grid::getCell ( int rowNum, int colNum )
+bool Grid::isSpaceOccupied ( int x, int y )
+{
+	return m_grid[x][y].isOccupied();
+}
+
+void Grid::moveToSpace ( int x, int y )
+{
+	m_grid[x][y].setState( Tile::occupied );
+}
+
+Tile* Grid::getCell ( int rowNum, int colNum )
 {
 	return &m_grid[rowNum][colNum];
 }

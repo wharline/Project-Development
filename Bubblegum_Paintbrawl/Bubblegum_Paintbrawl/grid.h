@@ -13,7 +13,9 @@
 #if !defined ( __Grid_H__ )
 #define __Grid_H__
 
+#include "stdafx.h"
 #include <string>
+#include "Tile.h"
 
 class Grid
 {
@@ -22,24 +24,17 @@ public:
 	Grid ();
 	~Grid ();
 
-// public data types
-public:
-	struct Tile
-	{
-		int x, y;
-		bool hasUnit;
-
-		bool* sprite;
-	};
-
 // public methods
 public:
 	// Create a new grid with the specified number of rows and columns
 	void init ( int rowNum, int colNum );
-	Tile* getCell ( int rowNum, int colNum );
+	bool isSpaceOccupied ( int x, int y );
+	void moveToSpace ( int x, int y );
 
 // private methods
 private:
+	Tile* getCell ( int rowNum, int colNum );
+
 
 // private member data
 private:
