@@ -35,6 +35,7 @@ TILE
 Holds state of space on map (occupied, blocked, etc.)
 Holds the sprite image of the space.
 
+
 UNITS
 
 Every unit has certain specific traits: Position, Move Distance, Locked, Health, Attack Damage, Image, and Allegiance
@@ -46,7 +47,7 @@ Attack Damage represents how much damage a unit will deal to enemy units per att
 Every unit will have an Image in the form of a sprite that both players will see.
 Allegiance will determine which team the unit is on.
 
-Bonus: Units will be divided into three categories or classes. 
+Bonus: Units will be divided into four categories or classes. 
 Each class will have one special ability it can do in place of its unit’s attack during any turn.
 Class abilities will be decided at a later time.
 
@@ -54,6 +55,33 @@ All units can attack within one x and y unit of their position.
 Units of the same allegiance cannot attack each other.
 Selected units can move one x or y unit at a time.  After unit moves and attacks, it is locked until next turn.
 Certain terrain spaces may lock a unit when it passes over it.
+
+
+UNIT TYPES
+
+>Linebacker
+- Move Distance: Medium
+- Max Health: High
+- Attack Damage: Low
+- Special: Bubble Block - Negate the next incoming attack.
+
+>Paintballer
+- Move Distance: Low
+- Max Health: Medium
+- Attack Damage: High
+- Special: Paint Bomb - Ranged attack that can cross occupied spaces.
+
+>Artist
+- Move Distance: Medium
+- Max Health: Medium
+- Attack Damage: Medium
+- Special: Fresh Paint - Return health to self or allies.
+
+>Prankster
+- Move Distance: High
+- Max Health: Low
+- Attack Damage: Medium
+- Speical: Gum Trap - Convert a space into a trap that locks the next enemy to cross it.
 
 
 GAME MANAGER
