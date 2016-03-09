@@ -39,6 +39,7 @@ public:
 private:
   	void takeDamage(int damage);
   	void lockUnit();
+   void unitDie();
 
 private:
 	int positionX;
@@ -50,6 +51,7 @@ private:
 	int attackDamage;
    int myAllegiance; // the value is equal to the team number
 	bool locked;
+   bool dead;
 
    GridInterface* myGridInterface;
 };

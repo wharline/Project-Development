@@ -4,14 +4,15 @@
 
 Unit::Unit()
 {
-   int positionX = 0;
-   int positionY = 0;
-   int maxMove = 0;
-   int currentMove = 0;
-   int maxHealth = 0;
-   int currentHealth = 0;
-   int attackDamage = 0;
-   bool locked = true;
+   positionX = 0;
+   positionY = 0;
+   maxMove = 0;
+   currentMove = 0;
+   maxHealth = 0;
+   currentHealth = 0;
+   attackDamage = 0;
+   locked = true;
+   dead = false;
    myGridInterface = NULL;
 }
 
@@ -102,6 +103,9 @@ void Unit::attack(Unit* enemyUnit)
 void Unit::takeDamage(int damage)
 {
    currentHealth -= damage;
+
+   if ( currentHealth <= 0 )
+      unitDie();
 }
 int Unit::checkAllegiance(Unit& currentUnit)
 {
@@ -114,5 +118,12 @@ void Unit::lockUnit()
 
 void Unit::turnStart ()
 {
-   locked = false;
+   if ( !dead )
+      locked = false;
+}
+
+void Unit::unitDie ()
+{
+   dead = true;
+   locked = true;
 }
