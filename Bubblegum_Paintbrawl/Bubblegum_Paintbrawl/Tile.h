@@ -12,7 +12,8 @@ public:
 	{
 		occupied,
 		blocked,
-		empty
+		empty,
+      trapped
 	};
 
 public:
@@ -25,15 +26,23 @@ public:
 	void setXPos ( int x );
 	void setYPos ( int y );
 
-	bool isOccupied () { return myState == occupied; }
+	bool canPassThrough ( int allegiance );
+   bool isEmpty () { return myState == empty; }
 	bool isBlocked () { return myState == blocked; }
-	bool isEmpty () { return myState == empty; }
+   bool isTrapped () { return myState == trapped; }
+   void setTrap ( int trapLevel );
+   void removeTrap ();
+
 
 	void setState ( TileState state );
 
 private:
 	int myXPos, myYPos;
 	TileState myState;
+
+   int myTrapLevel; // equal to zero if not trapped
+
+   int occupiedAllegiance; // value of team number that has a unit on this tile.  Zero if no unit is on tile.
 
 	void* mySprite;
 

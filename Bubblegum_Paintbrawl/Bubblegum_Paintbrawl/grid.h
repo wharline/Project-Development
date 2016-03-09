@@ -29,7 +29,11 @@ public:
 public:
 	// Create a new grid with the specified number of rows and columns
 	void init ( int rowNum, int colNum );
-	bool isSpaceEmpty ( int x, int y );
+	bool canPassThrough ( int x, int y, int allegiance );
+   bool isEmpty ( int x, int y );
+   bool isTrapped ( int x, int y );
+   void setTrap ( int x, int y, int trapLevel );
+   void removeTrap ();
 	void moveToSpace ( int x, int y );
 
 // private methods

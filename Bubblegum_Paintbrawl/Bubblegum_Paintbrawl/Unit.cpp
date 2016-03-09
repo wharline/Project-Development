@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "Unit.h"
 
-Unit::Unit()
+Unit::Unit ()
 {
    positionX = 0;
    positionY = 0;
@@ -16,11 +16,11 @@ Unit::Unit()
    myGridInterface = NULL;
 }
 
-Unit::~Unit()
+Unit::~Unit ()
 {
 
 }
-void Unit::initUnit( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y)
+void Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
 {
    myGridInterface = pInterface;
    myAllegiance = allegiance;
@@ -36,7 +36,7 @@ void Unit::initUnit( GridInterface* pInterface, ClassType unitClass, int allegia
    default: break;
    }
 }
-void Unit::initBalanced(int x, int y)
+void Unit::initBalanced ( int x, int y )
 {
    maxMove = 5;
    currentMove = maxMove;
@@ -44,7 +44,7 @@ void Unit::initBalanced(int x, int y)
    currentHealth = maxHealth;
    attackDamage = 5;
 }
-void Unit::initBruiser(int x, int y)
+void Unit::initBruiser ( int x, int y )
 {
    maxMove = 3;
    currentMove = maxMove;
@@ -52,7 +52,7 @@ void Unit::initBruiser(int x, int y)
    currentHealth = maxHealth;
    attackDamage = 10;
 }
-void Unit::initRanger(int x, int y)
+void Unit::initRanger ( int x, int y )
 {
    maxMove = 5;
    currentMove = maxMove;
@@ -60,10 +60,10 @@ void Unit::initRanger(int x, int y)
    currentHealth = maxHealth;
    attackDamage = 5;
 }
-void Unit::move(Direction dir)
+bool Unit::selectPath ( Direction dir )
 {
-   int y = positionY;
-   int x = positionX;
+   int y = yPosToMoveTo;
+   int x = xPosToMoveTo;
 
    switch(dir)
    {
@@ -83,15 +83,30 @@ void Unit::move(Direction dir)
       break;
    }
 
-   if ( !locked && myGridInterface->isSpaceEmpty( x, y ) )
+   if ( !locked && myGridInterface->canPassThrough( x, y, myAllegiance ) )
    {
-      positionY = y;
+      yPosToMoveTo = y;
+      xPosToMoveTo = x;
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+}
+
+void Unit::moveTo ( int x, int y )
+{
+   if ( !locked && myGridInterface->isEmpty( x, y ) )
+   {
       positionX = x;
+      positionY = y;
       myGridInterface->moveToSpace( positionX, positionY );
       lockUnit();
    }
 }
-void Unit::attack(Unit* enemyUnit)
+
+void Unit::attack ( Unit* enemyUnit )
 {
    if ( !locked )
    {
@@ -100,26 +115,28 @@ void Unit::attack(Unit* enemyUnit)
    }
 }
 
-void Unit::takeDamage(int damage)
+void Unit::takeDamage ( int damage )
 {
    currentHealth -= damage;
 
    if ( currentHealth <= 0 )
       unitDie();
 }
-int Unit::checkAllegiance(Unit& currentUnit)
-{
-   return myAllegiance;
-}
-void Unit::lockUnit()
+
+void Unit::lockUnit ()
 {
    locked = true;
 }
 
 void Unit::turnStart ()
 {
-   if ( !dead )
+   bool trapped = myGridInterface->isTrapped( positionX, positionY );
+   if ( !dead && !trapped )
       locked = false;
+   if ( trapped )
+   {
+      myGridInterface->removeTrap();
+   }
 }
 
 void Unit::unitDie ()

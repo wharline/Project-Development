@@ -29,10 +29,29 @@ void Grid::init ( int rowNum, int colNum )
 	}
 }
 
-bool Grid::isSpaceEmpty ( int x, int y )
+bool Grid::canPassThrough ( int x, int y, int allegiance )
+{
+   return m_grid[x][y].canPassThrough( allegiance );
+}
+
+bool Grid::isEmpty ( int x, int y )
 {
    return m_grid[x][y].isEmpty();
 }
+
+bool Grid::isTrapped ( int x, int y )
+{
+   return m_grid[x][y].isTrapped();
+}
+
+void Grid::setTrap ( int x, int y, int trapLevel )
+{
+}
+
+void Grid::removeTrap ()
+{
+}
+
 
 void Grid::moveToSpace ( int x, int y )
 {
