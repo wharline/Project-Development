@@ -16,8 +16,9 @@
 #include "stdafx.h"
 #include <string>
 #include "Tile.h"
+#include "Unit.h"
 
-class Grid
+class Grid : public GridInterface
 {
 // public constructors/destructors/assign/copy methods
 public:
@@ -28,7 +29,7 @@ public:
 public:
 	// Create a new grid with the specified number of rows and columns
 	void init ( int rowNum, int colNum );
-	bool isSpaceOccupied ( int x, int y );
+	bool isSpaceEmpty ( int x, int y );
 	void moveToSpace ( int x, int y );
 
 // private methods

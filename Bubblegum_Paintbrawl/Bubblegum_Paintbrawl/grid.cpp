@@ -29,9 +29,9 @@ void Grid::init ( int rowNum, int colNum )
 	}
 }
 
-bool Grid::isSpaceOccupied ( int x, int y )
+bool Grid::isSpaceEmpty ( int x, int y )
 {
-	return m_grid[x][y].isOccupied();
+   return m_grid[x][y].isEmpty();
 }
 
 void Grid::moveToSpace ( int x, int y )
