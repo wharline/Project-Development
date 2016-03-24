@@ -20,46 +20,83 @@ Unit::~Unit ()
 {
 
 }
-void Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
+bool Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
 {
+   bool result;
+
    myGridInterface = pInterface;
    myAllegiance = allegiance;
+
+   myClass = unitClass;
 
    positionX = x;
    positionY = y;
 
-   switch(unitClass)
+   switch ( myClass )
    {
-   case Bruiser: initBruiser(x, y); break;
-   case Ranger: initRanger( x, y); break;
-   case Balanced: initBalanced( x, y); break;
-   default: break;
+   case linebacker:
+      result = initLinebacker(x, y);
+      break;
+   case paintballer:
+      result = initPaintballer( x, y);
+      break;
+   case artist:
+      result = initArtist( x, y);
+      break;
+   case prankster:
+      result = initPrankster( x, y );
+      break;
+   default:
+      break;
    }
+
+   return true;
 }
-void Unit::initBalanced ( int x, int y )
-{
-   maxMove = 5;
-   currentMove = maxMove;
-   maxHealth = 10;
-   currentHealth = maxHealth;
-   attackDamage = 5;
-}
-void Unit::initBruiser ( int x, int y )
+
+bool Unit::initLinebacker ( int x, int y )
 {
    maxMove = 3;
    currentMove = maxMove;
    maxHealth = 15;
    currentHealth = maxHealth;
    attackDamage = 10;
+
+   return true;
 }
-void Unit::initRanger ( int x, int y )
+
+bool Unit::initPaintballer ( int x, int y )
 {
    maxMove = 5;
    currentMove = maxMove;
    maxHealth = 5;
    currentHealth = maxHealth;
    attackDamage = 5;
+
+   return true;
 }
+
+bool Unit::initArtist ( int x, int y )
+{
+   maxMove = 5;
+   currentMove = maxMove;
+   maxHealth = 10;
+   currentHealth = maxHealth;
+   attackDamage = 5;
+
+   return true;
+}
+
+bool Unit::initPrankster ( int x, int y )
+{
+   maxMove = 5;
+   currentMove = maxMove;
+   maxHealth = 10;
+   currentHealth = maxHealth;
+   attackDamage = 5;
+
+   return true;
+}
+
 bool Unit::selectPath ( Direction dir )
 {
    int y = yPosToMoveTo;
@@ -67,16 +104,16 @@ bool Unit::selectPath ( Direction dir )
 
    switch(dir)
    {
-   case North:
+   case north:
       y -= 1;
       break;
-   case South:
+   case south:
       y += 1;
       break;
-   case East:
+   case east:
       x += 1;
       break;
-   case West:
+   case west:
       x -= 1;
       break;
    default:
@@ -112,6 +149,23 @@ void Unit::attack ( Unit* enemyUnit )
    {
       enemyUnit->takeDamage(attackDamage);
       lockUnit();
+   }
+}
+
+void Unit::specialAbility ()
+{
+   switch ( myClass )
+   {
+   case linebacker:
+      break;
+   case paintballer:
+      break;
+   case artist:
+      break;
+   case prankster:
+      break;
+   default:
+      break;
    }
 }
 
