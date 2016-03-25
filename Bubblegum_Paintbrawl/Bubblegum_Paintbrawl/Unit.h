@@ -38,8 +38,10 @@ public:
    void moveTo ( int x, int y );
 	void attack ( Unit* enemyUnit );
 
-   // x and y coordinates correspond to the target of the of the special (linebacker doesn't use these values)
-   void specialAbility ( int x, int y );
+   void linebackerSpecial ();
+   void paintballerSpecial ( Unit* otherUnit );
+   void artistSpecial ( Unit* otherUnit );
+   void pranksterSpecial ( int x, int y );
    void turnStart ();
 
    int checkAllegiance () { return myAllegiance; }
@@ -47,6 +49,7 @@ public:
 
 private:
   	void takeDamage ( int damage );
+   void healDamage ( int amountToHeal );
   	void lockUnit ();
    void unitDie ();
 

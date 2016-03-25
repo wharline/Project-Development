@@ -44,7 +44,7 @@ private:
 
 // private member data
 private:
-	Tile** m_grid;		// TO-DO: determine grid type (what is the grid holding)
+	Tile** m_grid;
 	int m_rowNum;
 	int m_colNum;
 

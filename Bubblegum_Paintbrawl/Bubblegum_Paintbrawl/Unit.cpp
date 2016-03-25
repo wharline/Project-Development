@@ -152,29 +152,44 @@ void Unit::attack ( Unit* enemyUnit )
    }
 }
 
-void Unit::specialAbility ( int x, int y )
+void Unit::linebackerSpecial ()
 {
-   if ( locked )
-      return;
-
-   switch ( myClass )
-   {
-   case linebacker:
+   if ( !locked && myClass == linebacker )
       isBlocking = true;
-      break;
-   case paintballer:
-      if ( x > positionX + 2 || x < positionX - 2 || y > positionY + 2 || y < positionY - 2 )
-      // shoot a bomb at x and y coordinate
-      break;
-   case artist:
-      // return health to unit at x and y coordinate
-      break;
-   case prankster:
+}
+
+void Unit::paintballerSpecial ( Unit* otherUnit )
+{
+   if ( !locked && myClass == paintballer )
+   {
+      if ( otherUnit->positionX > this->positionX + 2 || otherUnit->positionX < this->positionX - 2 ||
+           otherUnit->positionY > this->positionY + 2 || otherUnit->positionY < this->positionY - 2 )
+      {
+         otherUnit->takeDamage( attackDamage );
+      }
+   }
+}
+
+void Unit::artistSpecial ( Unit* otherUnit )
+{
+   if ( !locked && myClass == artist )
+   {
+      if ( otherUnit->positionX > this->positionX + 1 || otherUnit->positionX < this->positionX - 1 ||
+           otherUnit->positionY > this->positionY + 1 || otherUnit->positionY < this->positionY - 1 )
+      {
+         otherUnit->healDamage( 5 );
+      }
+   }
+}
+
+void Unit::pranksterSpecial ( int x, int y )
+{
+   if ( !locked && myClass == prankster )
+   {
       if ( x > positionX + 1 || x < positionX - 1 || y > positionY + 1 || y < positionY - 1 )
+      {
          myGridInterface->setTrap( x, y, 1 );
-      break;
-   default:
-      break;
+      }
    }
 }
 
@@ -184,6 +199,18 @@ void Unit::takeDamage ( int damage )
 
    if ( currentHealth <= 0 )
       unitDie();
+}
+
+void Unit::healDamage ( int amountToHeal )
+{
+   if ( !dead )
+   {
+      currentHealth += amountToHeal;
+      if ( currentHealth > maxHealth )
+      {
+         currentHealth = maxHealth;
+      }
+   }
 }
 
 void Unit::lockUnit ()
