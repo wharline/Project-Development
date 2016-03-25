@@ -20,46 +20,83 @@ Unit::~Unit ()
 {
 
 }
-void Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
+bool Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
 {
+   bool result;
+
    myGridInterface = pInterface;
    myAllegiance = allegiance;
+
+   myClass = unitClass;
 
    positionX = x;
    positionY = y;
 
-   switch(unitClass)
+   switch ( myClass )
    {
-   case Bruiser: initBruiser(x, y); break;
-   case Ranger: initRanger( x, y); break;
-   case Balanced: initBalanced( x, y); break;
-   default: break;
+   case linebacker:
+      result = initLinebacker(x, y);
+      break;
+   case paintballer:
+      result = initPaintballer( x, y);
+      break;
+   case artist:
+      result = initArtist( x, y);
+      break;
+   case prankster:
+      result = initPrankster( x, y );
+      break;
+   default:
+      break;
    }
+
+   return true;
 }
-void Unit::initBalanced ( int x, int y )
-{
-   maxMove = 5;
-   currentMove = maxMove;
-   maxHealth = 10;
-   currentHealth = maxHealth;
-   attackDamage = 5;
-}
-void Unit::initBruiser ( int x, int y )
+
+bool Unit::initLinebacker ( int x, int y )
 {
    maxMove = 3;
    currentMove = maxMove;
    maxHealth = 15;
    currentHealth = maxHealth;
    attackDamage = 10;
+
+   return true;
 }
-void Unit::initRanger ( int x, int y )
+
+bool Unit::initPaintballer ( int x, int y )
 {
    maxMove = 5;
    currentMove = maxMove;
    maxHealth = 5;
    currentHealth = maxHealth;
    attackDamage = 5;
+
+   return true;
 }
+
+bool Unit::initArtist ( int x, int y )
+{
+   maxMove = 5;
+   currentMove = maxMove;
+   maxHealth = 10;
+   currentHealth = maxHealth;
+   attackDamage = 5;
+
+   return true;
+}
+
+bool Unit::initPrankster ( int x, int y )
+{
+   maxMove = 5;
+   currentMove = maxMove;
+   maxHealth = 10;
+   currentHealth = maxHealth;
+   attackDamage = 5;
+
+   return true;
+}
+
 bool Unit::selectPath ( Direction dir )
 {
    int y = yPosToMoveTo;
@@ -67,16 +104,16 @@ bool Unit::selectPath ( Direction dir )
 
    switch(dir)
    {
-   case North:
+   case north:
       y -= 1;
       break;
-   case South:
+   case south:
       y += 1;
       break;
-   case East:
+   case east:
       x += 1;
       break;
-   case West:
+   case west:
       x -= 1;
       break;
    default:
@@ -115,12 +152,65 @@ void Unit::attack ( Unit* enemyUnit )
    }
 }
 
+void Unit::linebackerSpecial ()
+{
+   if ( !locked && myClass == linebacker )
+      isBlocking = true;
+}
+
+void Unit::paintballerSpecial ( Unit* otherUnit )
+{
+   if ( !locked && myClass == paintballer )
+   {
+      if ( otherUnit->positionX > this->positionX + 2 || otherUnit->positionX < this->positionX - 2 ||
+           otherUnit->positionY > this->positionY + 2 || otherUnit->positionY < this->positionY - 2 )
+      {
+         otherUnit->takeDamage( attackDamage );
+      }
+   }
+}
+
+void Unit::artistSpecial ( Unit* otherUnit )
+{
+   if ( !locked && myClass == artist )
+   {
+      if ( otherUnit->positionX > this->positionX + 1 || otherUnit->positionX < this->positionX - 1 ||
+           otherUnit->positionY > this->positionY + 1 || otherUnit->positionY < this->positionY - 1 )
+      {
+         otherUnit->healDamage( 5 );
+      }
+   }
+}
+
+void Unit::pranksterSpecial ( int x, int y )
+{
+   if ( !locked && myClass == prankster )
+   {
+      if ( x > positionX + 1 || x < positionX - 1 || y > positionY + 1 || y < positionY - 1 )
+      {
+         myGridInterface->setTrap( x, y, 1 );
+      }
+   }
+}
+
 void Unit::takeDamage ( int damage )
 {
    currentHealth -= damage;
 
    if ( currentHealth <= 0 )
       unitDie();
+}
+
+void Unit::healDamage ( int amountToHeal )
+{
+   if ( !dead )
+   {
+      currentHealth += amountToHeal;
+      if ( currentHealth > maxHealth )
+      {
+         currentHealth = maxHealth;
+      }
+   }
 }
 
 void Unit::lockUnit ()

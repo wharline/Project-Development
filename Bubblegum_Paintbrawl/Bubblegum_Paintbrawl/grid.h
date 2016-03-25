@@ -31,6 +31,7 @@ public:
 	void init ( int rowNum, int colNum );
 	bool canPassThrough ( int x, int y, int allegiance );
    bool isEmpty ( int x, int y );
+   bool isOccupied ( int x, int y );
    bool isTrapped ( int x, int y );
    void setTrap ( int x, int y, int trapLevel );
    void removeTrap ();
@@ -43,7 +44,7 @@ private:
 
 // private member data
 private:
-	Tile** m_grid;		// TO-DO: determine grid type (what is the grid holding)
+	Tile** m_grid;
 	int m_rowNum;
 	int m_colNum;
 

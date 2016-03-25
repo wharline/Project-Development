@@ -20,22 +20,28 @@ class Unit
 {
 	
 public:
-	enum Direction {  North, South, East, West };
-	enum ClassType { Bruiser, Ranger, Balanced };
+	enum Direction {  north, south, east, west };
+	enum ClassType { linebacker, paintballer, artist, prankster };
 
 	Unit ();
 	~Unit ();
 
    // pInterface is a pointer to the map.
-	void initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y );
-	void initBruiser ( int x, int y );
-	void initRanger ( int x, int y );
-	void initBalanced ( int x, int y );
+	bool initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y );
+	bool initLinebacker ( int x, int y );
+	bool initPaintballer ( int x, int y );
+	bool initArtist ( int x, int y );
+   bool initPrankster ( int x, int y );
 
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
    void moveTo ( int x, int y );
 	void attack ( Unit* enemyUnit );
+
+   void linebackerSpecial ();
+   void paintballerSpecial ( Unit* otherUnit );
+   void artistSpecial ( Unit* otherUnit );
+   void pranksterSpecial ( int x, int y );
    void turnStart ();
 
    int checkAllegiance () { return myAllegiance; }
@@ -43,22 +49,29 @@ public:
 
 private:
   	void takeDamage ( int damage );
+   void healDamage ( int amountToHeal );
   	void lockUnit ();
    void unitDie ();
 
 private:
-	int      positionX;
-   int      xPosToMoveTo;
-   int      yPosToMoveTo;
-	int      positionY;
-	int      maxMove;
-	int      currentMove;
-	int      maxHealth;
-	int      currentHealth;
-	int      attackDamage;
-   int      myAllegiance; // the value is equal to the team number
-	bool     locked;
-   bool     dead;
+   ClassType   myClass;
+
+	int         positionX;
+	int         positionY;
+   int         xPosToMoveTo;
+   int         yPosToMoveTo;
+	int         maxMove;
+	int         currentMove;
+	int         maxHealth;
+	int         currentHealth;
+	int         attackDamage;
+   int         myAllegiance; // the value is equal to the team number
+	bool        locked;
+   bool        dead;
+
+   // special abilities
+   bool isBlocking; //linebacker
+
 
    GridInterface* myGridInterface;
 };
