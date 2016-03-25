@@ -37,7 +37,9 @@ public:
 	bool selectPath ( Direction dir );
    void moveTo ( int x, int y );
 	void attack ( Unit* enemyUnit );
-   void specialAbility ();
+
+   // x and y coordinates correspond to the target of the of the special (linebacker doesn't use these values)
+   void specialAbility ( int x, int y );
    void turnStart ();
 
    int checkAllegiance () { return myAllegiance; }
@@ -52,9 +54,9 @@ private:
    ClassType   myClass;
 
 	int         positionX;
+	int         positionY;
    int         xPosToMoveTo;
    int         yPosToMoveTo;
-	int         positionY;
 	int         maxMove;
 	int         currentMove;
 	int         maxHealth;
@@ -63,6 +65,10 @@ private:
    int         myAllegiance; // the value is equal to the team number
 	bool        locked;
    bool        dead;
+
+   // special abilities
+   bool isBlocking; //linebacker
+
 
    GridInterface* myGridInterface;
 };

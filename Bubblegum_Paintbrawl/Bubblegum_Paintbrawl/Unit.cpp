@@ -152,17 +152,26 @@ void Unit::attack ( Unit* enemyUnit )
    }
 }
 
-void Unit::specialAbility ()
+void Unit::specialAbility ( int x, int y )
 {
+   if ( locked )
+      return;
+
    switch ( myClass )
    {
    case linebacker:
+      isBlocking = true;
       break;
    case paintballer:
+      if ( x > positionX + 2 || x < positionX - 2 || y > positionY + 2 || y < positionY - 2 )
+      // shoot a bomb at x and y coordinate
       break;
    case artist:
+      // return health to unit at x and y coordinate
       break;
    case prankster:
+      if ( x > positionX + 1 || x < positionX - 1 || y > positionY + 1 || y < positionY - 1 )
+         myGridInterface->setTrap( x, y, 1 );
       break;
    default:
       break;

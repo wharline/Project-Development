@@ -31,6 +31,7 @@ public:
 	void init ( int rowNum, int colNum );
 	bool canPassThrough ( int x, int y, int allegiance );
    bool isEmpty ( int x, int y );
+   bool isOccupied ( int x, int y );
    bool isTrapped ( int x, int y );
    void setTrap ( int x, int y, int trapLevel );
    void removeTrap ();

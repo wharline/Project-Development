@@ -28,6 +28,7 @@ public:
 
 	bool canPassThrough ( int allegiance );
    bool isEmpty () { return myState == empty; }
+   bool isOccupied () { return myState == occupied; }
 	bool isBlocked () { return myState == blocked; }
    bool isTrapped () { return myState == trapped; }
    void setTrap ( int trapLevel );
