@@ -17,38 +17,39 @@
 #include <string>
 #include "Tile.h"
 #include "Unit.h"
+#include <vector>
 
 class Grid : public GridInterface
 {
-// public constructors/destructors/assign/copy methods
+	// public constructors/destructors/assign/copy methods
 public:
 	Grid ();
 	~Grid ();
 
-// public methods
+	// public methods
 public:
 	// Create a new grid with the specified number of rows and columns
 	void init ( int rowNum, int colNum );
 	bool canPassThrough ( int x, int y, int allegiance );
-   bool isEmpty ( int x, int y );
-   bool isOccupied ( int x, int y );
-   bool isTrapped ( int x, int y );
-   void setTrap ( int x, int y, int trapLevel );
-   void removeTrap ();
+	bool isEmpty ( int x, int y );
+	bool isTrapped ( int x, int y );
+	void setTrap ( int x, int y, int trapLevel );
+	void removeTrap ();
 	void moveToSpace ( int x, int y );
-
-// private methods
+	void checkReachableTiles(int x, int y, int remainingMoves);
+	// private methods
 private:
 	Tile* getCell ( int rowNum, int colNum );
 
 
-// private member data
+	// private member data
 private:
-	Tile** m_grid;
+	Tile** m_grid;		// TO-DO: determine grid type (what is the grid holding)
 	int m_rowNum;
 	int m_colNum;
+	std::vector<POINT> reachableTiles;
 
-// private special methods
+	// private special methods
 private:
 
 };
