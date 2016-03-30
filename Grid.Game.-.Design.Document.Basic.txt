@@ -1,4 +1,4 @@
-Design Document: “Grid Game”
+﻿Design Document: “Grid Game”
 
 Basic Edition
 
@@ -87,7 +87,7 @@ UNIT TYPES
 GAME MANAGER
 
 Keeps track of player turns, how many units are on each team.
-Two arrays, one for each player.  When a unit dies, it's deleted from the array.
+Two arrays, one for each player.
 If an array is empty, that player loses.
 Tells the units when a turn starts.
 
@@ -113,7 +113,7 @@ If it is not, the player selects a new space in the same range.
 If an enemy is occupying the selected space, the unit attacks, 
 dealing its Attack Damage against the enemy unit’s Health. 
 If an enemy unit’s Health becomes equal to or less than zero, it dies, 
-and its position on the grid becomes empty. After attacking, the unit’s action phase ends.
+and it locks its position on the grid. After attacking, the unit’s action phase ends.
 
 This completes the selected unit’s phases, and the unit is then locked for the rest of the player’s turn. 
 The player is free to select another unit and repeat the process. 

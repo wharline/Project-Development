@@ -47,6 +47,8 @@ public:
    int checkAllegiance () { return myAllegiance; }
 	int getHealth () { return currentHealth; }
 
+   bool isDead () { return dead; }
+
 private:
   	void takeDamage ( int damage );
    void healDamage ( int amountToHeal );

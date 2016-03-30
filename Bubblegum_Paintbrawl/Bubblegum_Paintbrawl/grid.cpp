@@ -46,10 +46,19 @@ bool Grid::isTrapped ( int x, int y )
 
 void Grid::setTrap ( int x, int y, int trapLevel )
 {
+   m_grid[x][y].setTrap( trapLevel );
 }
 
 void Grid::removeTrap ()
 {
+   for ( int r = 0; r < m_rowNum; r++ )
+   {
+      for ( int c = 0; c < m_colNum; c++ )
+      {
+         if ( m_grid[r][c].isOccupied() )
+            m_grid[r][c].removeTrap();
+      }
+   }
 }
 
 void Grid::checkReachableTiles(int x, int y, int remainingMoves)

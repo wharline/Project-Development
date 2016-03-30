@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\grid.cpp"
 				>
 			</File>
@@ -214,6 +218,10 @@
 			>
 			<File
 				RelativePath=".\Bubblegum_Paintbrawl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameManager.h"
 				>
 			</File>
 			<File
