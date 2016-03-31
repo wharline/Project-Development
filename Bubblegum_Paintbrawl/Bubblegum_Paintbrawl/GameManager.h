@@ -6,10 +6,11 @@
 #include <vector>
 #include "Unit.h"
 #include "grid.h"
+#include "Bubblegum_Paintbrawl.h"
 
 using namespace std;
 
-class GameManager
+class GameManager : public Framework
 {
 public:
    enum PlayerTurn { player1, player2 };
