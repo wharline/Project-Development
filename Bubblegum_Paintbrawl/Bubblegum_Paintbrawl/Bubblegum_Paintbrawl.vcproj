@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DxFramework.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameManager.cpp"
 				>
 			</File>
@@ -218,6 +222,10 @@
 			>
 			<File
 				RelativePath=".\Bubblegum_Paintbrawl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DxFramework.h"
 				>
 			</File>
 			<File

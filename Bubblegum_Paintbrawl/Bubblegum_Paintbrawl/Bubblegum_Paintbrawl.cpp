@@ -5,15 +5,21 @@
 
 #include "stdafx.h"
 #include "Bubblegum_Paintbrawl.h"
+#include "DxFramework.h"
 #include "GameManager.h"
 
 //-------------------------------------------------------------------------
 // FRAMEWORK FUNCTIONS
 //-------------------------------------------------------------------------
 
-void Framework::quitGame ()
+void WinFramework::quitGame ()
 {
    PostQuitMessage( 0 );
+}
+
+void WinFramework::setHWnd ( HWND hwnd )
+{
+   hMainWnd = hwnd;
 }
 
 //-------------------------------------------------------------------------
@@ -149,6 +155,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   game.setHWnd( hWnd );
 
    return TRUE;
 }

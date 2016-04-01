@@ -29,7 +29,8 @@ public:
 	// public methods
 public:
 	// Create a new grid with the specified number of rows and columns
-	void init ( int rowNum, int colNum );
+	bool init ( int rowNum, int colNum );
+   void shutdown ();
 	bool canPassThrough ( int x, int y, int allegiance );
 	bool isEmpty ( int x, int y );
 	bool isTrapped ( int x, int y );

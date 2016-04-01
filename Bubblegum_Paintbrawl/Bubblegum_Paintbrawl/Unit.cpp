@@ -20,7 +20,7 @@ Unit::~Unit ()
 {
 
 }
-bool Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
+bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
 {
    bool result;
 

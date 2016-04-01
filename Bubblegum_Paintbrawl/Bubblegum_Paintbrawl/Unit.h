@@ -27,12 +27,8 @@ public:
 	~Unit ();
 
    // pInterface is a pointer to the map.
-	bool initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y );
-	bool initLinebacker ( int x, int y );
-	bool initPaintballer ( int x, int y );
-	bool initArtist ( int x, int y );
-   bool initPrankster ( int x, int y );
-
+	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y );
+	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
    void moveTo ( int x, int y );
@@ -50,6 +46,11 @@ public:
    bool isDead () { return dead; }
 
 private:
+   bool initLinebacker ( int x, int y );
+	bool initPaintballer ( int x, int y );
+	bool initArtist ( int x, int y );
+   bool initPrankster ( int x, int y );
+
   	void takeDamage ( int damage );
    void healDamage ( int amountToHeal );
   	void lockUnit ();

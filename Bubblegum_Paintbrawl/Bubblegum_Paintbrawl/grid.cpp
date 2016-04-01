@@ -10,7 +10,7 @@ Grid::~Grid ()
 {
 }
 
-void Grid::init ( int rowNum, int colNum )
+bool Grid::init ( int rowNum, int colNum )
 {
 	m_rowNum = rowNum;
 	m_colNum = colNum;
@@ -27,6 +27,17 @@ void Grid::init ( int rowNum, int colNum )
 			m_grid[r][c].setYPos( c );
 		}
 	}
+
+   return true;
+}
+
+void Grid::shutdown ()
+{
+   for ( int r = 0; r < m_rowNum; r++ )
+   {
+      delete[] m_grid[r];
+   }
+   delete[] m_grid;
 }
 
 bool Grid::canPassThrough ( int x, int y, int allegiance )
