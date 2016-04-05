@@ -47,6 +47,14 @@ public:
 
 
 private:
+   // DirectX functions
+   LPDIRECT3DSURFACE9 LoadSurface ( string filename );
+   void DrawSurface ( LPDIRECT3DSURFACE9 dest, float x, float y, LPDIRECT3DSURFACE9 source );
+   D3DXVECTOR2 GetBitmapSize ( string filename );
+   LPDIRECT3DTEXTURE9 LoadTexture ( string filename, D3DCOLOR transcolor = D3DCOLOR_XRGB( 0, 0, 0 ) );
+   void Sprite_Draw_Frame ( LPDIRECT3DTEXTURE9 texture, int destx, int desty, int framenum, int framew, int frameh, int columns );
+   void Sprite_Animate ( int &frame, int startframe, int endframe, int direction, int &starttime, int delay );
+
    // DirectInput functions
    bool directInputInit ();
    void directInputUpdate ();
@@ -64,6 +72,7 @@ private:
    LPDIRECT3D9          d3d;
    LPDIRECT3DDEVICE9    d3ddev;
    LPDIRECT3DSURFACE9   backbuffer;
+   LPD3DXSPRITE         spriteobj;
 
    // DirectInput objects, devices, and states
    LPDIRECTINPUT8 dinput;

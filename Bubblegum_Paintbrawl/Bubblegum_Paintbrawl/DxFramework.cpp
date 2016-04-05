@@ -29,7 +29,16 @@ bool DxFramework::init ()
       return false;
 
 	// get a point to the gack buffer surface
-	d3ddev->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &backbuffer );
+	result = d3ddev->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &backbuffer );
+
+   if ( FAILED( result ) )
+      return false;
+
+	// create sprite object
+	result = D3DXCreateSprite( d3ddev, &spriteobj );
+
+   if ( FAILED( result ) )
+      return false;
 
    if ( !directInputInit() )
    {
@@ -47,6 +56,8 @@ void DxFramework::update ()
    // make sure the Direct3D device is valid
 	if ( !d3ddev ) return;
 
+   d3ddev->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 100 ), 1.0f, 0 );
+
    directInputUpdate();
 
    gameRun();
@@ -60,6 +71,142 @@ void DxFramework::shutdown ()
 	if ( d3d ) d3d->Release();
 
    directInputShutdown();
+}
+
+/**
+ ** Draws a surface to the screen using StretchRect
+ **/
+void DxFramework::DrawSurface ( LPDIRECT3DSURFACE9 dest,
+				  float x, float y,
+				  LPDIRECT3DSURFACE9 source )
+{
+	// get width/height from source surface
+	D3DSURFACE_DESC desc;
+	source->GetDesc( &desc );
+
+	// create rects for drawing
+	RECT source_rect = { 0, 0, ( long )desc.Width, ( long )desc.Height };
+	RECT dest_rect = { ( long )x, ( long )y, ( long )x + desc.Width, ( long )y + desc.Height };
+
+	// draw the source surface onto the dest
+	d3ddev->StretchRect( source, &source_rect, dest, &dest_rect, D3DTEXF_NONE );
+}
+
+/**
+ ** Loads a bitmap file into a surface
+ **/
+LPDIRECT3DSURFACE9 DxFramework::LoadSurface ( string filename )
+{
+	LPDIRECT3DSURFACE9 image = NULL;
+
+	// get width and height from bitmap file
+	D3DXIMAGE_INFO info;
+	HRESULT result = D3DXGetImageInfoFromFile( filename.c_str(), &info );
+	if ( result != D3D_OK ) return NULL;
+
+	// create surface
+	result = d3ddev->CreateOffscreenPlainSurface(
+		info.Width,			// width of the surface
+		info.Height,		// height of the surface
+		D3DFMT_X8R8G8B8,	// surface format
+		D3DPOOL_DEFAULT,		// memory pool to use
+		&image,				// pointer to the surface
+		NULL );				// reserved (always NULL)
+
+	if ( result != D3D_OK ) return NULL;
+
+	// load surface from file into newly created surface
+	result = D3DXLoadSurfaceFromFile(
+		image,						// destination surface
+		NULL,						// destination palette
+		NULL,						// destination rectangle
+		filename.c_str(),			// source filename
+		NULL,						// source rectangle
+		D3DX_DEFAULT,				// controls how image is filtered
+		D3DCOLOR_XRGB( 0, 0, 0 ),	// for transparency (0 for none)
+		NULL );						// source inage info (usually NULL)
+
+	// make sure file was loaded okay
+	if ( result != D3D_OK ) return NULL;
+
+	return image;
+}
+
+
+LPDIRECT3DTEXTURE9 DxFramework::LoadTexture ( string filename, D3DCOLOR transcolor )
+{
+	LPDIRECT3DTEXTURE9 texture = NULL;
+
+	// get width and height from bitmap file
+	D3DXIMAGE_INFO info;
+	HRESULT result = D3DXGetImageInfoFromFile( filename.c_str(), &info );
+	if ( result != D3D_OK ) return NULL;
+
+	// create the new texture by loading a bitmap image file
+	D3DXCreateTextureFromFileEx(
+		d3ddev,					// Direct3D device object
+		filename.c_str(),		// bitmap filename
+		info.Width,				// bitmap image width
+		info.Height,			// bitmap image height
+		1,						// mip-map levels (1 for no chain)
+		D3DPOOL_DEFAULT,		// the type of surface (standard)
+		D3DFMT_UNKNOWN,			// surface format (default)
+		D3DPOOL_DEFAULT,		// memory class for the texture
+		D3DX_DEFAULT,			// image filter
+		D3DX_DEFAULT,			// mip filter
+		transcolor,				// color key for transparency
+		&info,					// bitmp file info (from loaded file)
+		NULL,					// color palette
+		&texture );				// destination texture
+
+	// make sure the bitmap texture was loaded correctly
+	if ( result != D3D_OK ) return NULL;
+
+	return texture;
+}
+
+
+D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
+{
+	D3DXIMAGE_INFO info;
+	D3DXVECTOR2 size = D3DXVECTOR2( 0.0f, 0.0f );
+	HRESULT result = D3DXGetImageInfoFromFile( filename.c_str(), &info );
+
+	// ask Scott about this.  Does there really need to be an "if" statement?
+	if ( result == D3D_OK )
+		size = D3DXVECTOR2( ( float )info.Width, ( float )info.Height );
+	else
+		size = D3DXVECTOR2( ( float )info.Width, ( float )info.Height );
+
+	return size;
+}
+
+
+void DxFramework::Sprite_Draw_Frame ( LPDIRECT3DTEXTURE9 texture, int destx, int desty, int framenum, int framew, int frameh, int columns )
+{
+	D3DXVECTOR3 position( ( float )destx, ( float )desty, 0 );
+	D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
+
+	RECT rect;
+	rect.left = ( framenum % columns ) * framew;
+	rect.top = ( framenum / columns ) * frameh;
+	rect.right = rect.left + framew;
+	rect.bottom = rect.top + frameh;
+
+	spriteobj->Draw( texture, &rect, NULL, &position, white );
+}
+
+
+void DxFramework::Sprite_Animate ( int &frame, int startframe, int endframe, int direction, int &starttime, int delay )
+{
+	if ( ( int )GetTickCount() > starttime + delay )
+	{
+		starttime = GetTickCount();
+
+		frame += direction;
+		if ( frame > endframe ) frame = startframe;
+		if ( frame < startframe ) frame = endframe;
+	}
 }
 
 //----------------------------------------------------------------------
