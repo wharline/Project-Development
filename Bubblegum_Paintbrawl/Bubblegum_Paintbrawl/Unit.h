@@ -3,6 +3,8 @@
 #include "stdafx.h"
 #include <string>
 
+#include "Common.h"
+
 class GridInterface
 {
 public:
@@ -27,7 +29,7 @@ public:
 	~Unit ();
 
    // pInterface is a pointer to the map.
-	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y );
+	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, LPDIRECT3DTEXTURE9 image );
 	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
@@ -44,6 +46,11 @@ public:
 	int getHealth () { return currentHealth; }
 
    bool isDead () { return dead; }
+
+   // for drawing
+   LPDIRECT3DTEXTURE9 texture () { return myImage; }
+   int getXPos () { return positionX; }
+   int getYPos () { return positionY; }
 
 private:
    bool initLinebacker ( int x, int y );
@@ -77,4 +84,7 @@ private:
 
 
    GridInterface* myGridInterface;
+
+   // image
+   LPDIRECT3DTEXTURE9 myImage;
 };

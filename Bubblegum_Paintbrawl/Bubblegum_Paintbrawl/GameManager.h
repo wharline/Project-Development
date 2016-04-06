@@ -33,6 +33,11 @@ private:
    vector<Unit> player1Units;
    vector<Unit> player2Units;
 
+   LPDIRECT3DTEXTURE9 linebackerImage;
+   LPDIRECT3DTEXTURE9 paintballerImage;
+   LPDIRECT3DTEXTURE9 artistImage;
+   LPDIRECT3DTEXTURE9 pranksterImage;
+
    int myStartLinebackerNum;
    int myStartPaintballerNum;
    int myStartArtistNum;

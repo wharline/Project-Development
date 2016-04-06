@@ -14,13 +14,15 @@ Unit::Unit ()
    locked = true;
    dead = false;
    myGridInterface = NULL;
+
+   myImage = NULL;
 }
 
 Unit::~Unit ()
 {
 
 }
-bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
+bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, LPDIRECT3DTEXTURE9 image )
 {
    bool result;
 
@@ -31,6 +33,8 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
 
    positionX = x;
    positionY = y;
+
+   myImage = image;
 
    switch ( myClass )
    {

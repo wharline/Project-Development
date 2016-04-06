@@ -56,7 +56,7 @@ void DxFramework::update ()
    // make sure the Direct3D device is valid
 	if ( !d3ddev ) return;
 
-   d3ddev->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 100 ), 1.0f, 0 );
+   d3ddev->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
 
    directInputUpdate();
 
@@ -148,7 +148,7 @@ LPDIRECT3DTEXTURE9 DxFramework::LoadTexture ( string filename, D3DCOLOR transcol
 		filename.c_str(),		// bitmap filename
 		info.Width,				// bitmap image width
 		info.Height,			// bitmap image height
-		1,						// mip-map levels (1 for no chain)
+		1,						   // mip-map levels (1 for no chain)
 		D3DPOOL_DEFAULT,		// the type of surface (standard)
 		D3DFMT_UNKNOWN,			// surface format (default)
 		D3DPOOL_DEFAULT,		// memory class for the texture
@@ -156,7 +156,7 @@ LPDIRECT3DTEXTURE9 DxFramework::LoadTexture ( string filename, D3DCOLOR transcol
 		D3DX_DEFAULT,			// mip filter
 		transcolor,				// color key for transparency
 		&info,					// bitmp file info (from loaded file)
-		NULL,					// color palette
+		NULL,					   // color palette
 		&texture );				// destination texture
 
 	// make sure the bitmap texture was loaded correctly
@@ -250,7 +250,7 @@ void DxFramework::directInputUpdate ()
 	// update controllers
 	for ( int i = 0; i < 4; i++ )
 	{
-		ZeroMemory( &controllers[i], sizeof( XINPUT_STATE ) );
+		ZeroMemory( &controllers[i], sizeof( controllers[i] ) );
 
 		// get the state of the controller
 		XINPUT_STATE state;
@@ -280,12 +280,12 @@ void DxFramework::directInputShutdown ()
 
 int DxFramework::keyDown ( int key )
 {
-   return 0;
+	return ( keys[key] & 0x80 );
 }
 
 int DxFramework::mouseButton ( int button )
 {
-   return 0;
+	return mouse_state.rgbButtons[button] & 0x80;
 }
 int DxFramework::mouseX ()
 {

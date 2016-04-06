@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DxFramework.h"
 				>
 			</File>

@@ -5,29 +5,7 @@
 
 #include "Bubblegum_Paintbrawl.h"
 
-// header files
-#define WIN32_EXTRA_LEAN
-#define DIRECTINPUT_VERSION 0x0800
-#include <windows.h>
-#include <d3d9.h>
-#include <d3dx9.h>
-#include <dinput.h>
-#include <xinput.h>
-#include <ctime>
-#include <iostream>
-#include <iomanip>
-using namespace std;
-
-// libraries
-#pragma comment( lib, "winmm.lib" )
-#pragma comment( lib, "user32.lib" )
-#pragma comment( lib, "gdi32.lib" )
-#pragma comment( lib, "dxguid.lib" )
-#pragma comment( lib, "d3d9.lib" )
-#pragma comment( lib, "d3dx9.lib" )
-#pragma comment( lib, "dinput8.lib" )
-#pragma comment( lib, "xinput.lib" )
-
+#include "Common.h"
 
 class DxFramework : public WinFramework
 {
@@ -46,7 +24,7 @@ public:
    void shutdown ();
 
 
-private:
+protected:
    // DirectX functions
    LPDIRECT3DSURFACE9 LoadSurface ( string filename );
    void DrawSurface ( LPDIRECT3DSURFACE9 dest, float x, float y, LPDIRECT3DSURFACE9 source );
@@ -54,6 +32,10 @@ private:
    LPDIRECT3DTEXTURE9 LoadTexture ( string filename, D3DCOLOR transcolor = D3DCOLOR_XRGB( 0, 0, 0 ) );
    void Sprite_Draw_Frame ( LPDIRECT3DTEXTURE9 texture, int destx, int desty, int framenum, int framew, int frameh, int columns );
    void Sprite_Animate ( int &frame, int startframe, int endframe, int direction, int &starttime, int delay );
+
+   // get the device
+   LPDIRECT3DDEVICE9 dxDevice () { return d3ddev; }
+   LPD3DXSPRITE spriteInterface () { return spriteobj; }
 
    // DirectInput functions
    bool directInputInit ();
