@@ -36,7 +36,7 @@ public:
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();
 	void moveToSpace ( int x, int y );
-	void checkReachableTiles(int x, int y, int remainingMoves);
+	void checkReachableTiles(int x, int y, int remainingMoves, int allegiance);
 	// private methods
 private:
 	Tile* getCell ( int rowNum, int colNum );

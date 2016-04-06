@@ -61,7 +61,7 @@ void Grid::removeTrap ()
    }
 }
 
-void Grid::checkReachableTiles(int x, int y, int remainingMoves)
+void Grid::checkReachableTiles(int x, int y, int remainingMoves, int allegiance)
 {
 	// Ensure that the provided coordinates do not breach the bounds of the Grid
 	if( ( x < 0 || y < 0 ) || (x > m_colNum || y > m_rowNum ))
@@ -73,30 +73,30 @@ void Grid::checkReachableTiles(int x, int y, int remainingMoves)
 	currentPoint.x = x;
 	currentPoint.y = y;
 
-	// Make referenc to current Tile
+	// Make reference to current Tile
 	Tile& currentTile = m_grid[x][y];
 	
-	if( (currentTile.isEmpty()) && (currentTile.isBlocked() == false) ) reachableTiles.push_back(currentPoint);
+	if( currentTile.isAccessible(allegiance) == true ) reachableTiles.push_back(currentPoint);
 
 	// Check Left
 	if ( ( x > 0) && (remainingMoves > 0) )
 	{
-		checkReachableTiles(x - 1, y, remainingMoves - 1);
+		checkReachableTiles(x - 1, y, remainingMoves - 1, allegiance);
 	}
 	// Check Top
 	if ( ( y > 0) && (remainingMoves > 0) )
 	{
-		checkReachableTiles(y - 1, y, remainingMoves - 1);
+		checkReachableTiles(y - 1, y, remainingMoves - 1, allegiance);
 	}
 	// Check Right
 	if ( ( x < ( m_colNum - 1 ) ) && ( remainingMoves > 0 ) )
 	{
-		checkReachableTiles(x + 1, y, remainingMoves - 1);
+		checkReachableTiles(x + 1, y, remainingMoves - 1, allegiance);
 	}
 	// Check Bottom
 	if ( ( y < ( m_rowNum - 1 ) ) && ( remainingMoves > 0 ) )
 	{
-		checkReachableTiles(y + 1, y, remainingMoves - 1);
+		checkReachableTiles(y + 1, y, remainingMoves - 1, allegiance);
 	}
 
 }
