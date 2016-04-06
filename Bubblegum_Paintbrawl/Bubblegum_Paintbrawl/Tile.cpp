@@ -48,8 +48,17 @@ void Tile::setTrap ( int trapLevel )
 
 void Tile::removeTrap ()
 {
-   if ( myTrapLevel > 0 )
-      myTrapLevel--;
-   if ( myTrapLevel == 0 )
-      myState = occupied;
+	if ( myTrapLevel > 0 )
+		myTrapLevel--;
+	if ( myTrapLevel == 0 )
+		myState = occupied;
+}
+
+bool Tile::isAccessible(int allegiance)
+{
+	if((!isTrapped() || !isOccupied() || !isBlocked()) && canPassThrough(allegiance))
+	{
+		return true;
+	}
+   return false;
 }
