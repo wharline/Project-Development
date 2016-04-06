@@ -14,7 +14,7 @@ DESCRIPTION
 As the game begins, two players decide on a size for the game board/grid.
 Once selected, two sets of units are placed on their end of the grid, 
 each set under one player’s control. Players then take turns moving their units around the grid.
- As units are coordinated around the grid, players attempt to kill all enemy units. 
+As units are coordinated around the grid, players attempt to kill all enemy units. 
 A player wins when all of the opposing player’s units have been eliminated.
 
 GRID
@@ -38,46 +38,44 @@ Holds the sprite image of the space.
 
 UNITS
 
-Every unit has certain specific traits: Position, Move Distance, Locked, Health, Attack Damage, Image, and Allegiance
+Every unit has certain specific traits:
+Position, Move Distance, Locked, Max Health, Current Health,
+Attack Damage, Ability Value, Special Ability, Image, and Allegiance
+
 A unit’s Position is equal to its X and Y values in the array that represents the grid. 
 Move Distance resembles the maximum number of spaces a unit can move across the grid per turn.
 If unit is locked, it cannot move or attack this turn.
-A unit’s Health displays how much damage it can take before it dies. 
+A unit’s Max Health displays the highest value its Current Health can reach. 
+A unit's Current Health displays how much damage it can take before it dies.
 Attack Damage represents how much damage a unit will deal to enemy units per attack. 
+Ability Value is a number that will apply to a unit's Apecial Ability in unique ways.
+A Special Ability is an alternative to attacking that will be unique to each unit type.
 Every unit will have an Image in the form of a sprite that both players will see.
 Allegiance will determine which team the unit is on.
-
-Bonus: Units will be divided into four categories or classes. 
-Each class will have one special ability it can do in place of its unit’s attack during any turn.
-Class abilities will be decided at a later time.
-
-All units can attack within one x and y unit of their position.
-Units of the same allegiance cannot attack each other.
-Selected units can move one x or y unit at a time.  After unit moves and attacks, it is locked until next turn.
-Certain terrain spaces may lock a unit when it passes over it.
+Units of the same allegiance are known as allies, while all other units are enemies.
 
 
 UNIT TYPES
 
->Linebacker
+> Linebacker
 - Move Distance: Medium
 - Max Health: High
 - Attack Damage: Low
 - Special: Bubble Block - Negate the next incoming attack.
 
->Paintballer
+> Paintballer
 - Move Distance: Low
 - Max Health: Medium
 - Attack Damage: High
 - Special: Paint Bomb - Ranged attack that can cross occupied spaces.
 
->Artist
+> Artist
 - Move Distance: Medium
 - Max Health: Medium
 - Attack Damage: Medium
 - Special: Fresh Paint - Return health to self or allies.
 
->Prankster
+> Prankster
 - Move Distance: High
 - Max Health: Low
 - Attack Damage: Medium
@@ -102,19 +100,42 @@ Each time a unit tries to move to a new space on the grid, the game checks if th
 If it is, the unit will not move; if it is empty, the unit moves. 
 After moving, if the unit hasn’t moved its full Move Distance value, it may move again. 
 The player can end a unit’s moving phase early by selecting the space where it is already standing. 
-(Optional: When a unit’s moving phase ends, the player has the option to commit to the movement, 
-or return the unit to its original space with full Move Distance points.)
+When a unit’s moving phase ends, the player has the option to either commit to the movement 
+or return the unit to its original space and restart the moving phase.
 
 Once a unit’s moving phase has ended, it begins its action phase. 
-During the unit’s action phase, the player can select any space 
-on the grid within one X and/or Y position of the player. 
-Once a space is selected, the game will check if the space is occupied by an enemy. 
-If it is not, the player selects a new space in the same range. 
-If an enemy is occupying the selected space, the unit attacks, 
-dealing its Attack Damage against the enemy unit’s Health. 
-If an enemy unit’s Health becomes equal to or less than zero, it dies, 
-and it locks its position on the grid. After attacking, the unit’s action phase ends.
+During the unit’s action phase, the player can select whether the unit will
+attack, use its special ability, or skip this phase.
+> Attack:
+The player selects any space on the grid within one X and/or Y position of the unit. 
+Once a space is selected, the the unit attacks, dealing its Attack Damage
+against the Current Health of any enemy unit occupying the same space.
+> Special Ability:
+>> Linebacker, Bubble Block:
+The Linebacker enters a blocking state, and will negate a number of incoming attacks
+equal to its Ability Value before the player's next turn.
+>> Paintballer, Gum Bomb:
+The player selects any space on the grid within three X and/or Y positions of the Paintballer.
+Once a space is selected, the Paintballer uses its ability, dealing its Ability Value
+against the Current Health of any enemy unit occupying the same space.
+>> Artist, Fresh Paint:
+The player selects any space on the grid within one X and/or Y position of the Artist.
+Once a space is selected, the Artist uses its ability, adding its Ability Value
+to the Current Health of any ally unit occyping the same space.
+(Note, this Special Ability can be used on the Artist itself.)
+>> Prankster, Gum Trap:
+The player selects any space on the grid within one X and/or Y position of the Prankster.
+Once a space is selected, the game will mark the space as Trapped.
+If at any point during an enemy unit's movement phase, its position is equal to a Trapped space, 
+the unit's remaining movement phase is ended and its action phase is skipped.
+A space can remain trapped for the duration of the game, but the Trapper can only have
+a number of traps placed equal to his Ability Value at a time.
+> Skip:
+The unit takes no further actions.
+After taking any of the three optional actions, the unit’s action phase ends.
+If, at any point during a unit's action phase, an enemy unit’s Current Health is reduced to zero or lower,
+the enemy unit dies and locks its position on the grid.
 
 This completes the selected unit’s phases, and the unit is then locked for the rest of the player’s turn. 
 The player is free to select another unit and repeat the process. 
-Once all units have been used, the player’s turn ends.
+Once all of a player's units have been locked, the player’s turn ends.
