@@ -133,14 +133,14 @@ LPDIRECT3DSURFACE9 DxFramework::LoadSurface ( string filename )
 }
 
 
-LPDIRECT3DTEXTURE9 DxFramework::LoadTexture ( string filename, D3DCOLOR transcolor )
+bool DxFramework::LoadTexture ( DxTexture& dxTex, string filename, D3DCOLOR transcolor )
 {
 	LPDIRECT3DTEXTURE9 texture = NULL;
 
 	// get width and height from bitmap file
 	D3DXIMAGE_INFO info;
 	HRESULT result = D3DXGetImageInfoFromFile( filename.c_str(), &info );
-	if ( result != D3D_OK ) return NULL;
+	if ( result != D3D_OK ) return false;
 
 	// create the new texture by loading a bitmap image file
 	D3DXCreateTextureFromFileEx(
@@ -162,7 +162,9 @@ LPDIRECT3DTEXTURE9 DxFramework::LoadTexture ( string filename, D3DCOLOR transcol
 	// make sure the bitmap texture was loaded correctly
 	if ( result != D3D_OK ) return NULL;
 
-	return texture;
+   dxTex.create( texture, info );
+
+	return true;
 }
 
 
@@ -182,18 +184,18 @@ D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
 }
 
 
-void DxFramework::Sprite_Draw_Frame ( LPDIRECT3DTEXTURE9 texture, int destx, int desty, int framenum, int framew, int frameh, int columns )
+void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty )
 {
 	D3DXVECTOR3 position( ( float )destx, ( float )desty, 0 );
 	D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
 
 	RECT rect;
-	rect.left = ( framenum % columns ) * framew;
-	rect.top = ( framenum / columns ) * frameh;
-	rect.right = rect.left + framew;
-	rect.bottom = rect.top + frameh;
+	rect.left = 0;
+	rect.top = 0;
+   rect.right = texture.width();
+   rect.bottom = texture.height();
 
-	spriteobj->Draw( texture, &rect, NULL, &position, white );
+   spriteobj->Draw( texture.texture(), &rect, NULL, &position, white );
 }
 
 

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Common.h"
+#include "DxTexture.h"
 
 class GridInterface
 {
@@ -29,7 +30,7 @@ public:
 	~Unit ();
 
    // pInterface is a pointer to the map.
-	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, LPDIRECT3DTEXTURE9 image );
+	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image );
 	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
@@ -48,7 +49,7 @@ public:
    bool isDead () { return dead; }
 
    // for drawing
-   LPDIRECT3DTEXTURE9 texture () { return myImage; }
+   DxTexture& texture () { return *myImage; }
    int getXPos () { return positionX; }
    int getYPos () { return positionY; }
 
@@ -86,5 +87,5 @@ private:
    GridInterface* myGridInterface;
 
    // image
-   LPDIRECT3DTEXTURE9 myImage;
+   DxTexture* myImage;
 };

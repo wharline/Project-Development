@@ -6,6 +6,7 @@
 #include "Bubblegum_Paintbrawl.h"
 
 #include "Common.h"
+#include "DxTexture.h"
 
 class DxFramework : public WinFramework
 {
@@ -29,8 +30,8 @@ protected:
    LPDIRECT3DSURFACE9 LoadSurface ( string filename );
    void DrawSurface ( LPDIRECT3DSURFACE9 dest, float x, float y, LPDIRECT3DSURFACE9 source );
    D3DXVECTOR2 GetBitmapSize ( string filename );
-   LPDIRECT3DTEXTURE9 LoadTexture ( string filename, D3DCOLOR transcolor = D3DCOLOR_XRGB( 0, 0, 0 ) );
-   void Sprite_Draw_Frame ( LPDIRECT3DTEXTURE9 texture, int destx, int desty, int framenum, int framew, int frameh, int columns );
+   bool LoadTexture ( DxTexture& dxTex, string filename, D3DCOLOR transcolor = D3DCOLOR_XRGB( 0, 0, 0 ) );
+   void Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty );
    void Sprite_Animate ( int &frame, int startframe, int endframe, int direction, int &starttime, int delay );
 
    // get the device

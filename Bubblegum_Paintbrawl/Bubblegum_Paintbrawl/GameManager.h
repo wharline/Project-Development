@@ -27,16 +27,24 @@ public:
 
 private:
    void playerTurn ( vector<Unit> player );
-   bool initUnits ( vector<Unit>* playersUnits, PlayerTurn player );
+   bool initPlayers ( vector<Unit>* playersUnits, PlayerTurn player );
+
+   bool initPlayer1 ();
+   bool initPlayer2 ();
 
 private:
    vector<Unit> player1Units;
    vector<Unit> player2Units;
 
-   LPDIRECT3DTEXTURE9 linebackerImage;
-   LPDIRECT3DTEXTURE9 paintballerImage;
-   LPDIRECT3DTEXTURE9 artistImage;
-   LPDIRECT3DTEXTURE9 pranksterImage;
+   DxTexture linebackerImage1;
+   DxTexture paintballerImage1;
+   DxTexture artistImage1;
+   DxTexture pranksterImage1;
+
+   DxTexture linebackerImage2;
+   DxTexture paintballerImage2;
+   DxTexture artistImage2;
+   DxTexture pranksterImage2;
 
    int myStartLinebackerNum;
    int myStartPaintballerNum;

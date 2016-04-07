@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DxTexture.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameManager.cpp"
 				>
 			</File>
@@ -230,6 +234,10 @@
 			</File>
 			<File
 				RelativePath=".\DxFramework.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DxTexture.h"
 				>
 			</File>
 			<File
