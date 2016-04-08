@@ -33,10 +33,14 @@ public:
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();
 	void moveToSpace ( int x, int y );
+<<<<<<< HEAD
 	void checkReachableTiles(int x, int y, int remainingMoves);
 
    DxTexture& getTileTexture ( int rowNum, int colNum );
 
+=======
+	void checkReachableTiles(int x, int y, int remainingMoves, int allegiance);
+>>>>>>> refs/remotes/origin/master
 	// private methods
 private:
 	Tile& getCell ( int rowNum, int colNum );
