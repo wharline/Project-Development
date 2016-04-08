@@ -30,7 +30,7 @@ protected:
    LPDIRECT3DSURFACE9 LoadSurface ( string filename );
    void DrawSurface ( LPDIRECT3DSURFACE9 dest, float x, float y, LPDIRECT3DSURFACE9 source );
    D3DXVECTOR2 GetBitmapSize ( string filename );
-   bool LoadTexture ( DxTexture& dxTex, string filename, D3DCOLOR transcolor = D3DCOLOR_XRGB( 0, 0, 0 ) );
+   bool LoadTexture ( DxTexture& dxTex, string filename, D3DCOLOR transcolor = D3DCOLOR_XRGB( 241, 242, 243 ) );
    void Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling );
    void Sprite_Animate ( int &frame, int startframe, int endframe, int direction, int &starttime, int delay );
 
