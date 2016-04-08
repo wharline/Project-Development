@@ -54,6 +54,8 @@ private:
    
    int myBoardSize;
 
+   float scaleFactor;
+
    PlayerTurn myTurn;
 
    Grid m_grid;

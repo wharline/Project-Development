@@ -184,7 +184,7 @@ D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
 }
 
 
-void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty )
+void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling )
 {
 	D3DXVECTOR3 position( ( float )destx, ( float )desty, 0 );
 	D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
@@ -194,6 +194,15 @@ void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty )
 	rect.top = 0;
    rect.right = texture.width();
    rect.bottom = texture.height();
+
+   D3DXVECTOR2 scale( scaling, scaling );
+
+   D3DXVECTOR2 center( (float)( texture.width() * scaling )/2, (float)( texture.height() * scaling )/2 );
+
+   D3DXMATRIX mat;
+   D3DXMatrixTransformation2D( &mat, NULL, 0, &scale, &center, 0, NULL );
+
+   spriteobj->SetTransform( &mat );
 
    spriteobj->Draw( texture.texture(), &rect, NULL, &position, white );
 }
@@ -297,6 +306,22 @@ int DxFramework::mouseX ()
 int DxFramework::mouseY ()
 {
 	return mouse_state.lY;
+}
+
+D3DXVECTOR2 DxFramework::mousePos ()
+{
+   D3DXVECTOR2 pos;
+
+   POINT p;
+
+   GetCursorPos( &p );
+
+   ScreenToClient( hwnd(), &p );
+
+   pos.x = (float)p.x;
+   pos.y = (float)p.y;
+
+   return pos;
 }
 
 void DxFramework::xInputVibrate ( int contNum, int amount )

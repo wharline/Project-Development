@@ -72,6 +72,11 @@ bool GameManager::gameInit ()
    myBoardSize = 16;
    m_grid.init( myBoardSize, myBoardSize );
 
+   if ( winWidth() < winHeight() )
+      scaleFactor = (float)winWidth() / (float)( myBoardSize * emptyTile.width() );
+   else
+      scaleFactor = (float)winHeight() / (float)( myBoardSize * emptyTile.height() );
+
    // initialize units
    myStartLinebackerNum = 1;
    myStartPaintballerNum = 1;
@@ -194,9 +199,9 @@ void GameManager::gameRun ()
       {
          for ( int c = 0; c < myBoardSize; c++ )
          {
-            DxTexture& tileTex = m_grid.getTileTexture( r, c ); //doesn't appear to be getting actual texture.
+            DxTexture& tileTex = m_grid.getTileTexture( r, c );
 
-            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height() );
+            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor );
          }
       }
 
@@ -205,7 +210,7 @@ void GameManager::gameRun ()
       {
          Unit& unit = player1Units.at( i );
 
-         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos() );
+         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor );
       }
 
       // draw player2's units
@@ -213,7 +218,7 @@ void GameManager::gameRun ()
       {
          Unit& unit = player2Units.at( i );
 
-         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos() );
+         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor );
       }
 
       // stop drawing
