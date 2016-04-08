@@ -20,7 +20,7 @@ Unit::~Unit ()
 {
 
 }
-bool Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y )
+bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image )
 {
    bool result;
 
@@ -29,8 +29,10 @@ bool Unit::initUnit ( GridInterface* pInterface, ClassType unitClass, int allegi
 
    myClass = unitClass;
 
-   positionX = x;
-   positionY = y;
+   positionX = x * image.width();
+   positionY = y * image.height();
+
+   myImage = &image;
 
    switch ( myClass )
    {

@@ -1,15 +1,27 @@
 #include "stdafx.h"
 #include "Tile.h"
 
+DxTexture Tile::ourEmptyTile;
+DxTexture Tile::ourFilledTile;
+
 Tile::Tile ()
 {
 	mySprite = NULL;
 	myState = empty;
 	myXPos = myYPos = 0;
+
+   myTrapLevel = occupiedAllegiance = 0;
 }
 
 Tile::~Tile ()
 {
+}
+
+bool Tile::init ()
+{
+   mySprite = &ourEmptyTile;
+
+   return true;
 }
 
 void Tile::setXPos ( int x )
@@ -61,4 +73,12 @@ bool Tile::isAccessible(int allegiance)
 		return true;
 	}
    return false;
+}
+
+bool Tile::loadTileImages ( DxTexture emptyTile, DxTexture filledTile )
+{
+   ourEmptyTile = emptyTile;
+   ourFilledTile = filledTile;
+
+   return true;
 }

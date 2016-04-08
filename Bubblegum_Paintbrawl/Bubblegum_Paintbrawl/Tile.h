@@ -3,7 +3,8 @@
 #if !defined ( __Tile_H__ )
 #define __Tile_H__
 
-#include "stdafx.h"
+#include "Common.h"
+#include "DxTexture.h"
 
 class Tile
 {
@@ -19,6 +20,8 @@ public:
 public:
 	Tile ();
 	~Tile ();
+
+   bool init ();
 
 	int x () { return myXPos; }
 	int y () { return myYPos; }
@@ -37,8 +40,11 @@ public:
 	bool isAccessible(int allegiance);
 	void removeTrap ();
 
-
 	void setState ( TileState state );
+
+   DxTexture& texture () { return *mySprite; }
+
+   static bool loadTileImages ( DxTexture emptyTile, DxTexture filledTile );
 
 private:
 	int myXPos, myYPos;
@@ -48,8 +54,16 @@ private:
 
 	int occupiedAllegiance; // value of team number that has a unit on this tile.  Zero if no unit is on tile.
 
-	void* mySprite;
+	DxTexture* mySprite;
 
+   // tile images
+   static DxTexture ourEmptyTile;
+   static DxTexture ourFilledTile;
+
+   // prevent copying
+private:
+   Tile ( const Tile& other );
+   Tile& operator= ( const Tile& other );
 };
 
 #endif

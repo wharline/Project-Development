@@ -1,8 +1,31 @@
 // Bubblegum_Paintbrawl.cpp : Defines the entry point for the application.
 //
 
+
+
 #include "stdafx.h"
 #include "Bubblegum_Paintbrawl.h"
+#include "DxFramework.h"
+#include "GameManager.h"
+
+//-------------------------------------------------------------------------
+// FRAMEWORK FUNCTIONS
+//-------------------------------------------------------------------------
+
+void WinFramework::quitGame ()
+{
+   PostQuitMessage( 0 );
+}
+
+void WinFramework::setHWnd ( HWND hwnd )
+{
+   hMainWnd = hwnd;
+}
+
+//-------------------------------------------------------------------------
+// WINDOWS PROCESS
+//-------------------------------------------------------------------------
+
 
 #define MAX_LOADSTRING 100
 
@@ -17,6 +40,11 @@ BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
+//-------------------------------------
+// Game app
+GameManager game;
+//-------------------------------------
+
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPTSTR    lpCmdLine,
@@ -26,7 +54,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
  	// TODO: Place code here.
-	MSG msg;
+   MSG msg = {0};
 	HACCEL hAccelTable;
 
 	// Initialize global strings
@@ -40,17 +68,26 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return FALSE;
 	}
 
+   if ( !game.init() )
+   {
+      return FALSE;
+   }
+
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_BUBBLEGUM_PAINTBRAWL));
 
 	// Main message loop:
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+	while ( msg.message != WM_QUIT )
+   {
+      if ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			TranslateMessage( &msg );
+			DispatchMessage( &msg );
 		}
-	}
+
+      game.update();
+   }
+
+   game.shutdown();
 
 	return (int) msg.wParam;
 }
@@ -107,8 +144,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    hInst = hInstance; // Store instance handle in our global variable
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+   hWnd = CreateWindow(szWindowClass, szTitle,
+      WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+      game.winWidth(), game.winHeight(), NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
@@ -117,6 +155,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   game.setHWnd( hWnd );
 
    return TRUE;
 }

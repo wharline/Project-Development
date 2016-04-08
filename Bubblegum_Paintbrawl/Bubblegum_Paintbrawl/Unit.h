@@ -3,6 +3,9 @@
 #include "stdafx.h"
 #include <string>
 
+#include "Common.h"
+#include "DxTexture.h"
+
 class GridInterface
 {
 public:
@@ -27,12 +30,8 @@ public:
 	~Unit ();
 
    // pInterface is a pointer to the map.
-	bool initUnit ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y );
-	bool initLinebacker ( int x, int y );
-	bool initPaintballer ( int x, int y );
-	bool initArtist ( int x, int y );
-   bool initPrankster ( int x, int y );
-
+	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image );
+	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
    void moveTo ( int x, int y );
@@ -49,7 +48,17 @@ public:
 
    bool isDead () { return dead; }
 
+   // for drawing
+   DxTexture& texture () { return *myImage; }
+   int getXPos () { return positionX; }
+   int getYPos () { return positionY; }
+
 private:
+   bool initLinebacker ( int x, int y );
+	bool initPaintballer ( int x, int y );
+	bool initArtist ( int x, int y );
+   bool initPrankster ( int x, int y );
+
   	void takeDamage ( int damage );
    void healDamage ( int amountToHeal );
   	void lockUnit ();
@@ -76,4 +85,7 @@ private:
 
 
    GridInterface* myGridInterface;
+
+   // image
+   DxTexture* myImage;
 };

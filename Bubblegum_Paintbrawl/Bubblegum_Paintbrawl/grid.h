@@ -3,10 +3,6 @@
 // Representation of the grid, i.e. the board in 
 //	the strategy game.
 //
-// Created by: William Harline
-//
-// version 1
-//
 //-------------------------------------------------
 
 #pragma once
@@ -29,22 +25,30 @@ public:
 	// public methods
 public:
 	// Create a new grid with the specified number of rows and columns
-	void init ( int rowNum, int colNum );
+	bool init ( int rowNum, int colNum );
+   void shutdown ();
 	bool canPassThrough ( int x, int y, int allegiance );
 	bool isEmpty ( int x, int y );
 	bool isTrapped ( int x, int y );
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();
 	void moveToSpace ( int x, int y );
+<<<<<<< HEAD
+	void checkReachableTiles(int x, int y, int remainingMoves);
+
+   DxTexture& getTileTexture ( int rowNum, int colNum );
+
+=======
 	void checkReachableTiles(int x, int y, int remainingMoves, int allegiance);
+>>>>>>> refs/remotes/origin/master
 	// private methods
 private:
-	Tile* getCell ( int rowNum, int colNum );
+	Tile& getCell ( int rowNum, int colNum );
 
 
 	// private member data
 private:
-	Tile** m_grid;		// TO-DO: determine grid type (what is the grid holding)
+	Tile** m_grid;
 	int m_rowNum;
 	int m_colNum;
 	std::vector<POINT> reachableTiles;

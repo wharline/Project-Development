@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -175,6 +175,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DxFramework.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DxTexture.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameManager.cpp"
 				>
 			</File>
@@ -218,6 +226,18 @@
 			>
 			<File
 				RelativePath=".\Bubblegum_Paintbrawl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DxFramework.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DxTexture.h"
 				>
 			</File>
 			<File
