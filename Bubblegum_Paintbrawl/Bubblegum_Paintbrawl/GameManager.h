@@ -18,7 +18,7 @@ public:
    GameManager ();
    ~GameManager ();
 
-   bool gameInit ();
+   bool gameInit (int boardsize);
    void gameRun ();
    void gameExit ();
 

@@ -14,13 +14,13 @@ public:
    DxFramework () {}
    virtual ~DxFramework () {}
 
-   virtual bool gameInit () = 0;
+   virtual bool gameInit (int boardsize) = 0;
    virtual void gameRun () = 0;
    virtual void gameExit () = 0;
    
    virtual bool fullscreen () { return false; }
 
-   bool init ();
+   bool init (int boardsize);
    void update ();
    void shutdown ();
 

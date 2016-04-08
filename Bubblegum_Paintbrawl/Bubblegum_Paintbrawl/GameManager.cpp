@@ -9,7 +9,7 @@ GameManager::~GameManager ()
 {
 }
 
-bool GameManager::gameInit ()
+bool GameManager::gameInit (int boardsize)
 {
    myTurn = player1;
 
@@ -69,9 +69,10 @@ bool GameManager::gameInit ()
 
 
    // initialize grid
-   myBoardSize = 16;
+   myBoardSize = boardsize;
    m_grid.init( myBoardSize, myBoardSize );
 
+   // Adjust scale to screen size
    if ( winWidth() < winHeight() )
       scaleFactor = (float)winWidth() / (float)( myBoardSize * emptyTile.width() );
    else
@@ -239,9 +240,11 @@ void GameManager::gameExit ()
    m_grid.shutdown();
 }
 
+// The full encompassment of a single players turn
 void GameManager::playerTurn ( vector<Unit> player )
 {
-   // check if player has lost
+   
+   // Check if player has lost
    for ( int i = 0; i < (int)player.size(); i++ )
    {
       if ( player.at( i ).isDead() )
@@ -249,4 +252,6 @@ void GameManager::playerTurn ( vector<Unit> player )
          myGameIsOver = true;
       }
    }
+
+   //TO-DO Fill out the rest of the players turn
 }

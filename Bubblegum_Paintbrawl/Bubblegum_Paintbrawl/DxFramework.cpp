@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "DxFramework.h"
 
-bool DxFramework::init ()
+bool DxFramework::init (int boardsize)
 {
    HRESULT result;
 
@@ -45,7 +45,7 @@ bool DxFramework::init ()
       return false;
    }
 
-	if ( !gameInit() )
+	if ( !gameInit(boardsize) )
       return false;
 
    return true;

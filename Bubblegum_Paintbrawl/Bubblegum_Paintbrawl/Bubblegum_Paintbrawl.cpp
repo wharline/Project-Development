@@ -44,6 +44,7 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 // Game app
 GameManager game;
 //-------------------------------------
+string str = "sdfsdfdsf";
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -68,7 +69,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return FALSE;
 	}
 
-   if ( !game.init() )
+   if ( !game.init(16) )
    {
       return FALSE;
    }
@@ -185,6 +186,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Parse the menu selections:
 		switch (wmId)
 		{
+      case ID_FILE_NEWGAME:
+         
+         break;
+      case ID_FILE_LOADGAME:
+
+         break;
+      case ID_FILE_SAVEGAME:
+         break;
+
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
@@ -212,19 +222,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 // Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message)
-	{
-	case WM_INITDIALOG:
-		return (INT_PTR)TRUE;
+   UNREFERENCED_PARAMETER(lParam);
+   switch (message)
+   {
+   case WM_INITDIALOG:
 
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-		{
-			EndDialog(hDlg, LOWORD(wParam));
-			return (INT_PTR)TRUE;
-		}
-		break;
-	}
-	return (INT_PTR)FALSE;
+      return (INT_PTR)TRUE;
+
+   case WM_COMMAND:
+      if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+      {
+         EndDialog(hDlg, LOWORD(wParam));
+         return (INT_PTR)TRUE;
+      }
+      break;
+   }
+   return (INT_PTR)FALSE;
 }
