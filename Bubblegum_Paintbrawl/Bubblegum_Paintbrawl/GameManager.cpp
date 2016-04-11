@@ -67,6 +67,9 @@ bool GameManager::gameInit (int boardsize)
 
    Tile::loadTileImages( emptyTile, filledTile );
 
+   tileSize.x = (float)emptyTile.width();
+   tileSize.y = (float)emptyTile.height();
+
 
    // initialize grid
    myBoardSize = boardsize;
@@ -254,4 +257,45 @@ void GameManager::playerTurn ( vector<Unit> player )
    }
 
    //TO-DO Fill out the rest of the players turn
+
+   // select a unit to move
+   Unit* unit = NULL;
+   if ( mouseButton( 1 ) )
+   {
+      unit = selectUnit( &player );
+   }
+
+   // check if I got a unit
+   if ( unit )
+   {
+      // getHealth() is called merely to put a breakpoint in this line.
+      unit->getHealth();
+   }
+}
+
+Unit* GameManager::selectUnit ( vector<Unit>* player )
+{
+   // get mouse position
+   POINT mPos;
+
+   mPos = mousePos();
+
+   // convert the mouse position to a space on the grid
+   mPos.x /= (long)scaleFactor;
+   mPos.y /= (long)scaleFactor;
+
+   mPos.x /= (long)tileSize.x;
+   mPos.y /= (long)tileSize.y;
+
+   // find a unit for current player at the mouse position
+   for ( int i = 0; i < (int)player->size(); i++ )
+   {
+      if ( mPos.x == player->at( i ).getGridXPos() && mPos.y == player->at( i ).getGridYPos() )
+      {
+         return &player->at( i );
+      }
+   }
+
+   // didn't find a unit for that player at that space
+   return NULL;
 }

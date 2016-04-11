@@ -53,6 +53,10 @@ public:
    int getXPos () { return positionX; }
    int getYPos () { return positionY; }
 
+   // for grid logic
+   int getGridXPos () { return positionX / myImage->width(); }
+   int getGridYPos () { return positionY / myImage->height(); }
+
 private:
    bool initLinebacker ( int x, int y );
 	bool initPaintballer ( int x, int y );

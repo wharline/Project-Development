@@ -294,9 +294,15 @@ int DxFramework::keyDown ( int key )
 	return ( keys[key] & 0x80 );
 }
 
-int DxFramework::mouseButton ( int button )
+bool DxFramework::mouseButton ( int button )
 {
-	return mouse_state.rgbButtons[button] & 0x80;
+   if ( button == 1 )
+   {
+      if ( ( GetAsyncKeyState( VK_LBUTTON ) & 0x8000 ) != 0 )
+         return true;
+   }
+
+	return false;
 }
 int DxFramework::mouseX ()
 {
@@ -308,7 +314,7 @@ int DxFramework::mouseY ()
 	return mouse_state.lY;
 }
 
-D3DXVECTOR2 DxFramework::mousePos ()
+POINT DxFramework::mousePos ()
 {
    D3DXVECTOR2 pos;
 
@@ -318,10 +324,7 @@ D3DXVECTOR2 DxFramework::mousePos ()
 
    ScreenToClient( hwnd(), &p );
 
-   pos.x = (float)p.x;
-   pos.y = (float)p.y;
-
-   return pos;
+   return p;
 }
 
 void DxFramework::xInputVibrate ( int contNum, int amount )

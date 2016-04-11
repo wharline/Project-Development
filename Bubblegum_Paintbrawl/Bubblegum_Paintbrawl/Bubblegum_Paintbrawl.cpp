@@ -146,8 +146,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
 
    hWnd = CreateWindow(szWindowClass, szTitle,
-      WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT,
-      game.winWidth(), game.winHeight(), NULL, NULL, hInstance, NULL);
+      WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | LBS_NOINTEGRALHEIGHT,
+      CW_USEDEFAULT, CW_USEDEFAULT,
+      game.winWidth(), game.winHeight(),
+      NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {

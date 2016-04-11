@@ -32,6 +32,8 @@ private:
    bool initPlayer1 ();
    bool initPlayer2 ();
 
+   Unit* selectUnit ( vector<Unit>* player );
+
 private:
    vector<Unit> player1Units;
    vector<Unit> player2Units;
@@ -50,6 +52,8 @@ private:
    int myStartPaintballerNum;
    int myStartArtistNum;
    int myStartPranksterNum;
+
+   D3DXVECTOR2 tileSize;
    
    
    int myBoardSize;

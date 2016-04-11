@@ -43,14 +43,14 @@ protected:
    void directInputUpdate ();
    void directInputShutdown ();
    int keyDown ( int key );
-   int mouseButton ( int button );
+   bool mouseButton ( int button );
    int mouseX ();
    int mouseY ();
    void xInputVibrate ( int contNum = 0, int amount = 65535 );
    bool xInputControllerFound ();
 
    // get the mouse position in the game window
-   D3DXVECTOR2 mousePos ();
+   POINT mousePos ();
 
 
 private:
