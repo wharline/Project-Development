@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include <cassert>
 
 GameManager::GameManager ()
 {
@@ -189,8 +190,14 @@ void GameManager::gameRun ()
 {
    // iterate through all units for each player and determine if all are dead.
    // if all are dead, that player lost.
-   playerTurn( player1Units );
-   playerTurn( player2Units );
+   if ( myTurn == player1 )
+   {
+      playerTurn( player1Units );
+   }
+   if ( myTurn == player2 )
+   {
+      playerTurn( player2Units );
+   }
 
    // render
    if ( SUCCEEDED( dxDevice()->BeginScene() ) )
@@ -248,11 +255,23 @@ void GameManager::playerTurn ( vector<Unit> player )
 {
    
    // Check if player has lost
+   bool unitDead = true;
    for ( int i = 0; i < (int)player.size(); i++ )
    {
-      if ( player.at( i ).isDead() )
+      unitDead = unitDead && player.at( i ).isDead();
+   }
+   if ( unitDead )
+   {
+      myGameIsOver = true;
+      return;
+   }
+
+   // unlock all units for the player at beginning of turn
+   for ( int i = 0; i < (int)player.size(); i++ )
+   {
+      if ( !player.at( i ).isDead() )
       {
-         myGameIsOver = true;
+         player.at( i ).turnStart();
       }
    }
 
@@ -260,7 +279,7 @@ void GameManager::playerTurn ( vector<Unit> player )
 
    // select a unit to move
    Unit* unit = NULL;
-   if ( mouseButton( 1 ) )
+   if ( mouseButton( 0 ) )
    {
       unit = selectUnit( &player );
    }
@@ -268,8 +287,11 @@ void GameManager::playerTurn ( vector<Unit> player )
    // check if I got a unit
    if ( unit )
    {
-      // getHealth() is called merely to put a breakpoint in this line.
-      unit->getHealth();
+      // do something with the unit that was selected
+      assert( unit );
+
+      // test movement
+      unit->moveTo( 5, 5 );
    }
 }
 
@@ -281,16 +303,22 @@ Unit* GameManager::selectUnit ( vector<Unit>* player )
    mPos = mousePos();
 
    // convert the mouse position to a space on the grid
-   mPos.x /= (long)scaleFactor;
-   mPos.y /= (long)scaleFactor;
+   float posX;
+   float posY;
 
-   mPos.x /= (long)tileSize.x;
-   mPos.y /= (long)tileSize.y;
+   posX = ( ( mPos.x / scaleFactor ) / tileSize.x );
+   posY = ( ( mPos.y / scaleFactor ) / tileSize.y );
+
+   // round y poxition (x position works without rounding)
+   if ( int( posY * 10 ) % 10 >= 5 )
+   {
+      posY += 1;
+   }
 
    // find a unit for current player at the mouse position
    for ( int i = 0; i < (int)player->size(); i++ )
    {
-      if ( mPos.x == player->at( i ).getGridXPos() && mPos.y == player->at( i ).getGridYPos() )
+      if ( (int)posX == player->at( i ).getGridXPos() && (int)posY == player->at( i ).getGridYPos() )
       {
          return &player->at( i );
       }

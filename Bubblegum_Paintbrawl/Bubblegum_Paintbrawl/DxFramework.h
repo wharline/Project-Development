@@ -43,9 +43,12 @@ protected:
    void directInputUpdate ();
    void directInputShutdown ();
    int keyDown ( int key );
+
+   // 0 means left button, 1 is right button, and 2 is middle button
    bool mouseButton ( int button );
    int mouseX ();
    int mouseY ();
+
    void xInputVibrate ( int contNum = 0, int amount = 65535 );
    bool xInputControllerFound ();
 

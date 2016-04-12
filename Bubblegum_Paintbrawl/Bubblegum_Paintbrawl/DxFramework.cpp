@@ -296,10 +296,19 @@ int DxFramework::keyDown ( int key )
 
 bool DxFramework::mouseButton ( int button )
 {
+   if ( button == 0 )
+   {
+      return ( ( GetAsyncKeyState( VK_LBUTTON ) & 0x8000 ) != 0 );
+   }
+
    if ( button == 1 )
    {
-      if ( ( GetAsyncKeyState( VK_LBUTTON ) & 0x8000 ) != 0 )
-         return true;
+      return ( ( GetAsyncKeyState( VK_RBUTTON ) & 0x8000 ) != 0 );
+   }
+
+   if ( button == 2 )
+   {
+      return ( ( GetAsyncKeyState( VK_MBUTTON ) & 0x8000 ) != 0 );
    }
 
 	return false;
