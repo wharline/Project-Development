@@ -12,7 +12,8 @@ Tile::Tile ()
 
    myColor = D3DCOLOR_XRGB( 255, 255, 255 );
 
-   myTrapLevel = occupiedAllegiance = 0;
+   myTrapLevel = 0;
+   occupiedAllegiance = -1;
 }
 
 Tile::~Tile ()
@@ -36,17 +37,19 @@ void Tile::setYPos ( int y )
 	myYPos = y;
 }
 
-void Tile::setState ( TileState state )
+void Tile::setState ( TileState state, int allegiance )
 {
 	myState = state;
 
 	switch ( myState )
    {
    case occupied:
+      occupiedAllegiance = allegiance;
       break;
    case blocked:
       break;
    case empty:
+      occupiedAllegiance = -1;
       break;
    case trapped:
       break;

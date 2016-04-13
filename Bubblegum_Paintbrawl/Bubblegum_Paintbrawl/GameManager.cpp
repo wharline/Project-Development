@@ -6,6 +6,8 @@ GameManager::GameManager ()
 {
    selectedUnit = NULL;
    myTurnStart = true;
+
+   keyPressed = false;
 }
 
 GameManager::~GameManager ()
@@ -157,7 +159,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartLinebackerNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::linebacker, player1, myBoardSize - i - 1, 0, linebackerImage2 );
+      unit.init( &m_grid, Unit::linebacker, player2, myBoardSize - i - 1, 0, linebackerImage2 );
       player2Units.push_back( unit );
    }
 
@@ -165,7 +167,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartPaintballerNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::paintballer, player1, myBoardSize - i - 1, 1, paintballerImage2 );
+      unit.init( &m_grid, Unit::paintballer, player2, myBoardSize - i - 1, 1, paintballerImage2 );
       player2Units.push_back( unit );
    }
 
@@ -173,7 +175,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartArtistNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::artist, player1, myBoardSize - i - 1, 2, artistImage2 );
+      unit.init( &m_grid, Unit::artist, player2, myBoardSize - i - 1, 2, artistImage2 );
       player2Units.push_back( unit );
    }
 
@@ -181,7 +183,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartPranksterNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::prankster, player1, myBoardSize - i - 1, 3, pranksterImage2 );
+      unit.init( &m_grid, Unit::prankster, player2, myBoardSize - i - 1, 3, pranksterImage2 );
       player2Units.push_back( unit );
    }
 
@@ -268,6 +270,7 @@ void GameManager::playerTurn ( vector<Unit>& player )
       return;
    }
 
+   // check if the player's turn is over
    bool turnOver = true;
    for ( int i = 0; i < (int)player.size(); i++ )
    {
@@ -295,6 +298,7 @@ void GameManager::playerTurn ( vector<Unit>& player )
       }
    }
 
+   // set the start of turn for the next player
    if ( turnOver )
    {
       myTurnStart = true;
@@ -315,28 +319,60 @@ void GameManager::playerTurn ( vector<Unit>& player )
    // check if I got a unit
    if ( selectedUnit )
    {
-       //do something with the unit that was selected
-       //test movement
-      if ( keyDown( VK_UP ) )
+      // move when the key is pressed once, but not held
+      if ( !keyPressed )
       {
-         selectedUnit->selectPath( Unit::north );
+         if ( keyDown( VK_UP ))
+         {
+            selectedUnit->selectPath( Unit::north );
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_RIGHT ) )
+         {
+            selectedUnit->selectPath( Unit::east );
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_LEFT ) )
+         {
+            selectedUnit->selectPath( Unit::west );
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_DOWN ) )
+         {
+            selectedUnit->selectPath( Unit::south );
+            keyPressed = true;
+         }
       }
-      if ( keyDown( VK_RIGHT ) )
+      else
       {
-         selectedUnit->selectPath( Unit::east );
+         // check that the key is not being held before setting it to false
+         if ( keyDown( VK_UP ))
+         {
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_RIGHT ) )
+         {
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_LEFT ) )
+         {
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_DOWN ) )
+         {
+            keyPressed = true;
+         }
+         else
+         {
+            keyPressed = false;
+         }
       }
-      if ( keyDown( VK_LEFT ) )
-      {
-         selectedUnit->selectPath( Unit::west );
-      }
-      if ( keyDown( VK_DOWN ) )
-      {
-         selectedUnit->selectPath( Unit::south );
-      }
+
       if ( keyDown( VK_SPACE ) )
       {
-         selectedUnit->finishMovement();
-         selectedUnit = NULL;
+         bool result = selectedUnit->finishMovement();
+         if ( result )
+            selectedUnit = NULL;
       }
    }
 }

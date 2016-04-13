@@ -28,7 +28,6 @@ Unit::Unit ()
 
 Unit::~Unit ()
 {
-
 }
 bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image )
 {
@@ -61,6 +60,8 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
    default:
       break;
    }
+
+   myGridInterface->moveToSpace( 0, 0, positionX, positionY, myAllegiance );
 
    return true;
 }
@@ -145,15 +146,23 @@ bool Unit::selectPath ( Direction dir )
    }
 }
 
-void Unit::finishMovement ()
+bool Unit::finishMovement ()
 {
    if ( !locked && myGridInterface->isEmpty( xPosToMoveTo, yPosToMoveTo ) )
    {
+      int prevPosX = positionX;
+      int prevPosY = positionY;
+
       positionX = xPosToMoveTo;
       positionY = yPosToMoveTo;
-      myGridInterface->moveToSpace( positionX, positionY );
+
+      myGridInterface->moveToSpace( prevPosX, prevPosY, positionX, positionY, myAllegiance );
       lockUnit();
+      
+      return true;
    }
+
+   return false;
 }
 
 void Unit::attack ( Unit* enemyUnit )

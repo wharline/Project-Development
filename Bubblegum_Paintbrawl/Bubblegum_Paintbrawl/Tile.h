@@ -40,7 +40,7 @@ public:
 	bool isAccessible(int allegiance);
 	void removeTrap ();
 
-	void setState ( TileState state );
+	void setState ( TileState state, int allegiance = -1 );
 
    DxTexture& texture () { return *mySprite; }
    D3DCOLOR color () { return myColor; }

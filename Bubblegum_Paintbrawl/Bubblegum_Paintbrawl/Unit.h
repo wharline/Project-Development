@@ -16,7 +16,7 @@ public:
    virtual bool isTrapped ( int x, int y ) = 0;
    virtual void setTrap ( int x, int y, int trapLevel ) = 0;
    virtual void removeTrap () = 0;
-	virtual void moveToSpace ( int x, int y ) = 0;
+	virtual void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance ) = 0;
    virtual void spaceSelected ( int x, int y ) = 0;
 };
 
@@ -35,7 +35,7 @@ public:
 	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
-   void finishMovement ();
+   bool finishMovement ();
 	void attack ( Unit* enemyUnit );
 
    void linebackerSpecial ();

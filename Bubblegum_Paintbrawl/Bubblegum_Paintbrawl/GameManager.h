@@ -66,6 +66,8 @@ private:
    bool myGameIsOver;
    bool myTurnStart;
 
+   bool keyPressed;
+
    Unit* selectedUnit;
 };
 

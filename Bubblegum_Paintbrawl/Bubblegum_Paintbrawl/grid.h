@@ -32,7 +32,7 @@ public:
 	bool isTrapped ( int x, int y );
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();
-	void moveToSpace ( int x, int y );
+	void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance );
 	void checkReachableTiles(int x, int y, int remainingMoves);
 
    void spaceSelected ( int x, int y );

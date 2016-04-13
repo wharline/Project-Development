@@ -42,7 +42,7 @@ protected:
    bool directInputInit ();
    void directInputUpdate ();
    void directInputShutdown ();
-   int keyDown ( int key );
+   bool keyDown ( int key );
 
    // 0 means left button, 1 is right button, and 2 is middle button
    bool mouseButton ( int button );
@@ -70,7 +70,6 @@ private:
    DIMOUSESTATE mouse_state;
    XINPUT_GAMEPAD controllers[4];
    char keys[256];
-
 };
 
 #endif

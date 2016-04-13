@@ -288,9 +288,9 @@ void DxFramework::directInputShutdown ()
 	}
 }
 
-int DxFramework::keyDown ( int key )
+bool DxFramework::keyDown ( int key )
 {
-	return ( GetAsyncKeyState( key ) & 0x8000 ) != 0;
+   return ( GetAsyncKeyState( key ) & 0x8000 ) != 0;
 }
 
 bool DxFramework::mouseButton ( int button )

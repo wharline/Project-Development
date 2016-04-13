@@ -135,14 +135,15 @@ void Grid::checkReachableTiles(int x, int y, int remainingMoves, int allegiance)
 
 }
 
-void Grid::moveToSpace ( int x, int y )
+void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance )
 {
-   if ( x < 0 || x >= m_rowNum )
+   if ( newX < 0 || newX >= m_rowNum )
       return;
-   if ( y < 0 || y >= m_colNum )
+   if ( newY < 0 || newY >= m_colNum )
       return;
 
-	m_grid[x][y].setState( Tile::occupied );
+   m_grid[oldX][oldY].setState( Tile::empty );
+	m_grid[newX][newY].setState( Tile::occupied, allegiance );
 
    // change tile color back to white
    for ( int r = 0; r < m_rowNum; r++ )
