@@ -4,6 +4,8 @@
 
 GameManager::GameManager ()
 {
+   selectedUnit = NULL;
+   myTurnStart = true;
 }
 
 GameManager::~GameManager ()
@@ -212,7 +214,7 @@ void GameManager::gameRun ()
          {
             DxTexture& tileTex = m_grid.getTileTexture( r, c );
 
-            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor );
+            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor, m_grid.tileColor( r, c ) );
          }
       }
 
@@ -239,7 +241,7 @@ void GameManager::gameRun ()
    }
 
    // quit game by pressing esc
-   if ( keyDown( DIK_ESCAPE ) )
+   if ( keyDown( VK_ESCAPE ) )
    {
       quitGame();
    }
@@ -266,27 +268,76 @@ void GameManager::playerTurn ( vector<Unit>& player )
       return;
    }
 
-   // unlock all units for the player at beginning of turn
+   bool turnOver = true;
    for ( int i = 0; i < (int)player.size(); i++ )
    {
-      player.at( i ).turnStart();
+      turnOver = turnOver && player.at( i ).isLocked();
+   }
+   if ( turnOver )
+   {
+      // turn is now over
+      if ( myTurn == player1 )
+      {
+         myTurn = player2;
+      }
+      else
+      {
+         myTurn = player1;
+      }
+   }
+
+   // unlock all units for the player at beginning of turn
+   if ( myTurnStart )
+   {
+      for ( int i = 0; i < (int)player.size(); i++ )
+      {
+         player.at( i ).turnStart();
+      }
+   }
+
+   if ( turnOver )
+   {
+      myTurnStart = true;
+   }
+   else
+   {
+      myTurnStart = false;
    }
 
    //TO-DO Fill out the rest of the players turn
 
    // select a unit to move
-   Unit* unit = NULL;
    if ( mouseButton( 0 ) )
    {
-      unit = selectUnit( player );
+      selectedUnit = selectUnit( player );
    }
 
    // check if I got a unit
-   if ( unit )
+   if ( selectedUnit )
    {
-      // do something with the unit that was selected
-      // test movement
-      unit->moveTo( 5, 5 );
+       //do something with the unit that was selected
+       //test movement
+      if ( keyDown( VK_UP ) )
+      {
+         selectedUnit->selectPath( Unit::north );
+      }
+      if ( keyDown( VK_RIGHT ) )
+      {
+         selectedUnit->selectPath( Unit::east );
+      }
+      if ( keyDown( VK_LEFT ) )
+      {
+         selectedUnit->selectPath( Unit::west );
+      }
+      if ( keyDown( VK_DOWN ) )
+      {
+         selectedUnit->selectPath( Unit::south );
+      }
+      if ( keyDown( VK_SPACE ) )
+      {
+         selectedUnit->finishMovement();
+         selectedUnit = NULL;
+      }
    }
 }
 
@@ -305,7 +356,7 @@ Unit* GameManager::selectUnit ( vector<Unit>& player )
    posY = ( ( mPos.y / scaleFactor ) / tileSize.y );
 
    // round y poxition (x position works without rounding)
-   if ( int( posY * 10 ) % 10 >= 5 )
+   if ( (int)( posY * 10 ) % 10 >= 5 )
    {
       posY += 1;
    }

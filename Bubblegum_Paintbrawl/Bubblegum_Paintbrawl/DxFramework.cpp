@@ -184,10 +184,9 @@ D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
 }
 
 
-void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling )
+void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling, D3DCOLOR color)
 {
 	D3DXVECTOR3 position( ( float )destx, ( float )desty, 0 );
-	D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
 
 	RECT rect;
 	rect.left = 0;
@@ -204,7 +203,7 @@ void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, 
 
    spriteobj->SetTransform( &mat );
 
-   spriteobj->Draw( texture.texture(), &rect, NULL, &position, white );
+   spriteobj->Draw( texture.texture(), &rect, NULL, &position, color );
 }
 
 
@@ -291,7 +290,7 @@ void DxFramework::directInputShutdown ()
 
 int DxFramework::keyDown ( int key )
 {
-	return ( keys[key] & 0x80 );
+	return ( GetAsyncKeyState( key ) & 0x8000 ) != 0;
 }
 
 bool DxFramework::mouseButton ( int button )

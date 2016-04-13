@@ -136,6 +136,7 @@ bool Unit::selectPath ( Direction dir )
    {
       yPosToMoveTo = y;
       xPosToMoveTo = x;
+      myGridInterface->spaceSelected( xPosToMoveTo, yPosToMoveTo );
       return true;
    }
    else
@@ -144,12 +145,12 @@ bool Unit::selectPath ( Direction dir )
    }
 }
 
-void Unit::moveTo ( int x, int y )
+void Unit::finishMovement ()
 {
-   if ( !locked && myGridInterface->isEmpty( x, y ) )
+   if ( !locked && myGridInterface->isEmpty( xPosToMoveTo, yPosToMoveTo ) )
    {
-      positionX = x;
-      positionY = y;
+      positionX = xPosToMoveTo;
+      positionY = yPosToMoveTo;
       myGridInterface->moveToSpace( positionX, positionY );
       lockUnit();
    }
@@ -232,13 +233,22 @@ void Unit::lockUnit ()
 
 void Unit::turnStart ()
 {
+   if ( dead )
+   {
+      return;
+   }
    bool trapped = myGridInterface->isTrapped( positionX, positionY );
-   if ( !dead && !trapped )
+   if ( !trapped )
+   {
       locked = false;
-   if ( trapped )
+   }
+   else
    {
       myGridInterface->removeTrap();
    }
+
+   xPosToMoveTo = positionX;
+   yPosToMoveTo = positionY;
 }
 
 void Unit::unitDie ()

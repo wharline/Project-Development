@@ -35,9 +35,14 @@ public:
 	void moveToSpace ( int x, int y );
 	void checkReachableTiles(int x, int y, int remainingMoves);
 
+   void spaceSelected ( int x, int y );
+
+
    DxTexture& getTileTexture ( int rowNum, int colNum );
 
 	void checkReachableTiles(int x, int y, int remainingMoves, int allegiance);
+
+   D3DCOLOR tileColor ( int x, int y );
 
 
 	// private methods

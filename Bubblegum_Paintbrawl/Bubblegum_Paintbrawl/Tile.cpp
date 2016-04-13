@@ -10,6 +10,8 @@ Tile::Tile ()
 	myState = empty;
 	myXPos = myYPos = 0;
 
+   myColor = D3DCOLOR_XRGB( 255, 255, 255 );
+
    myTrapLevel = occupiedAllegiance = 0;
 }
 
@@ -37,6 +39,20 @@ void Tile::setYPos ( int y )
 void Tile::setState ( TileState state )
 {
 	myState = state;
+
+	switch ( myState )
+   {
+   case occupied:
+      break;
+   case blocked:
+      break;
+   case empty:
+      break;
+   case trapped:
+      break;
+   default:
+      break;
+   }
 }
 
 bool Tile::canPassThrough ( int allegiance )
@@ -81,4 +97,9 @@ bool Tile::loadTileImages ( DxTexture emptyTile, DxTexture filledTile )
    ourFilledTile = filledTile;
 
    return true;
+}
+
+void Tile::setColor ( D3DCOLOR color )
+{
+   myColor = color;
 }

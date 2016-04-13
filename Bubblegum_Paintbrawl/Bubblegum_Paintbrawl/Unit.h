@@ -17,6 +17,7 @@ public:
    virtual void setTrap ( int x, int y, int trapLevel ) = 0;
    virtual void removeTrap () = 0;
 	virtual void moveToSpace ( int x, int y ) = 0;
+   virtual void spaceSelected ( int x, int y ) = 0;
 };
 
 class Unit
@@ -34,7 +35,7 @@ public:
 	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
-   void moveTo ( int x, int y );
+   void finishMovement ();
 	void attack ( Unit* enemyUnit );
 
    void linebackerSpecial ();
@@ -47,6 +48,7 @@ public:
 	int getHealth () { return currentHealth; }
 
    bool isDead () { return dead; }
+   bool isLocked () { return locked; }
 
    // for drawing
    DxTexture& texture () { return *myImage; }

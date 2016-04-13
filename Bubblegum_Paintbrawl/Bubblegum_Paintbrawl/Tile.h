@@ -43,6 +43,9 @@ public:
 	void setState ( TileState state );
 
    DxTexture& texture () { return *mySprite; }
+   D3DCOLOR color () { return myColor; }
+
+   void setColor ( D3DCOLOR color );
 
    static bool loadTileImages ( DxTexture emptyTile, DxTexture filledTile );
 
@@ -55,6 +58,7 @@ private:
 	int occupiedAllegiance; // value of team number that has a unit on this tile.  Zero if no unit is on tile.
 
 	DxTexture* mySprite;
+   D3DCOLOR myColor;
 
    // tile images
    static DxTexture ourEmptyTile;

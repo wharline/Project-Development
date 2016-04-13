@@ -64,8 +64,9 @@ private:
    Grid m_grid;
 
    bool myGameIsOver;
+   bool myTurnStart;
 
-   Unit dummyUnit;
+   Unit* selectedUnit;
 };
 
 #endif

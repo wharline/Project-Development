@@ -44,21 +44,41 @@ void Grid::shutdown ()
 
 bool Grid::canPassThrough ( int x, int y, int allegiance )
 {
+   if ( x < 0 || x >= m_rowNum )
+      return false;
+   if ( y < 0 || y >= m_colNum )
+      return false;
+
    return m_grid[x][y].canPassThrough( allegiance );
 }
 
 bool Grid::isEmpty ( int x, int y )
 {
+   if ( x < 0 || x >= m_rowNum )
+      return false;
+   if ( y < 0 || y >= m_colNum )
+      return false;
+
    return m_grid[x][y].isEmpty();
 }
 
 bool Grid::isTrapped ( int x, int y )
 {
+   if ( x < 0 || x >= m_rowNum )
+      return false;
+   if ( y < 0 || y >= m_colNum )
+      return false;
+
    return m_grid[x][y].isTrapped();
 }
 
 void Grid::setTrap ( int x, int y, int trapLevel )
 {
+   if ( x < 0 || x >= m_rowNum )
+      return;
+   if ( y < 0 || y >= m_colNum )
+      return;
+
    m_grid[x][y].setTrap( trapLevel );
 }
 
@@ -117,11 +137,30 @@ void Grid::checkReachableTiles(int x, int y, int remainingMoves, int allegiance)
 
 void Grid::moveToSpace ( int x, int y )
 {
+   if ( x < 0 || x >= m_rowNum )
+      return;
+   if ( y < 0 || y >= m_colNum )
+      return;
+
 	m_grid[x][y].setState( Tile::occupied );
+
+   // change tile color back to white
+   for ( int r = 0; r < m_rowNum; r++ )
+   {
+      for ( int c = 0; c < m_colNum; c++ )
+      {
+         m_grid[r][c].setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
+      }
+   }
 }
 
 Tile& Grid::getCell ( int rowNum, int colNum )
 {
+   if ( rowNum < 0 || rowNum >= m_rowNum )
+      return m_grid[0][0];
+   if ( colNum < 0 || colNum >= m_colNum )
+      return m_grid[0][0];
+
    Tile& tile = m_grid[rowNum][colNum];
 	
    return tile;
@@ -134,4 +173,24 @@ DxTexture& Grid::getTileTexture ( int rowNum, int colNum )
    DxTexture& tex = tile.texture();
 
    return tex;
+}
+
+D3DCOLOR Grid::tileColor ( int x, int y )
+{
+   if ( x < 0 || x >= m_rowNum )
+      return D3DCOLOR_XRGB( 0, 0, 0 );
+   if ( y < 0 || y >= m_colNum )
+      return D3DCOLOR_XRGB( 0, 0, 0 );
+
+   return m_grid[x][y].color();
+}
+
+void Grid::spaceSelected ( int x, int y )
+{
+   if ( x < 0 || x >= m_rowNum )
+      return;
+   if ( y < 0 || y >= m_colNum )
+      return;
+
+   m_grid[x][y].setColor( D3DCOLOR_XRGB( 100, 100, 100 ) );
 }
