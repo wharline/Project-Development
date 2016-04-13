@@ -50,12 +50,12 @@ public:
 
    // for drawing
    DxTexture& texture () { return *myImage; }
-   int getXPos () { return positionX; }
-   int getYPos () { return positionY; }
+   int getXPos () { return positionX * myImage->width(); }
+   int getYPos () { return positionY * myImage->height(); }
 
    // for grid logic
-   int getGridXPos () { return positionX / myImage->width(); }
-   int getGridYPos () { return positionY / myImage->height(); }
+   int getGridXPos () { return positionX; }
+   int getGridYPos () { return positionY; }
 
 private:
    bool initLinebacker ( int x, int y );

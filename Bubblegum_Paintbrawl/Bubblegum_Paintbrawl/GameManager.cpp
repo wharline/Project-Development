@@ -251,7 +251,7 @@ void GameManager::gameExit ()
 }
 
 // The full encompassment of a single players turn
-void GameManager::playerTurn ( vector<Unit> player )
+void GameManager::playerTurn ( vector<Unit>& player )
 {
    
    // Check if player has lost
@@ -269,10 +269,7 @@ void GameManager::playerTurn ( vector<Unit> player )
    // unlock all units for the player at beginning of turn
    for ( int i = 0; i < (int)player.size(); i++ )
    {
-      if ( !player.at( i ).isDead() )
-      {
-         player.at( i ).turnStart();
-      }
+      player.at( i ).turnStart();
    }
 
    //TO-DO Fill out the rest of the players turn
@@ -281,21 +278,19 @@ void GameManager::playerTurn ( vector<Unit> player )
    Unit* unit = NULL;
    if ( mouseButton( 0 ) )
    {
-      unit = selectUnit( &player );
+      unit = selectUnit( player );
    }
 
    // check if I got a unit
    if ( unit )
    {
       // do something with the unit that was selected
-      assert( unit );
-
       // test movement
       unit->moveTo( 5, 5 );
    }
 }
 
-Unit* GameManager::selectUnit ( vector<Unit>* player )
+Unit* GameManager::selectUnit ( vector<Unit>& player )
 {
    // get mouse position
    POINT mPos;
@@ -316,11 +311,11 @@ Unit* GameManager::selectUnit ( vector<Unit>* player )
    }
 
    // find a unit for current player at the mouse position
-   for ( int i = 0; i < (int)player->size(); i++ )
+   for ( int i = 0; i < (int)player.size(); i++ )
    {
-      if ( (int)posX == player->at( i ).getGridXPos() && (int)posY == player->at( i ).getGridYPos() )
+      if ( (int)posX == player.at( i ).getGridXPos() && (int)posY == player.at( i ).getGridYPos() )
       {
-         return &player->at( i );
+         return &player.at( i ); // seems to be returning a copy, not a reference
       }
    }
 

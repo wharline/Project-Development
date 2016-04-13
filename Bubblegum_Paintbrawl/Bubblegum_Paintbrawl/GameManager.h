@@ -26,13 +26,13 @@ public:
    int winHeight () { return 728; }
 
 private:
-   void playerTurn ( vector<Unit> player );
+   void playerTurn ( vector<Unit>& player );
    bool initPlayers ( vector<Unit>* playersUnits, PlayerTurn player );
 
    bool initPlayer1 ();
    bool initPlayer2 ();
 
-   Unit* selectUnit ( vector<Unit>* player );
+   Unit* selectUnit ( vector<Unit>& player );
 
 private:
    vector<Unit> player1Units;
@@ -57,7 +57,6 @@ private:
    
    
    int myBoardSize;
-
    float scaleFactor;
 
    PlayerTurn myTurn;
@@ -65,6 +64,8 @@ private:
    Grid m_grid;
 
    bool myGameIsOver;
+
+   Unit dummyUnit;
 };
 
 #endif

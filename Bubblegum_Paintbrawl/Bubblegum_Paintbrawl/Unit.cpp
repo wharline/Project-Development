@@ -4,16 +4,26 @@
 
 Unit::Unit ()
 {
+   myClass = linebacker;
+
    positionX = 0;
    positionY = 0;
+   xPosToMoveTo = 0;
+   yPosToMoveTo = 0;
    maxMove = 0;
    currentMove = 0;
    maxHealth = 0;
    currentHealth = 0;
    attackDamage = 0;
+   myAllegiance = 0;
    locked = true;
    dead = false;
+
    myGridInterface = NULL;
+   myImage = NULL;
+
+   // special abilities
+   bool isBlocking = false;
 }
 
 Unit::~Unit ()
@@ -29,8 +39,8 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
 
    myClass = unitClass;
 
-   positionX = x * image.width();
-   positionY = y * image.height();
+   positionX = x;
+   positionY = y;
 
    myImage = &image;
 
