@@ -2,12 +2,14 @@
 #include "GameManager.h"
 #include <cassert>
 
+// define keycodes for keyboard input that aren't already defined by windows
+#define VK_W 0x57
+#define VK_A 0x41
+#define VK_S 0x53
+#define VK_D 0x44
+
 GameManager::GameManager ()
 {
-   selectedUnit = NULL;
-   myTurnStart = true;
-
-   keyPressed = false;
 }
 
 GameManager::~GameManager ()
@@ -16,6 +18,13 @@ GameManager::~GameManager ()
 
 bool GameManager::gameInit (int boardsize)
 {
+   selectedUnit = NULL;
+   myTurnStart = true;
+
+   keyPressed = false;
+
+   selectedUnitMove = false;
+
    myTurn = player1;
 
    myGameIsOver = false;
@@ -310,9 +319,14 @@ void GameManager::playerTurn ( vector<Unit>& player )
 
    //TO-DO Fill out the rest of the players turn
 
-   // select a unit to move
+   // select a unit
    if ( mouseButton( 0 ) )
    {
+      // if a unit was already selected, cancel that unit before selecting another.
+      if ( selectedUnit )
+      {
+         selectedUnit->cancelPath();
+      }
       selectedUnit = selectUnit( player );
    }
 
@@ -322,59 +336,61 @@ void GameManager::playerTurn ( vector<Unit>& player )
       // move when the key is pressed once, but not held
       if ( !keyPressed )
       {
-         if ( keyDown( VK_UP ))
+         if ( keyDown( VK_W ))
          {
             selectedUnit->selectPath( Unit::north );
             keyPressed = true;
          }
-         else if ( keyDown( VK_RIGHT ) )
+         else if ( keyDown( VK_D ) )
          {
             selectedUnit->selectPath( Unit::east );
             keyPressed = true;
          }
-         else if ( keyDown( VK_LEFT ) )
+         else if ( keyDown( VK_A ) )
          {
             selectedUnit->selectPath( Unit::west );
             keyPressed = true;
          }
-         else if ( keyDown( VK_DOWN ) )
+         else if ( keyDown( VK_S ) )
          {
             selectedUnit->selectPath( Unit::south );
+            keyPressed = true;
+         }
+         else if ( keyDown( VK_SPACE ) )
+         {
+            // move unit to potential position to see attack range
+            if ( !selectedUnitMove )
+            {
+               bool result = selectedUnit->potentialMove();
+               selectedUnitMove = result;
+            }
+            // finish movement
+            else
+            {
+               bool result = selectedUnit->finishMovement();
+               if ( result )
+               {
+                  selectedUnitMove = false;
+                  selectedUnit = NULL;
+               }
+            }
+
             keyPressed = true;
          }
       }
       else
       {
-         // check that the key is not being held before setting it to false
-         if ( keyDown( VK_UP ))
-         {
-            keyPressed = true;
-         }
-         else if ( keyDown( VK_RIGHT ) )
-         {
-            keyPressed = true;
-         }
-         else if ( keyDown( VK_LEFT ) )
-         {
-            keyPressed = true;
-         }
-         else if ( keyDown( VK_DOWN ) )
-         {
-            keyPressed = true;
-         }
-         else
+         // check that the keys are not being held before setting it to false
+         if ( !keyDown( VK_W ) && !keyDown( VK_D ) && !keyDown( VK_A ) && !keyDown( VK_S ) && !keyDown( VK_SPACE ) )
          {
             keyPressed = false;
          }
       }
 
-      if ( keyDown( VK_SPACE ) )
-      {
-         bool result = selectedUnit->finishMovement();
-         if ( result )
-            selectedUnit = NULL;
-      }
-   }
+      // when space is pressed, check surrounding region for units to attack
+      // range is displayed in red
+      // left click on an enemy unit to attack, right click on a space to activate special
+}
 }
 
 Unit* GameManager::selectUnit ( vector<Unit>& player )

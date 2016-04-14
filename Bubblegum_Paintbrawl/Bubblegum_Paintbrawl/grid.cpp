@@ -155,6 +155,22 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
    }
 }
 
+void Grid::showRange ( int x, int y, int range )
+{
+   // visit tiles around x and y coordinates within the range given
+   for ( int dr = -range; dr <= range; dr++ )
+   {
+      for ( int dc = -range; dc <= range; dc++ )
+      {
+         // change tile color to red
+         int r = x + dr;
+         int c = y + dc;
+
+         m_grid[r][c].setColor( D3DCOLOR_XRGB( 255, 0, 0 ) );
+      }
+   }
+}
+
 Tile& Grid::getCell ( int rowNum, int colNum )
 {
    if ( rowNum < 0 || rowNum >= m_rowNum )

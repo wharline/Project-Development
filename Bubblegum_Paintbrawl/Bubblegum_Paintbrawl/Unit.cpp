@@ -8,6 +8,8 @@ Unit::Unit ()
 
    positionX = 0;
    positionY = 0;
+   prevPosX = 0;
+   prevPosY = 0;
    xPosToMoveTo = 0;
    yPosToMoveTo = 0;
    maxMove = 0;
@@ -18,6 +20,8 @@ Unit::Unit ()
    myAllegiance = 0;
    locked = true;
    dead = false;
+
+   selectedPathLength = 0;  
 
    myGridInterface = NULL;
    myImage = NULL;
@@ -38,8 +42,8 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
 
    myClass = unitClass;
 
-   positionX = x;
-   positionY = y;
+   positionX = prevPosX = x;
+   positionY = prevPosY = y;
 
    myImage = &image;
 
@@ -61,7 +65,7 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
       break;
    }
 
-   myGridInterface->moveToSpace( 0, 0, positionX, positionY, myAllegiance );
+   myGridInterface->moveToSpace( positionX, positionY, positionX, positionY, myAllegiance );
 
    return true;
 }
@@ -73,6 +77,7 @@ bool Unit::initLinebacker ( int x, int y )
    maxHealth = 15;
    currentHealth = maxHealth;
    attackDamage = 10;
+   attackRange = 1;
 
    return true;
 }
@@ -84,6 +89,7 @@ bool Unit::initPaintballer ( int x, int y )
    maxHealth = 5;
    currentHealth = maxHealth;
    attackDamage = 5;
+   attackRange = 2;
 
    return true;
 }
@@ -95,6 +101,7 @@ bool Unit::initArtist ( int x, int y )
    maxHealth = 10;
    currentHealth = maxHealth;
    attackDamage = 5;
+   attackRange = 1;
 
    return true;
 }
@@ -106,12 +113,18 @@ bool Unit::initPrankster ( int x, int y )
    maxHealth = 10;
    currentHealth = maxHealth;
    attackDamage = 5;
+   attackRange = 1;
 
    return true;
 }
 
 bool Unit::selectPath ( Direction dir )
 {
+   if ( selectedPathLength > maxMove )
+   {
+      return false;
+   }
+
    int y = yPosToMoveTo;
    int x = xPosToMoveTo;
 
@@ -137,6 +150,7 @@ bool Unit::selectPath ( Direction dir )
    {
       yPosToMoveTo = y;
       xPosToMoveTo = x;
+      selectedPathLength++;
       myGridInterface->spaceSelected( xPosToMoveTo, yPosToMoveTo );
       return true;
    }
@@ -146,19 +160,48 @@ bool Unit::selectPath ( Direction dir )
    }
 }
 
-bool Unit::finishMovement ()
+void Unit::cancelPath ()
+{
+   // reset positions to move to
+   positionX = prevPosX;
+   positionY = prevPosY;
+   xPosToMoveTo = positionX;
+   yPosToMoveTo = positionY;
+   selectedPathLength = 0;
+
+   // use this to reset tile colors.
+   myGridInterface->moveToSpace( positionX, positionY, positionX, positionY, myAllegiance );
+}
+
+bool Unit::potentialMove ()
 {
    if ( !locked && myGridInterface->isEmpty( xPosToMoveTo, yPosToMoveTo ) )
    {
-      int prevPosX = positionX;
-      int prevPosY = positionY;
+      prevPosX = positionX;
+      prevPosY = positionY;
 
       positionX = xPosToMoveTo;
       positionY = yPosToMoveTo;
 
+      myGridInterface->showRange( positionX, positionY, attackRange );
+
+      return true;
+   }
+
+   return false;
+}
+
+bool Unit::finishMovement ()
+{
+   if ( !locked && myGridInterface->isEmpty( xPosToMoveTo, yPosToMoveTo ) )
+   {
       myGridInterface->moveToSpace( prevPosX, prevPosY, positionX, positionY, myAllegiance );
-      lockUnit();
+
+      prevPosX = positionX;
+      prevPosY = positionY;
       
+      lockUnit();
+
       return true;
    }
 

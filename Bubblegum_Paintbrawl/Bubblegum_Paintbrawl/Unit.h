@@ -18,6 +18,7 @@ public:
    virtual void removeTrap () = 0;
 	virtual void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance ) = 0;
    virtual void spaceSelected ( int x, int y ) = 0;
+   virtual void showRange ( int x, int y, int range ) = 0;
 };
 
 class Unit
@@ -35,6 +36,8 @@ public:
 	
    // these are called by the GameManager (i.e. the player)
 	bool selectPath ( Direction dir );
+   void cancelPath ();
+   bool Unit::potentialMove ();
    bool finishMovement ();
 	void attack ( Unit* enemyUnit );
 
@@ -75,6 +78,8 @@ private:
 
 	int         positionX;
 	int         positionY;
+   int         prevPosX;
+   int         prevPosY;
    int         xPosToMoveTo;
    int         yPosToMoveTo;
 	int         maxMove;
@@ -82,9 +87,12 @@ private:
 	int         maxHealth;
 	int         currentHealth;
 	int         attackDamage;
+   int         attackRange;
    int         myAllegiance; // the value is equal to the team number
 	bool        locked;
    bool        dead;
+
+   int selectedPathLength;
 
    // special abilities
    bool isBlocking; //linebacker

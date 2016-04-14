@@ -37,6 +37,9 @@ public:
 
    void spaceSelected ( int x, int y );
 
+   void showRange ( int x, int y, int range );
+
+
 
    DxTexture& getTileTexture ( int rowNum, int colNum );
 

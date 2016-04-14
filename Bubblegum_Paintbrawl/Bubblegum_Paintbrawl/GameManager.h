@@ -69,6 +69,8 @@ private:
    bool keyPressed;
 
    Unit* selectedUnit;
+
+   bool selectedUnitMove;
 };
 
 #endif
