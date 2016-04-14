@@ -18,7 +18,9 @@ public:
    virtual void removeTrap () = 0;
 	virtual void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance ) = 0;
    virtual void spaceSelected ( int x, int y ) = 0;
-   virtual void showRange ( int x, int y, int range, D3DCOLOR color ) = 0;
+   virtual void showRange ( int x, int y, int range, int allegiance, D3DCOLOR color ) = 0;
+   virtual void unitDied ( int x, int y, int allegiance ) = 0;
+
 };
 
 class Unit
@@ -40,7 +42,7 @@ public:
    void cancelPath ();
    bool Unit::potentialMove ();
    bool finishMovement ();
-	void attack ( Unit* enemyUnit );
+	bool attack ( Unit* enemyUnit );
 
    void linebackerSpecial ();
    void paintballerSpecial ( Unit* otherUnit );

@@ -120,7 +120,9 @@ bool Unit::initPrankster ( int x, int y )
 
 void Unit::unitSelected ()
 {
-   myGridInterface->showRange( positionX, positionY, maxMove + 1, D3DCOLOR_XRGB( 0, 255, 0 ) );
+   // if not locked show the movement range
+   if ( !locked )
+      myGridInterface->showRange( positionX, positionY, maxMove + 1, myAllegiance, D3DCOLOR_XRGB( 0, 255, 0 ) );
 }
 
 bool Unit::selectPath ( Direction dir )
@@ -188,7 +190,9 @@ bool Unit::potentialMove ()
       positionX = xPosToMoveTo;
       positionY = yPosToMoveTo;
 
-      myGridInterface->showRange( positionX, positionY, attackRange, D3DCOLOR_XRGB( 255, 0, 0 ) );
+      // show the attack range.  Therefore, pass in the enemy's allegiance
+      // (if it equals zero, pass in one. If it equals one, pass in zero)
+      myGridInterface->showRange( positionX, positionY, attackRange, (myAllegiance == 0 ? 1 : 0), D3DCOLOR_XRGB( 255, 0, 0 ) );
 
       return true;
    }
@@ -213,13 +217,16 @@ bool Unit::finishMovement ()
    return false;
 }
 
-void Unit::attack ( Unit* enemyUnit )
+bool Unit::attack ( Unit* enemyUnit )
 {
    if ( !locked )
    {
       enemyUnit->takeDamage(attackDamage);
-      lockUnit();
+
+      return finishMovement();
    }
+
+   return false;
 }
 
 void Unit::linebackerSpecial ()
@@ -312,4 +319,5 @@ void Unit::unitDie ()
 {
    dead = true;
    locked = true;
+   myGridInterface->unitDied( positionX, positionY, myAllegiance );
 }

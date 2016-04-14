@@ -47,6 +47,8 @@ void Tile::setState ( TileState state, int allegiance )
       occupiedAllegiance = allegiance;
       break;
    case blocked:
+      occupiedAllegiance = allegiance;
+      myColor = D3DCOLOR_XRGB( 0, 0, 255 );
       break;
    case empty:
       occupiedAllegiance = -1;

@@ -33,18 +33,20 @@ public:
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();
 	void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance );
+   void unitDied ( int x, int y, int allegiance );
 
 	void checkReachableTiles(int x, int y, int remainingMoves);
 
    void spaceSelected ( int x, int y );
 
-   void showRange ( int x, int y, int range, D3DCOLOR color );
+   void showRange ( int x, int y, int range, int allegiance, D3DCOLOR color );
 
 
 
    DxTexture& getTileTexture ( int rowNum, int colNum );
 
 	void checkReachableTiles(int x, int y, int remainingMoves, int allegiance);
+   bool isPointInReachableTiles ( int x, int y );
 
    D3DCOLOR tileColor ( int x, int y );
 

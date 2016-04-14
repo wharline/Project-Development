@@ -26,7 +26,7 @@ public:
    int winHeight () { return 728; }
 
 private:
-   void playerTurn ( vector<Unit>& player );
+   void playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer );
    bool initPlayers ( vector<Unit>* playersUnits, PlayerTurn player );
 
    bool initPlayer1 ();
@@ -69,8 +69,10 @@ private:
    bool keyPressed;
 
    Unit* selectedUnit;
+   Unit* enemyUnit;
 
    bool selectedUnitMove;
+   bool showAttackRange;
 };
 
 #endif

@@ -69,7 +69,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return FALSE;
 	}
 
-   if ( !game.init(16) )
+   // INITIALIZE GAME
+   if ( !game.init(8) )
    {
       return FALSE;
    }

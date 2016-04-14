@@ -137,6 +137,24 @@ void Grid::checkReachableTiles(int x, int y, int remainingMoves, int allegiance)
 
 }
 
+bool Grid::isPointInReachableTiles ( int x, int y )
+{
+   if ( reachableTiles.empty() )
+   {
+      return false;
+   }
+
+   for ( int i = 0; i < (int)reachableTiles.size(); i++ )
+   {
+      if ( ( reachableTiles.at( i ).x == x ) && ( reachableTiles.at( i ).y == y ) )
+      {
+         return true;
+      }
+   }
+
+   return false;
+}
+
 void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance )
 {
    if ( newX < 0 || newX >= m_rowNum )
@@ -152,15 +170,22 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
    {
       for ( int c = 0; c < m_colNum; c++ )
       {
-         getCell( r, c ).setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
+         Tile& tile = getCell( r, c );
+         if ( !tile.isBlocked() )
+         {
+            tile.setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
+         }
       }
    }
 }
 
-void Grid::showRange ( int x, int y, int range, D3DCOLOR color )
+void Grid::showRange ( int x, int y, int range, int allegiance, D3DCOLOR color )
 {
+   // clear reachable tiles before refilling the vector
+   reachableTiles.clear();
+
    // visit tiles around x and y coordinates within the range given
-   checkReachableTiles( x, y, range, -1 );
+   checkReachableTiles( x, y, range, allegiance );
 
    for ( int i = 0; i < (int)reachableTiles.size(); i++ )
    {
@@ -168,8 +193,6 @@ void Grid::showRange ( int x, int y, int range, D3DCOLOR color )
 
       tile.setColor( color );
    }
-
-   reachableTiles.clear();
 }
 
 Tile& Grid::getCell ( int rowNum, int colNum )
@@ -211,4 +234,9 @@ void Grid::spaceSelected ( int x, int y )
       return;
 
    getCell( x, y ).setColor( D3DCOLOR_XRGB( 100, 100, 100 ) );
+}
+
+void Grid::unitDied ( int x, int y, int allegiance )
+{
+   getCell( x, y ).setState( Tile::blocked, allegiance );
 }

@@ -19,11 +19,14 @@ GameManager::~GameManager ()
 bool GameManager::gameInit (int boardsize)
 {
    selectedUnit = NULL;
+   enemyUnit = NULL;
+
    myTurnStart = true;
 
    keyPressed = false;
 
    selectedUnitMove = false;
+   showAttackRange = false;
 
    myTurn = player1;
 
@@ -205,11 +208,11 @@ void GameManager::gameRun ()
    // if all are dead, that player lost.
    if ( myTurn == player1 )
    {
-      playerTurn( player1Units );
+      playerTurn( player1Units, player2Units );
    }
    if ( myTurn == player2 )
    {
-      playerTurn( player2Units );
+      playerTurn( player2Units, player1Units );
    }
 
    // render
@@ -264,7 +267,7 @@ void GameManager::gameExit ()
 }
 
 // The full encompassment of a single players turn
-void GameManager::playerTurn ( vector<Unit>& player )
+void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 {
    
    // Check if player has lost
@@ -322,16 +325,48 @@ void GameManager::playerTurn ( vector<Unit>& player )
    // select a unit
    if ( mouseButton( 0 ) )
    {
-      // if a unit was already selected, cancel that unit before selecting another.
-      if ( selectedUnit )
+      // a unit's attack range is not shown
+      if ( !showAttackRange )
       {
-         selectedUnit->cancelPath();
+         // if a unit was already selected, cancel that unit before selecting another.
+         if ( selectedUnit )
+         {
+            selectedUnit->cancelPath();
+         }
+         selectedUnit = selectUnit( player );
+         
+         // show unit's movement range
+         if ( selectedUnit )
+         {
+            selectedUnit->unitSelected();
+         }
       }
-      selectedUnit = selectUnit( player );
-      
-      // show unit's movement range
-      if ( selectedUnit )
-         selectedUnit->unitSelected();
+      // a unit is selected and its attack range is being shown
+      else
+      {
+         // select an enemy's unit to attack within attack range
+         enemyUnit = selectUnit( enemyPlayer );
+         if ( enemyUnit )
+         {
+            // check that enemy is within attack range
+            bool result = m_grid.isPointInReachableTiles( enemyUnit->getGridXPos(), enemyUnit->getGridYPos() );
+            if ( result )
+            {
+               result = selectedUnit->attack( enemyUnit );
+               if ( result )
+               {
+                  selectedUnitMove = false;
+                  showAttackRange = false;
+                  selectedUnit = NULL;
+               }
+            }
+         }
+         else
+         {
+            showAttackRange = false;
+            selectedUnitMove = false;
+         }
+      }
    }
 
    // check if I got a unit
@@ -366,7 +401,7 @@ void GameManager::playerTurn ( vector<Unit>& player )
             if ( !selectedUnitMove )
             {
                bool result = selectedUnit->potentialMove();
-               selectedUnitMove = result;
+               selectedUnitMove = showAttackRange = result;
             }
             // finish movement
             else
@@ -375,6 +410,7 @@ void GameManager::playerTurn ( vector<Unit>& player )
                if ( result )
                {
                   selectedUnitMove = false;
+                  showAttackRange = false;
                   selectedUnit = NULL;
                }
             }
