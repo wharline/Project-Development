@@ -18,7 +18,7 @@ public:
    virtual void removeTrap () = 0;
 	virtual void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance ) = 0;
    virtual void spaceSelected ( int x, int y ) = 0;
-   virtual void showRange ( int x, int y, int range ) = 0;
+   virtual void showRange ( int x, int y, int range, D3DCOLOR color ) = 0;
 };
 
 class Unit
@@ -35,6 +35,7 @@ public:
 	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image );
 	
    // these are called by the GameManager (i.e. the player)
+   void unitSelected ();
 	bool selectPath ( Direction dir );
    void cancelPath ();
    bool Unit::potentialMove ();

@@ -30,6 +30,8 @@ bool Grid::init ( int rowNum, int colNum )
 		}
 	}
 
+   dummyTile.init();
+
    return true;
 }
 
@@ -49,7 +51,7 @@ bool Grid::canPassThrough ( int x, int y, int allegiance )
    if ( y < 0 || y >= m_colNum )
       return false;
 
-   return m_grid[x][y].canPassThrough( allegiance );
+   return getCell( x, y ).canPassThrough( allegiance );
 }
 
 bool Grid::isEmpty ( int x, int y )
@@ -59,7 +61,7 @@ bool Grid::isEmpty ( int x, int y )
    if ( y < 0 || y >= m_colNum )
       return false;
 
-   return m_grid[x][y].isEmpty();
+   return getCell( x, y ).isEmpty();
 }
 
 bool Grid::isTrapped ( int x, int y )
@@ -69,7 +71,7 @@ bool Grid::isTrapped ( int x, int y )
    if ( y < 0 || y >= m_colNum )
       return false;
 
-   return m_grid[x][y].isTrapped();
+   return getCell( x, y ).isTrapped();
 }
 
 void Grid::setTrap ( int x, int y, int trapLevel )
@@ -79,7 +81,7 @@ void Grid::setTrap ( int x, int y, int trapLevel )
    if ( y < 0 || y >= m_colNum )
       return;
 
-   m_grid[x][y].setTrap( trapLevel );
+   getCell( x, y ).setTrap( trapLevel );
 }
 
 void Grid::removeTrap ()
@@ -89,8 +91,8 @@ void Grid::removeTrap ()
    {
       for ( int c = 0; c < m_colNum; c++ )
       {
-         if ( m_grid[r][c].isOccupied() )
-            m_grid[r][c].removeTrap();
+         if ( getCell( r, c ).isOccupied() )
+            getCell( r, c ).removeTrap();
       }
    }
 }
@@ -120,7 +122,7 @@ void Grid::checkReachableTiles(int x, int y, int remainingMoves, int allegiance)
 	// Check Top
 	if ( ( y > 0) && (remainingMoves > 0) )
 	{
-		checkReachableTiles(y - 1, y, remainingMoves - 1, allegiance);
+		checkReachableTiles(x, y - 1, remainingMoves - 1, allegiance);
 	}
 	// Check Right
 	if ( ( x < ( m_colNum - 1 ) ) && ( remainingMoves > 0 ) )
@@ -130,7 +132,7 @@ void Grid::checkReachableTiles(int x, int y, int remainingMoves, int allegiance)
 	// Check Bottom
 	if ( ( y < ( m_rowNum - 1 ) ) && ( remainingMoves > 0 ) )
 	{
-		checkReachableTiles(y + 1, y, remainingMoves - 1, allegiance);
+		checkReachableTiles(x, y + 1, remainingMoves - 1, allegiance);
 	}
 
 }
@@ -142,41 +144,40 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
    if ( newY < 0 || newY >= m_colNum )
       return;
 
-   m_grid[oldX][oldY].setState( Tile::empty );
-	m_grid[newX][newY].setState( Tile::occupied, allegiance );
+   getCell( oldX, oldY ).setState( Tile::empty );
+	getCell( newX, newY ).setState( Tile::occupied, allegiance );
 
    // change tile color back to white
    for ( int r = 0; r < m_rowNum; r++ )
    {
       for ( int c = 0; c < m_colNum; c++ )
       {
-         m_grid[r][c].setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
+         getCell( r, c ).setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
       }
    }
 }
 
-void Grid::showRange ( int x, int y, int range )
+void Grid::showRange ( int x, int y, int range, D3DCOLOR color )
 {
    // visit tiles around x and y coordinates within the range given
-   for ( int dr = -range; dr <= range; dr++ )
-   {
-      for ( int dc = -range; dc <= range; dc++ )
-      {
-         // change tile color to red
-         int r = x + dr;
-         int c = y + dc;
+   checkReachableTiles( x, y, range, -1 );
 
-         m_grid[r][c].setColor( D3DCOLOR_XRGB( 255, 0, 0 ) );
-      }
+   for ( int i = 0; i < (int)reachableTiles.size(); i++ )
+   {
+      Tile& tile = getCell( reachableTiles.at( i ).x, reachableTiles.at( i ).y );
+
+      tile.setColor( color );
    }
+
+   reachableTiles.clear();
 }
 
 Tile& Grid::getCell ( int rowNum, int colNum )
 {
    if ( rowNum < 0 || rowNum >= m_rowNum )
-      return m_grid[0][0];
+      return dummyTile;
    if ( colNum < 0 || colNum >= m_colNum )
-      return m_grid[0][0];
+      return dummyTile;
 
    Tile& tile = m_grid[rowNum][colNum];
 	
@@ -199,7 +200,7 @@ D3DCOLOR Grid::tileColor ( int x, int y )
    if ( y < 0 || y >= m_colNum )
       return D3DCOLOR_XRGB( 0, 0, 0 );
 
-   return m_grid[x][y].color();
+   return getCell( x, y ).color();
 }
 
 void Grid::spaceSelected ( int x, int y )
@@ -209,5 +210,5 @@ void Grid::spaceSelected ( int x, int y )
    if ( y < 0 || y >= m_colNum )
       return;
 
-   m_grid[x][y].setColor( D3DCOLOR_XRGB( 100, 100, 100 ) );
+   getCell( x, y ).setColor( D3DCOLOR_XRGB( 100, 100, 100 ) );
 }

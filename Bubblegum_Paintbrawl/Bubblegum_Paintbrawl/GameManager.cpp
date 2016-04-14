@@ -328,6 +328,10 @@ void GameManager::playerTurn ( vector<Unit>& player )
          selectedUnit->cancelPath();
       }
       selectedUnit = selectUnit( player );
+      
+      // show unit's movement range
+      if ( selectedUnit )
+         selectedUnit->unitSelected();
    }
 
    // check if I got a unit

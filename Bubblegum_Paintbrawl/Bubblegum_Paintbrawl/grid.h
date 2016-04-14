@@ -33,11 +33,12 @@ public:
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();
 	void moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance );
+
 	void checkReachableTiles(int x, int y, int remainingMoves);
 
    void spaceSelected ( int x, int y );
 
-   void showRange ( int x, int y, int range );
+   void showRange ( int x, int y, int range, D3DCOLOR color );
 
 
 
@@ -59,6 +60,8 @@ private:
 	int m_rowNum;
 	int m_colNum;
 	std::vector<POINT> reachableTiles;
+
+   Tile dummyTile;
 
 	// private special methods
 private:

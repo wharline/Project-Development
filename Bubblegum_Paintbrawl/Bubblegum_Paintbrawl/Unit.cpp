@@ -118,6 +118,11 @@ bool Unit::initPrankster ( int x, int y )
    return true;
 }
 
+void Unit::unitSelected ()
+{
+   myGridInterface->showRange( positionX, positionY, maxMove + 1, D3DCOLOR_XRGB( 0, 255, 0 ) );
+}
+
 bool Unit::selectPath ( Direction dir )
 {
    if ( selectedPathLength > maxMove )
@@ -183,7 +188,7 @@ bool Unit::potentialMove ()
       positionX = xPosToMoveTo;
       positionY = yPosToMoveTo;
 
-      myGridInterface->showRange( positionX, positionY, attackRange );
+      myGridInterface->showRange( positionX, positionY, attackRange, D3DCOLOR_XRGB( 255, 0, 0 ) );
 
       return true;
    }
