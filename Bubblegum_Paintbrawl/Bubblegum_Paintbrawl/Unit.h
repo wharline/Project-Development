@@ -12,7 +12,7 @@ public:
 	virtual ~GridInterface () {};
 
 	virtual bool canPassThrough ( int x, int y, int allegiance ) = 0;
-   virtual bool isEmpty ( int x, int y ) = 0;
+   virtual bool isEmpty ( int myX, int myY, int x, int y ) = 0;
    virtual bool isTrapped ( int x, int y ) = 0;
    virtual void setTrap ( int x, int y, int trapLevel ) = 0;
    virtual void removeTrap () = 0;

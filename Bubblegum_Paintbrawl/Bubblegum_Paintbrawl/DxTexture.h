@@ -16,7 +16,7 @@ public:
    int width () { return (int)myInfo.Width; }
    int height () { return (int)myInfo.Height; }
 
-   LPDIRECT3DTEXTURE9 texture () { return myTexture; }
+   LPDIRECT3DTEXTURE9& texture () { return myTexture; }
 
 private:
    LPDIRECT3DTEXTURE9 myTexture;

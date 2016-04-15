@@ -96,7 +96,7 @@ bool Tile::isAccessible(int allegiance)
    return false;
 }
 
-bool Tile::loadTileImages ( DxTexture emptyTile, DxTexture filledTile )
+bool Tile::loadTileImages ( DxTexture& emptyTile, DxTexture& filledTile )
 {
    ourEmptyTile = emptyTile;
    ourFilledTile = filledTile;
@@ -106,5 +106,6 @@ bool Tile::loadTileImages ( DxTexture emptyTile, DxTexture filledTile )
 
 void Tile::setColor ( D3DCOLOR color )
 {
-   myColor = color;
+   if ( myState != blocked )
+      myColor = color;
 }

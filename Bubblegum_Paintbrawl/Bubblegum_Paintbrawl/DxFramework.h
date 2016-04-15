@@ -55,6 +55,10 @@ protected:
    // get the mouse position in the game window
    POINT mousePos ();
 
+   // for printing text to the screen
+   LPD3DXFONT makeFont ( string name, int size );
+   void fontPrint ( LPD3DXFONT font, int x, int y, string text, D3DCOLOR color = D3DCOLOR_XRGB( 255, 255, 255 ) );
+
 
 private:
    // Direct3D objects

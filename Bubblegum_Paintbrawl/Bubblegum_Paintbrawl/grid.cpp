@@ -54,12 +54,17 @@ bool Grid::canPassThrough ( int x, int y, int allegiance )
    return getCell( x, y ).canPassThrough( allegiance );
 }
 
-bool Grid::isEmpty ( int x, int y )
+bool Grid::isEmpty ( int myX, int myY, int x, int y )
 {
    if ( x < 0 || x >= m_rowNum )
       return false;
    if ( y < 0 || y >= m_colNum )
       return false;
+
+   if ( ( myX == x ) && ( myY == y ) )
+   {
+      return true;
+   }
 
    return getCell( x, y ).isEmpty();
 }

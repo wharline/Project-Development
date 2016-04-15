@@ -182,7 +182,7 @@ void Unit::cancelPath ()
 
 bool Unit::potentialMove ()
 {
-   if ( !locked && myGridInterface->isEmpty( xPosToMoveTo, yPosToMoveTo ) )
+   if ( !locked && myGridInterface->isEmpty( positionX, positionY, xPosToMoveTo, yPosToMoveTo ) )
    {
       prevPosX = positionX;
       prevPosY = positionY;
@@ -202,7 +202,7 @@ bool Unit::potentialMove ()
 
 bool Unit::finishMovement ()
 {
-   if ( !locked && myGridInterface->isEmpty( xPosToMoveTo, yPosToMoveTo ) )
+   if ( !locked && myGridInterface->isEmpty( positionX, positionY, xPosToMoveTo, yPosToMoveTo ) )
    {
       myGridInterface->moveToSpace( prevPosX, prevPosY, positionX, positionY, myAllegiance );
 

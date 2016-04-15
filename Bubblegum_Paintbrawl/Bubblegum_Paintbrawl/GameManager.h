@@ -48,6 +48,13 @@ private:
    DxTexture artistImage2;
    DxTexture pranksterImage2;
 
+   DxTexture filledTileImage;
+   DxTexture emptyTileImage;
+
+   LPD3DXFONT fontArial24;
+   LPD3DXFONT fontGaramond36;
+   LPD3DXFONT fontTimesNewRoman40;
+
    int myStartLinebackerNum;
    int myStartPaintballerNum;
    int myStartArtistNum;

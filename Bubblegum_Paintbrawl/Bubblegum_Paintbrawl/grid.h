@@ -28,7 +28,7 @@ public:
 	bool init ( int rowNum, int colNum );
    void shutdown ();
 	bool canPassThrough ( int x, int y, int allegiance );
-	bool isEmpty ( int x, int y );
+	bool isEmpty ( int myX, int myY, int x, int y );
 	bool isTrapped ( int x, int y );
 	void setTrap ( int x, int y, int trapLevel );
 	void removeTrap ();

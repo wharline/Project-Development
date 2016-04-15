@@ -21,6 +21,11 @@ bool GameManager::gameInit (int boardsize)
    selectedUnit = NULL;
    enemyUnit = NULL;
 
+   fontArial24 = NULL;
+   fontGaramond36 = NULL;
+   fontTimesNewRoman40 = NULL;
+
+
    myTurnStart = true;
 
    keyPressed = false;
@@ -71,21 +76,23 @@ bool GameManager::gameInit (int boardsize)
 
 
    // load the tile images
-   DxTexture filledTile;
-   DxTexture emptyTile;
-
-   result = LoadTexture( filledTile, "../Assets/BPB_-_Terrain01/BPB - FilledSpace01.png" );
+   result = LoadTexture( filledTileImage, "../Assets/BPB_-_Terrain01/BPB - FilledSpace01.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( emptyTile, "../Assets/BPB_-_Terrain01/BPB - EmptySpace01.png" );
+   result = LoadTexture( emptyTileImage, "../Assets/BPB_-_Terrain01/BPB - EmptySpace01.png" );
    if ( !result )
       return false;
 
-   Tile::loadTileImages( emptyTile, filledTile );
+   Tile::loadTileImages( emptyTileImage, filledTileImage );
 
-   tileSize.x = (float)emptyTile.width();
-   tileSize.y = (float)emptyTile.height();
+   tileSize.x = (float)emptyTileImage.width();
+   tileSize.y = (float)emptyTileImage.height();
+
+   // load fonts
+   fontArial24 = makeFont( "Arial", 24 );
+   fontGaramond36 = makeFont( "Garamond", 36 );
+   fontTimesNewRoman40 = makeFont( "Times New Roman", 40 );
 
 
    // initialize grid
@@ -94,9 +101,9 @@ bool GameManager::gameInit (int boardsize)
 
    // Adjust scale to screen size
    if ( winWidth() < winHeight() )
-      scaleFactor = (float)winWidth() / (float)( myBoardSize * emptyTile.width() );
+      scaleFactor = (float)winWidth() / (float)( myBoardSize * emptyTileImage.width() );
    else
-      scaleFactor = (float)winHeight() / (float)( myBoardSize * emptyTile.height() );
+      scaleFactor = (float)winHeight() / (float)( myBoardSize * emptyTileImage.height() );
 
    // initialize units
    myStartLinebackerNum = 1;
@@ -248,6 +255,21 @@ void GameManager::gameRun ()
          Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor );
       }
 
+      // draw text
+      fontPrint( fontArial24, (int)(myBoardSize * scaleFactor) + 10, 50,
+         "This is the Arial 24 font" );
+
+      fontPrint( fontGaramond36, (int)(myBoardSize * scaleFactor) + 10, 100,
+         "This is the Garamond 36 font", D3DCOLOR_XRGB( 255, 0, 255 ) );
+
+      fontPrint( fontTimesNewRoman40, (int)(myBoardSize * scaleFactor) + 10, 150,
+         "This is the Times New Roman 40 font", D3DCOLOR_XRGB( 0, 255, 0 ) );
+
+      RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 250, (long)( myBoardSize * tileSize.x * scaleFactor + 100 ), 700 };
+      D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
+      string text = "This is a long string that will be wrapped inside a rectangle.";
+      fontArial24->DrawText( spriteInterface(), text.c_str(), text.length(), &rect, DT_WORDBREAK, white );
+
       // stop drawing
       spriteInterface()->End();
       dxDevice()->EndScene();
@@ -263,6 +285,29 @@ void GameManager::gameRun ()
 
 void GameManager::gameExit ()
 {
+   player1Units.clear();
+   player2Units.clear();
+
+   linebackerImage1.texture()->Release();
+   paintballerImage1.texture()->Release();
+   artistImage1.texture()->Release();
+   pranksterImage1.texture()->Release();
+
+   linebackerImage2.texture()->Release();
+   paintballerImage2.texture()->Release();
+   artistImage2.texture()->Release();
+   pranksterImage2.texture()->Release();
+
+   filledTileImage.texture()->Release();
+   emptyTileImage.texture()->Release();
+
+   if ( fontArial24 )
+      fontArial24->Release();
+   if ( fontGaramond36 )
+      fontGaramond36->Release();
+   if ( fontTimesNewRoman40 )
+      fontTimesNewRoman40->Release();
+
    m_grid.shutdown();
 }
 
@@ -271,14 +316,25 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 {
    
    // Check if player has lost
-   bool unitDead = true;
+   bool allUnitsDead = true;
    for ( int i = 0; i < (int)player.size(); i++ )
    {
-      unitDead = unitDead && player.at( i ).isDead();
+      allUnitsDead = allUnitsDead && player.at( i ).isDead();
    }
-   if ( unitDead )
+   if ( allUnitsDead && !myGameIsOver )
    {
+      // what to do on gameover event
       myGameIsOver = true;
+      int deadPlayer = player.at( 0 ).checkAllegiance();
+
+      if ( deadPlayer == player1 )
+      {
+         MessageBox( 0, "Player 1 has lost", "Game Over", 0 );
+      }
+      else
+      {
+         MessageBox( 0, "Player 2 has lost", "Game Over", 0 );
+      }
       return;
    }
 

@@ -43,6 +43,7 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 //-------------------------------------
 // Game app
 GameManager game;
+int boardSize = 32;
 //-------------------------------------
 string str = "sdfsdfdsf";
 
@@ -70,7 +71,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	}
 
    // INITIALIZE GAME
-   if ( !game.init(8) )
+   if ( !game.init( boardSize ) )
    {
       return FALSE;
    }
@@ -190,7 +191,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wmId)
 		{
       case ID_FILE_NEWGAME:
-         
+         game.gameExit();
+         game.gameInit( boardSize );
          break;
       case ID_FILE_LOADGAME:
 

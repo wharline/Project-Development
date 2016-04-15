@@ -47,7 +47,7 @@ public:
 
    void setColor ( D3DCOLOR color );
 
-   static bool loadTileImages ( DxTexture emptyTile, DxTexture filledTile );
+   static bool loadTileImages ( DxTexture& emptyTile, DxTexture& filledTile );
 
 private:
 	int myXPos, myYPos;
