@@ -500,8 +500,11 @@ Unit* GameManager::selectUnit ( vector<Unit>& player )
    float posX;
    float posY;
 
-   posX = ( ( mPos.x / scaleFactor ) / tileSize.x );
-   posY = ( ( mPos.y / scaleFactor ) / tileSize.y );
+   posX = (float)mPos.x / scaleFactor;
+   posY = (float)mPos.y / scaleFactor;
+
+   posX /= tileSize.x;
+   posY /= tileSize.y - 1;
 
    // round y poxition (x position works without rounding)
    if ( (int)( posY * 10 ) % 10 >= 5 )
