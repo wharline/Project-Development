@@ -222,7 +222,11 @@ void GameManager::gameRun ()
       playerTurn( player2Units, player1Units );
    }
 
-   dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+   HRESULT hr = dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+   if ( hr != D3D_OK )
+   {
+      OutputDebugString( "Clear didn't work.\n" );
+   }
 
 
    // render
@@ -259,25 +263,24 @@ void GameManager::gameRun ()
       }
 
       // draw text
-      RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor ), 250, (long)( myBoardSize * tileSize.x * scaleFactor + 100 ), 700 };
+      RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 10, (long)( winWidth() - 10 ), winHeight() - 10 };
       D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
 
       switch ( myTurn )
       {
       case player1:
-         
-         fontArial24->DrawText( spriteInterface(), displayPlayer1.c_str(), displayPlayer1.length(), &rect, DT_WORDBREAK, white );
+         fontArial24->DrawText( NULL, displayPlayer1.c_str(), displayPlayer1.length(), &rect, DT_CENTER, white );
          break;
       case player2:
-         fontArial24->DrawText( spriteInterface(), displayPlayer2.c_str(), displayPlayer2.length(), &rect, DT_WORDBREAK, white );
+         fontArial24->DrawText( NULL, displayPlayer2.c_str(), displayPlayer2.length(), &rect, DT_CENTER, white );
          break;
       default:
          break;
       }
 
       // stop drawing
-      spriteInterface()->End();
-      dxDevice()->EndScene();
+      hr = spriteInterface()->End();
+      hr = dxDevice()->EndScene();
       dxDevice()->Present( NULL, NULL, NULL, NULL );
    }
 
@@ -306,8 +309,7 @@ void GameManager::gameExit ()
    filledTileImage.texture()->Release();
    emptyTileImage.texture()->Release();
 
-   if ( fontArial24 )
-      fontArial24->Release();
+   fontArial24->Release();
 
    m_grid.shutdown();
 }
