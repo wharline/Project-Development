@@ -33,6 +33,7 @@ private:
    bool initPlayer2 ();
 
    Unit* selectUnit ( vector<Unit>& player );
+   POINT selectSpace ();
 
 private:
    vector<Unit> player1Units;
@@ -52,8 +53,6 @@ private:
    DxTexture emptyTileImage;
 
    LPD3DXFONT fontArial24;
-   LPD3DXFONT fontGaramond36;
-   LPD3DXFONT fontTimesNewRoman40;
 
    int myStartLinebackerNum;
    int myStartPaintballerNum;
@@ -80,6 +79,7 @@ private:
 
    bool selectedUnitMove;
    bool showAttackRange;
+   bool showSpecialRange;
 };
 
 #endif

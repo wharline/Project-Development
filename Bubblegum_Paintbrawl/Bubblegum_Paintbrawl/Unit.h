@@ -40,9 +40,10 @@ public:
    void unitSelected ();
 	bool selectPath ( Direction dir );
    void cancelPath ();
-   bool Unit::potentialMove ();
+   bool potentialMove ();
    bool finishMovement ();
 	bool attack ( Unit* enemyUnit );
+   bool activateSpecial ();
 
    void linebackerSpecial ();
    void paintballerSpecial ( Unit* otherUnit );
@@ -52,6 +53,7 @@ public:
 
    int checkAllegiance () { return myAllegiance; }
 	int getHealth () { return currentHealth; }
+   ClassType getClassType () { return myClass; }
 
    bool isDead () { return dead; }
    bool isLocked () { return locked; }
@@ -91,6 +93,7 @@ private:
 	int         currentHealth;
 	int         attackDamage;
    int         attackRange;
+   int         specialRange;
    int         myAllegiance; // the value is equal to the team number
 	bool        locked;
    bool        dead;

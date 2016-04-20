@@ -22,8 +22,6 @@ bool GameManager::gameInit (int boardsize)
    enemyUnit = NULL;
 
    fontArial24 = NULL;
-   fontGaramond36 = NULL;
-   fontTimesNewRoman40 = NULL;
 
 
    myTurnStart = true;
@@ -32,6 +30,7 @@ bool GameManager::gameInit (int boardsize)
 
    selectedUnitMove = false;
    showAttackRange = false;
+   showSpecialRange = false;
 
    myTurn = player1;
 
@@ -91,8 +90,6 @@ bool GameManager::gameInit (int boardsize)
 
    // load fonts
    fontArial24 = makeFont( "Arial", 24 );
-   fontGaramond36 = makeFont( "Garamond", 36 );
-   fontTimesNewRoman40 = makeFont( "Times New Roman", 40 );
 
 
    // initialize grid
@@ -259,15 +256,17 @@ void GameManager::gameRun ()
       fontPrint( fontArial24, (int)(myBoardSize * scaleFactor) + 10, 50,
          "This is the Arial 24 font" );
 
-      fontPrint( fontGaramond36, (int)(myBoardSize * scaleFactor) + 10, 100,
-         "This is the Garamond 36 font", D3DCOLOR_XRGB( 255, 0, 255 ) );
-
-      fontPrint( fontTimesNewRoman40, (int)(myBoardSize * scaleFactor) + 10, 150,
-         "This is the Times New Roman 40 font", D3DCOLOR_XRGB( 0, 255, 0 ) );
-
-      RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 250, (long)( myBoardSize * tileSize.x * scaleFactor + 100 ), 700 };
+      RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor ), 250, (long)( myBoardSize * tileSize.x * scaleFactor + 100 ), 700 };
       D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
-      string text = "This is a long string that will be wrapped inside a rectangle.";
+      string text;
+      if ( myTurn == player1 )
+      {
+         text = "It is player 1's turn.";
+      }
+      else
+      {
+         text = "It is player 2's turn.";
+      }
       fontArial24->DrawText( spriteInterface(), text.c_str(), text.length(), &rect, DT_WORDBREAK, white );
 
       // stop drawing
@@ -303,10 +302,6 @@ void GameManager::gameExit ()
 
    if ( fontArial24 )
       fontArial24->Release();
-   if ( fontGaramond36 )
-      fontGaramond36->Release();
-   if ( fontTimesNewRoman40 )
-      fontTimesNewRoman40->Release();
 
    m_grid.shutdown();
 }
@@ -398,7 +393,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
          }
       }
       // a unit is selected and its attack range is being shown
-      else
+      else if ( showAttackRange && !showSpecialRange )
       {
          // select an enemy's unit to attack within attack range
          enemyUnit = selectUnit( enemyPlayer );
@@ -417,10 +412,151 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
                }
             }
          }
+         // didn't click on an enemy unit, so cancel attack and movement
          else
          {
             showAttackRange = false;
             selectedUnitMove = false;
+         }
+      }
+      // special ability was activated.
+      else if ( showAttackRange && showSpecialRange )
+      {
+         Unit::ClassType unitClass;
+         unitClass = selectedUnit->getClassType();
+
+         Unit* otherUnit;
+         bool result = false;
+
+         // determine unit's class and activate that class's special ability
+         switch ( unitClass )
+         {
+         case Unit::linebacker:
+            otherUnit = selectUnit( player );
+            if ( !otherUnit )
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+
+               break;
+            }
+            result = m_grid.isPointInReachableTiles( otherUnit->getGridXPos(), otherUnit->getGridYPos() );
+            if ( result )
+            {
+               selectedUnit->linebackerSpecial();
+
+               // reset movement and attack and selected units
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               selectedUnit = NULL;
+               otherUnit = NULL;
+            }
+            else
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+
+            }
+            break;
+         case Unit::paintballer:
+            otherUnit = selectUnit( enemyPlayer );
+            if ( !otherUnit )
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+
+               break;
+            }
+            result = m_grid.isPointInReachableTiles( otherUnit->getGridXPos(), otherUnit->getGridYPos() );
+            if ( result )
+            {
+               selectedUnit->paintballerSpecial( otherUnit );
+
+               // reset movement and attack and selected units
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               selectedUnit = NULL;
+               otherUnit = NULL;
+            }
+            else
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+            }
+            break;
+         case Unit::artist:
+            otherUnit = selectUnit( player );
+            if ( !otherUnit )
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+
+               break;
+            }
+            result = m_grid.isPointInReachableTiles( otherUnit->getGridXPos(), otherUnit->getGridYPos() );
+            if ( result )
+            {
+               selectedUnit->artistSpecial( otherUnit );
+
+               // reset movement and attack and selected units
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               selectedUnit = NULL;
+               otherUnit = NULL;
+            }
+            else
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+            }
+            break;
+         case Unit::prankster:
+            POINT space;
+            space = selectSpace();
+            result = m_grid.isPointInReachableTiles( space.x, space.y );
+            if ( result )
+            {
+               selectedUnit->pranksterSpecial( space.x, space.y );
+
+               // reset movement and attack and selected units
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               selectedUnit = NULL;
+               otherUnit = NULL;
+            }
+            else
+            {
+               // reset movement and attack
+               selectedUnitMove = false;
+               showAttackRange = false;
+               showSpecialRange = false;
+               otherUnit = NULL;
+            }
+            break;
+         default:
+            break;
          }
       }
    }
@@ -431,25 +567,36 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
       // move when the key is pressed once, but not held
       if ( !keyPressed )
       {
-         if ( keyDown( VK_W ))
+         if ( keyDown( VK_W ) && !selectedUnitMove )
          {
             selectedUnit->selectPath( Unit::north );
             keyPressed = true;
          }
-         else if ( keyDown( VK_D ) )
+         else if ( keyDown( VK_D ) && !selectedUnitMove )
          {
             selectedUnit->selectPath( Unit::east );
             keyPressed = true;
          }
-         else if ( keyDown( VK_A ) )
+         else if ( keyDown( VK_A ) && !selectedUnitMove )
          {
             selectedUnit->selectPath( Unit::west );
             keyPressed = true;
          }
          else if ( keyDown( VK_S ) )
          {
-            selectedUnit->selectPath( Unit::south );
-            keyPressed = true;
+            if ( !selectedUnitMove )
+            {
+               selectedUnit->selectPath( Unit::south );
+               keyPressed = true;
+            }
+            // if unit has started movement, then use S key to activate special ability
+            else
+            {
+               bool result = selectedUnit->activateSpecial();
+               showSpecialRange = result;
+               
+            }
+            
          }
          else if ( keyDown( VK_SPACE ) )
          {
@@ -457,7 +604,8 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             if ( !selectedUnitMove )
             {
                bool result = selectedUnit->potentialMove();
-               selectedUnitMove = showAttackRange = result;
+               selectedUnitMove = result;
+               showAttackRange = result;
             }
             // finish movement
             else
@@ -467,6 +615,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
                {
                   selectedUnitMove = false;
                   showAttackRange = false;
+                  showSpecialRange = false;
                   selectedUnit = NULL;
                }
             }
@@ -517,10 +666,41 @@ Unit* GameManager::selectUnit ( vector<Unit>& player )
    {
       if ( (int)posX == player.at( i ).getGridXPos() && (int)posY == player.at( i ).getGridYPos() )
       {
-         return &player.at( i ); // seems to be returning a copy, not a reference
+         return &player.at( i );
       }
    }
 
    // didn't find a unit for that player at that space
    return NULL;
+}
+
+POINT GameManager::selectSpace ()
+{
+      // get mouse position
+   POINT mPos;
+
+   mPos = mousePos();
+
+   // convert the mouse position to a space on the grid
+   float posX;
+   float posY;
+
+   posX = (float)mPos.x / scaleFactor;
+   posY = (float)mPos.y / scaleFactor;
+
+   posX /= tileSize.x;
+   posY /= tileSize.y - 1;
+
+   // round y poxition (x position works without rounding)
+   if ( (int)( posY * 10 ) % 10 >= 5 )
+   {
+      posY += 1;
+   }
+
+   POINT space;
+
+   space.x = (int)posX;
+   space.y = (int)posY;
+
+   return space;
 }

@@ -17,6 +17,8 @@ Unit::Unit ()
    maxHealth = 0;
    currentHealth = 0;
    attackDamage = 0;
+   attackRange = 0;
+   specialRange = 0;
    myAllegiance = 0;
    locked = true;
    dead = false;
@@ -78,6 +80,7 @@ bool Unit::initLinebacker ( int x, int y )
    currentHealth = maxHealth;
    attackDamage = 10;
    attackRange = 1;
+   specialRange = 0;
 
    return true;
 }
@@ -89,7 +92,8 @@ bool Unit::initPaintballer ( int x, int y )
    maxHealth = 5;
    currentHealth = maxHealth;
    attackDamage = 5;
-   attackRange = 2;
+   attackRange = 1;
+   specialRange = 2;
 
    return true;
 }
@@ -102,6 +106,7 @@ bool Unit::initArtist ( int x, int y )
    currentHealth = maxHealth;
    attackDamage = 5;
    attackRange = 1;
+   specialRange = 1;
 
    return true;
 }
@@ -114,6 +119,7 @@ bool Unit::initPrankster ( int x, int y )
    currentHealth = maxHealth;
    attackDamage = 5;
    attackRange = 1;
+   specialRange = 1;
 
    return true;
 }
@@ -229,20 +235,49 @@ bool Unit::attack ( Unit* enemyUnit )
    return false;
 }
 
+bool Unit::activateSpecial ()
+{
+   // the allegiance of tiles that are included in range
+   int allegiance;
+
+   // if it's a paintballer or prankster, choose enemy's allegiance
+   if ( myClass == paintballer || myClass == prankster )
+   {
+      allegiance = ( myAllegiance == 0 ? 1 : 0 );
+   }
+   else
+   {
+      allegiance = myAllegiance;
+   }
+
+   if ( !locked )
+   {
+      myGridInterface->showRange( positionX, positionY, specialRange, allegiance, D3DCOLOR_XRGB( 100, 0, 100 ) );
+      
+      return true;
+   }
+
+   return false;
+}
+
 void Unit::linebackerSpecial ()
 {
    if ( !locked && myClass == linebacker )
+   {
       isBlocking = true;
+      finishMovement();
+   }
 }
 
 void Unit::paintballerSpecial ( Unit* otherUnit )
 {
    if ( !locked && myClass == paintballer )
    {
-      if ( otherUnit->positionX > this->positionX + 2 || otherUnit->positionX < this->positionX - 2 ||
-           otherUnit->positionY > this->positionY + 2 || otherUnit->positionY < this->positionY - 2 )
+      if ( otherUnit->positionX >= this->positionX + specialRange || otherUnit->positionX <= this->positionX - specialRange ||
+           otherUnit->positionY >= this->positionY + specialRange || otherUnit->positionY <= this->positionY - specialRange )
       {
          otherUnit->takeDamage( attackDamage );
+         finishMovement();
       }
    }
 }
@@ -251,10 +286,11 @@ void Unit::artistSpecial ( Unit* otherUnit )
 {
    if ( !locked && myClass == artist )
    {
-      if ( otherUnit->positionX > this->positionX + 1 || otherUnit->positionX < this->positionX - 1 ||
-           otherUnit->positionY > this->positionY + 1 || otherUnit->positionY < this->positionY - 1 )
+      if ( otherUnit->positionX >= this->positionX + specialRange || otherUnit->positionX <= this->positionX - specialRange ||
+           otherUnit->positionY >= this->positionY + specialRange || otherUnit->positionY <= this->positionY - specialRange )
       {
          otherUnit->healDamage( 5 );
+         finishMovement();
       }
    }
 }
@@ -263,15 +299,20 @@ void Unit::pranksterSpecial ( int x, int y )
 {
    if ( !locked && myClass == prankster )
    {
-      if ( x > positionX + 1 || x < positionX - 1 || y > positionY + 1 || y < positionY - 1 )
+      if ( x >= positionX + specialRange || x <= positionX - specialRange ||
+          y >= positionY + specialRange || y <= positionY - specialRange )
       {
          myGridInterface->setTrap( x, y, 1 );
+         finishMovement();
       }
    }
 }
 
 void Unit::takeDamage ( int damage )
 {
+   if ( isBlocking )
+      return;
+
    currentHealth -= damage;
 
    if ( currentHealth <= 0 )
