@@ -36,6 +36,9 @@ bool GameManager::gameInit (int boardsize)
 
    myGameIsOver = false;
 
+   displayPlayer1 = "It is Player 1's turn.";
+   displayPlayer2 = "It is Player 2's turn.";
+
    bool result;
 
    // load player1's sprite images
@@ -219,6 +222,9 @@ void GameManager::gameRun ()
       playerTurn( player2Units, player1Units );
    }
 
+   dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+
+
    // render
    if ( SUCCEEDED( dxDevice()->BeginScene() ) )
    {
@@ -253,21 +259,21 @@ void GameManager::gameRun ()
       }
 
       // draw text
-      fontPrint( fontArial24, (int)(myBoardSize * scaleFactor) + 10, 50,
-         "This is the Arial 24 font" );
-
       RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor ), 250, (long)( myBoardSize * tileSize.x * scaleFactor + 100 ), 700 };
       D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
-      string text;
-      if ( myTurn == player1 )
+
+      switch ( myTurn )
       {
-         text = "It is player 1's turn.";
+      case player1:
+         
+         fontArial24->DrawText( spriteInterface(), displayPlayer1.c_str(), displayPlayer1.length(), &rect, DT_WORDBREAK, white );
+         break;
+      case player2:
+         fontArial24->DrawText( spriteInterface(), displayPlayer2.c_str(), displayPlayer2.length(), &rect, DT_WORDBREAK, white );
+         break;
+      default:
+         break;
       }
-      else
-      {
-         text = "It is player 2's turn.";
-      }
-      fontArial24->DrawText( spriteInterface(), text.c_str(), text.length(), &rect, DT_WORDBREAK, white );
 
       // stop drawing
       spriteInterface()->End();

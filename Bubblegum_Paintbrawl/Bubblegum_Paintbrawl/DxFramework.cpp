@@ -56,8 +56,6 @@ void DxFramework::update ()
    // make sure the Direct3D device is valid
 	if ( !d3ddev ) return;
 
-   d3ddev->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
-
    directInputUpdate();
 
    gameRun();

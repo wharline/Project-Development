@@ -80,6 +80,9 @@ private:
    bool selectedUnitMove;
    bool showAttackRange;
    bool showSpecialRange;
+
+   string displayPlayer1;
+   string displayPlayer2;
 };
 
 #endif
