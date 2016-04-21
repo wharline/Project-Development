@@ -35,6 +35,8 @@ private:
    Unit* selectUnit ( vector<Unit>& player );
    POINT selectSpace ();
 
+   void displaySidebar ( vector<Unit>& player );
+
 private:
    vector<Unit> player1Units;
    vector<Unit> player2Units;

@@ -262,21 +262,34 @@ void GameManager::gameRun ()
          Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor );
       }
 
-      // draw text
-      RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 10, (long)( winWidth() - 10 ), winHeight() - 10 };
-      D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
-
       switch ( myTurn )
       {
       case player1:
-         fontArial24->DrawText( NULL, displayPlayer1.c_str(), displayPlayer1.length(), &rect, DT_CENTER, white );
+         displaySidebar( player1Units );
          break;
       case player2:
-         fontArial24->DrawText( NULL, displayPlayer2.c_str(), displayPlayer2.length(), &rect, DT_CENTER, white );
+         displaySidebar( player2Units );
          break;
       default:
          break;
       }
+
+
+      //// draw text
+      //RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 10, (long)( winWidth() - 10 ), winHeight() - 10 };
+      //D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
+
+      //switch ( myTurn )
+      //{
+      //case player1:
+      //   fontArial24->DrawText( NULL, displayPlayer1.c_str(), displayPlayer1.length(), &rect, DT_CENTER, white );
+      //   break;
+      //case player2:
+      //   fontArial24->DrawText( NULL, displayPlayer2.c_str(), displayPlayer2.length(), &rect, DT_CENTER, white );
+      //   break;
+      //default:
+      //   break;
+      //}
 
       // stop drawing
       hr = spriteInterface()->End();
@@ -711,4 +724,43 @@ POINT GameManager::selectSpace ()
    space.y = (int)posY;
 
    return space;
+}
+
+void GameManager::displaySidebar ( vector<Unit>& player )
+{
+   // set boundary of area to display
+   RECT displayRect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 10, (long)( winWidth() - 10 ), winHeight() - 10 };
+   string displayText = "";
+
+   // get unit's name
+   Unit::ClassType classType;
+   
+   if ( selectedUnit )
+   {
+      classType = selectedUnit->getClassType();
+
+      switch ( classType )
+      {
+      case Unit::linebacker:
+         displayText += "Linebacker\n";
+         break;
+      case Unit::paintballer:
+         displayText += "Paintballer\n";
+         break;
+      case Unit::artist:
+         displayText += "Artist\n";
+         break;
+      case Unit::prankster:
+         displayText += "Prankster\n";
+         break;
+      default:
+         break;
+      }
+
+      // display text
+      fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER, D3DCOLOR_XRGB( 255, 255, 255 ) );
+
+      // display unit's picture
+      Sprite_Draw_Frame( selectedUnit->texture(), (int)( ( myBoardSize * tileSize.x * scaleFactor ) + 10 ), 30, scaleFactor );
+   }
 }
