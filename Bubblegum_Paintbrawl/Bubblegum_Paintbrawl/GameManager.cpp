@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "GameManager.h"
 #include <cassert>
+#include <string>
+
+using namespace std;
 
 // define keycodes for keyboard input that aren't already defined by windows
 #define VK_W 0x57
@@ -242,7 +245,7 @@ void GameManager::gameRun ()
          {
             DxTexture& tileTex = m_grid.getTileTexture( r, c );
 
-            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor, m_grid.tileColor( r, c ) );
+            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor, D3DXVECTOR2( 0, 0 ), m_grid.tileColor( r, c ) );
          }
       }
 
@@ -251,7 +254,7 @@ void GameManager::gameRun ()
       {
          Unit& unit = player1Units.at( i );
 
-         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor );
+         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor, D3DXVECTOR2( 0, 0 ) );
       }
 
       // draw player2's units
@@ -259,7 +262,7 @@ void GameManager::gameRun ()
       {
          Unit& unit = player2Units.at( i );
 
-         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor );
+         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor, D3DXVECTOR2( 0, 0 ) );
       }
 
       switch ( myTurn )
@@ -731,6 +734,8 @@ void GameManager::displaySidebar ( vector<Unit>& player )
    // set boundary of area to display
    RECT displayRect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 10, (long)( winWidth() - 10 ), winHeight() - 10 };
    string displayText = "";
+   float boardWidth = myBoardSize * tileSize.x * scaleFactor;
+
 
    // get unit's name
    Unit::ClassType classType;
@@ -757,10 +762,141 @@ void GameManager::displaySidebar ( vector<Unit>& player )
          break;
       }
 
-      // display text
-      fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER, D3DCOLOR_XRGB( 255, 255, 255 ) );
+      // skip down past picture
+      displayText += "\n\n\n\n\n\n\n\n\n\n";
+      // add in health
+      char n[256];
+      sprintf( n, "%d\n\n", selectedUnit->getHealth() );
+      displayText += "Health: ";
+      displayText += n;
+      
+      // add in attack power
+      sprintf( n, "%d    ", selectedUnit->getAttackPower() );
+      displayText += "Atk: ";
+      displayText += n;
+
+      // add in movement range
+      sprintf( n, "%d\n\n", selectedUnit->getMoveRange() );
+      displayText += "Mov: ";
+      displayText += n;
+
+      // add in special ability name and description
+      displayText += "Special: ";
+            
+      switch ( classType )
+      {
+      case Unit::linebacker:
+         displayText += "Bubble Block\n---------------------\n";
+         displayText += "Negate the next incoming attack.\n\n";
+         break;
+      case Unit::paintballer:
+         displayText += "Paint Bomb\n-------------------\n";
+         displayText += "Ranged attack that can cross occupied spaces.\n\n";
+         break;
+      case Unit::artist:
+         displayText += "Fresh Paint\n--------------------\n";
+         displayText += "Return health to self or allies.\n\n";
+         break;
+      case Unit::prankster:
+         displayText += "Gum Trap\n-----------------\n";
+         displayText += "Convert a space into a trap that locks the next enemy to cross it.\n\n";
+         break;
+      default:
+         break;
+      }
+
+
 
       // display unit's picture
-      Sprite_Draw_Frame( selectedUnit->texture(), (int)( ( myBoardSize * tileSize.x * scaleFactor ) + 10 ), 30, scaleFactor );
+      float scale = ( ( winWidth() - boardWidth )/4 * 3 ) / selectedUnit->texture().width();
+      int destx = (int)( boardWidth + ( winWidth() - boardWidth )/2 );
+      int desty = (int)( scale * selectedUnit->texture().height() ) / 3 * 2;
+
+
+      D3DXVECTOR2 center( (float)( selectedUnit->texture().width() )/2 + destx,
+                          (float)( selectedUnit->texture().height() )/2 + desty );
+
+      Sprite_Draw_Frame( selectedUnit->texture(), destx, desty, scale, center );
+
    }
+   else
+   {
+      displayText += "PLAYER TURN\n-------------------\n\n\n";
+   }
+
+   // add in team name and remaining units
+   int destx;
+   int desty;
+
+   int xOffset;
+   int yOffset;
+
+   xOffset = (int)( winWidth() - boardWidth ) / 3;
+   yOffset = (int)( tileSize.y * 2 * 2 );
+
+   destx = (int)( ( ( winWidth() - boardWidth ) / 3 ) + boardWidth );
+   desty = (int)( winHeight() - ( tileSize.y * 2 * 4 ) );
+
+   D3DXVECTOR2 center( (float)( linebackerImage1.width() )/2 + destx,
+                         (float)( linebackerImage1.height() )/2 + desty );
+
+   switch ( myTurn )
+   {
+   case player1:
+      displayText += "BLUE TEAM\n---------\nUnits Remaining\n\n";
+
+      Sprite_Draw_Frame( linebackerImage1, destx, desty, 2, center );
+
+      destx += xOffset;
+      center.x += xOffset;
+
+      Sprite_Draw_Frame( paintballerImage1, destx, desty, 2, center );
+
+      destx -= xOffset;
+      center.x -= xOffset;
+
+      desty += yOffset;
+      center.y += yOffset;
+
+      Sprite_Draw_Frame( artistImage1, destx, desty, 2, center );
+
+      destx += xOffset;
+      center.x += xOffset;
+
+      Sprite_Draw_Frame( pranksterImage1, destx, desty, 2, center );
+
+      break;
+   case player2:
+      displayText += "ORANGE TEAM\n---------\nUnits Remaining\n\n";
+
+      Sprite_Draw_Frame( linebackerImage2, destx, desty, 2, center );
+
+      destx += xOffset;
+      center.x += xOffset;
+
+      Sprite_Draw_Frame( paintballerImage2, destx, desty, 2, center );
+
+      destx -= xOffset;
+      center.x -= xOffset;
+
+      desty += yOffset;
+      center.y += yOffset;
+
+      Sprite_Draw_Frame( artistImage2, destx, desty, 2, center );
+
+      destx += xOffset;
+      center.x += xOffset;
+
+      Sprite_Draw_Frame( pranksterImage2, destx, desty, 2, center );
+
+      break;
+   default:
+      break;
+   }
+
+
+   
+
+   // display text
+   fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER | DT_WORDBREAK, D3DCOLOR_XRGB( 255, 255, 255 ) );
 }

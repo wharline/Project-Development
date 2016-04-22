@@ -182,7 +182,7 @@ D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
 }
 
 
-void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling, D3DCOLOR color)
+void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling, D3DXVECTOR2 scaleCenter, D3DCOLOR color)
 {
 	D3DXVECTOR3 position( ( float )destx, ( float )desty, 0 );
 
@@ -194,14 +194,19 @@ void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, 
 
    D3DXVECTOR2 scale( scaling, scaling );
 
-   D3DXVECTOR2 center( (float)( texture.width() * scaling )/2, (float)( texture.height() * scaling )/2 );
+   D3DXVECTOR2 center( (float)( texture.width() * scaling )/2 + destx, (float)( texture.height() * scaling )/2 + desty );
+
+   D3DXVECTOR3 center3( 0, 0, 0 );
 
    D3DXMATRIX mat;
-   D3DXMatrixTransformation2D( &mat, NULL, 0, &scale, &center, 0, NULL );
+   D3DXMatrixTransformation2D( &mat, &scaleCenter, 0, &scale, &center, 0, NULL );
 
-   spriteobj->SetTransform( &mat );
+   HRESULT hr = spriteobj->SetTransform( &mat );
 
-   spriteobj->Draw( texture.texture(), &rect, NULL, &position, color );
+   if ( FAILED( hr ) )
+      OutputDebugString( "Transform failed.\n" );
+
+   spriteobj->Draw( texture.texture(), &rect, &center3, &position, color );
 }
 
 

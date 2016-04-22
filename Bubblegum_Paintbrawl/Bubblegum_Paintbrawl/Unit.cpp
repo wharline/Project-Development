@@ -128,12 +128,12 @@ void Unit::unitSelected ()
 {
    // if not locked show the movement range
    if ( !locked )
-      myGridInterface->showRange( positionX, positionY, maxMove + 1, myAllegiance, D3DCOLOR_XRGB( 0, 255, 0 ) );
+      myGridInterface->showRange( positionX, positionY, maxMove, myAllegiance, D3DCOLOR_XRGB( 0, 255, 0 ) );
 }
 
 bool Unit::selectPath ( Direction dir )
 {
-   if ( selectedPathLength > maxMove )
+   if ( selectedPathLength >= maxMove )
    {
       return false;
    }
@@ -164,6 +164,7 @@ bool Unit::selectPath ( Direction dir )
       yPosToMoveTo = y;
       xPosToMoveTo = x;
       selectedPathLength++;
+      currentMove--;
       myGridInterface->spaceSelected( xPosToMoveTo, yPosToMoveTo );
       return true;
    }
@@ -181,6 +182,7 @@ void Unit::cancelPath ()
    xPosToMoveTo = positionX;
    yPosToMoveTo = positionY;
    selectedPathLength = 0;
+   currentMove = maxMove;
 
    // use this to reset tile colors.
    myGridInterface->moveToSpace( positionX, positionY, positionX, positionY, myAllegiance );

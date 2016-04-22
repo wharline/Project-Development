@@ -53,6 +53,8 @@ public:
 
    int checkAllegiance () { return myAllegiance; }
 	int getHealth () { return currentHealth; }
+   int getAttackPower () { return attackDamage; }
+   int getMoveRange () { return currentMove; }
    ClassType getClassType () { return myClass; }
 
    bool isDead () { return dead; }
