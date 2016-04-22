@@ -738,7 +738,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
 
    // get unit's name
-   Unit::ClassType classType;
+   Unit::ClassType classType = Unit::none;
    
    if ( selectedUnit )
    {
@@ -828,29 +828,52 @@ void GameManager::displaySidebar ( vector<Unit>& player )
    int destx;
    int desty;
 
-   int xOffset;
-   int yOffset;
+   int xOffset = (int)( ( winWidth() - boardWidth ) / 3 );
+   int yOffset = (int)( tileSize.y * 2 * 2 );
+   int offset = 0;
 
-   xOffset = (int)( winWidth() - boardWidth ) / 3;
-   yOffset = (int)( tileSize.y * 2 * 2 );
-
-   destx = (int)( ( ( winWidth() - boardWidth ) / 3 ) + boardWidth );
+   destx = (int)( ( ( winWidth() - boardWidth ) / 3 ) + boardWidth - ( linebackerImage1.width() * 2 ) );
    desty = (int)( winHeight() - ( tileSize.y * 2 * 4 ) );
 
    D3DXVECTOR2 center( (float)( linebackerImage1.width() )/2 + destx,
                          (float)( linebackerImage1.height() )/2 + desty );
+
+   switch ( classType )
+   {
+   case Unit::linebacker:
+      offset += 5;
+      break;
+   case Unit::paintballer:
+      offset += 5;
+      break;
+   case Unit::artist:
+      break;
+   case Unit::prankster:
+      offset += 15;
+      break;
+   default:
+      offset -= ( winHeight() / 4 );
+      break;
+   }
+
+   int numOfLinebackers = 0;
+   int numOfPaintballers = 0;
+   int numOfArtists = 0;
+   int numOfPranksters = 0;
+
+   char n[256];
 
    switch ( myTurn )
    {
    case player1:
       displayText += "BLUE TEAM\n---------\nUnits Remaining\n\n";
 
-      Sprite_Draw_Frame( linebackerImage1, destx, desty, 2, center );
+      Sprite_Draw_Frame( linebackerImage1, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( paintballerImage1, destx, desty, 2, center );
+      Sprite_Draw_Frame( paintballerImage1, destx, desty + offset, 2, center );
 
       destx -= xOffset;
       center.x -= xOffset;
@@ -858,23 +881,56 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       desty += yOffset;
       center.y += yOffset;
 
-      Sprite_Draw_Frame( artistImage1, destx, desty, 2, center );
+      Sprite_Draw_Frame( artistImage1, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( pranksterImage1, destx, desty, 2, center );
+      Sprite_Draw_Frame( pranksterImage1, destx, desty + offset, 2, center );
+
+      for ( int i = 0; i < (int)player1Units.size(); i++ )
+      {
+         if ( !player1Units.at( i ).isDead() )
+         {
+            if ( player1Units.at( i ).getClassType() == Unit::linebacker )
+               numOfLinebackers++;
+
+            if ( player1Units.at( i ).getClassType() == Unit::paintballer )
+               numOfPaintballers++;
+
+            if ( player1Units.at( i ).getClassType() == Unit::artist )
+               numOfArtists++;
+
+            if ( player1Units.at( i ).getClassType() == Unit::prankster )
+               numOfPranksters++;
+         }
+      }
+
+      sprintf( n, "      x %d", numOfLinebackers );
+      displayText += n;
+      displayText += "              ";
+      
+      sprintf( n, "x %d", numOfPaintballers );
+      displayText += n;
+      displayText += "\n\n\n";
+
+      sprintf( n, "      x %d", numOfArtists );
+      displayText += n;
+      displayText += "              ";
+
+      sprintf( n, "x %d", numOfPranksters );
+      displayText += n;
 
       break;
    case player2:
       displayText += "ORANGE TEAM\n---------\nUnits Remaining\n\n";
 
-      Sprite_Draw_Frame( linebackerImage2, destx, desty, 2, center );
+      Sprite_Draw_Frame( linebackerImage2, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( paintballerImage2, destx, desty, 2, center );
+      Sprite_Draw_Frame( paintballerImage2, destx, desty + offset, 2, center );
 
       destx -= xOffset;
       center.x -= xOffset;
@@ -882,12 +938,12 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       desty += yOffset;
       center.y += yOffset;
 
-      Sprite_Draw_Frame( artistImage2, destx, desty, 2, center );
+      Sprite_Draw_Frame( artistImage2, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( pranksterImage2, destx, desty, 2, center );
+      Sprite_Draw_Frame( pranksterImage2, destx, desty + offset, 2, center );
 
       break;
    default:

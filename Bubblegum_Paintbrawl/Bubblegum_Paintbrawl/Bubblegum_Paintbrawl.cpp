@@ -43,7 +43,7 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 //-------------------------------------
 // Game app
 GameManager game;
-int boardSize = 32;
+int boardSize = 8;
 //-------------------------------------
 string str = "sdfsdfdsf";
 

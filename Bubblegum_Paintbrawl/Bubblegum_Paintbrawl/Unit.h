@@ -28,7 +28,7 @@ class Unit
 	
 public:
 	enum Direction {  north, south, east, west };
-	enum ClassType { linebacker, paintballer, artist, prankster };
+	enum ClassType { linebacker, paintballer, artist, prankster, none };
 
 	Unit ();
 	~Unit ();
