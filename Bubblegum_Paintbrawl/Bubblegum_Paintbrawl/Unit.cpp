@@ -22,6 +22,7 @@ Unit::Unit ()
    myAllegiance = 0;
    locked = true;
    dead = false;
+   isBlocking = false;
 
    selectedPathLength = 0;  
 

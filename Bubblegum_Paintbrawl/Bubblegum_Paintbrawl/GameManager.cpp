@@ -395,7 +395,6 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
       myTurnStart = false;
    }
 
-   //TO-DO Fill out the rest of the players turn
 
    // select a unit
    if ( mouseButton( 0 ) )
@@ -888,38 +887,6 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
       Sprite_Draw_Frame( pranksterImage1, destx, desty + offset, 2, center );
 
-      for ( int i = 0; i < (int)player1Units.size(); i++ )
-      {
-         if ( !player1Units.at( i ).isDead() )
-         {
-            if ( player1Units.at( i ).getClassType() == Unit::linebacker )
-               numOfLinebackers++;
-
-            if ( player1Units.at( i ).getClassType() == Unit::paintballer )
-               numOfPaintballers++;
-
-            if ( player1Units.at( i ).getClassType() == Unit::artist )
-               numOfArtists++;
-
-            if ( player1Units.at( i ).getClassType() == Unit::prankster )
-               numOfPranksters++;
-         }
-      }
-
-      sprintf( n, "      x %d", numOfLinebackers );
-      displayText += n;
-      displayText += "              ";
-      
-      sprintf( n, "x %d", numOfPaintballers );
-      displayText += n;
-      displayText += "\n\n\n";
-
-      sprintf( n, "      x %d", numOfArtists );
-      displayText += n;
-      displayText += "              ";
-
-      sprintf( n, "x %d", numOfPranksters );
-      displayText += n;
 
       break;
    case player2:
@@ -950,9 +917,39 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       break;
    }
 
+   for ( int i = 0; i < (int)player.size(); i++ )
+   {
+      if ( !player.at( i ).isDead() )
+      {
+         if ( player.at( i ).getClassType() == Unit::linebacker )
+            numOfLinebackers++;
 
+         if ( player.at( i ).getClassType() == Unit::paintballer )
+            numOfPaintballers++;
+
+         if ( player.at( i ).getClassType() == Unit::artist )
+            numOfArtists++;
+
+         if ( player.at( i ).getClassType() == Unit::prankster )
+            numOfPranksters++;
+      }
+   }
+
+   sprintf( n, "      x %d", numOfLinebackers );
+   displayText += n;
+   displayText += "              ";
    
+   sprintf( n, "x %d", numOfPaintballers );
+   displayText += n;
+   displayText += "\n\n\n";
 
+   sprintf( n, "      x %d", numOfArtists );
+   displayText += n;
+   displayText += "              ";
+
+   sprintf( n, "x %d", numOfPranksters );
+   displayText += n;
+   
    // display text
    fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER | DT_WORDBREAK, D3DCOLOR_XRGB( 255, 255, 255 ) );
 }
