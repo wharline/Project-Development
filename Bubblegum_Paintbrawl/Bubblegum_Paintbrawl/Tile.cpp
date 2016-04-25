@@ -68,7 +68,7 @@ bool Tile::canPassThrough ( int allegiance )
    }
    else
    {
-      return myState == empty;
+      return ( myState == empty || myState == trapped );
    }
 }
 
@@ -89,7 +89,7 @@ void Tile::removeTrap ()
 
 bool Tile::isAccessible(int allegiance)
 {
-	if((!isTrapped() || !isOccupied() || !isBlocked()) && canPassThrough(allegiance))
+	if( ( !isOccupied() || !isBlocked() ) && canPassThrough(allegiance) )
 	{
 		return true;
 	}

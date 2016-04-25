@@ -355,6 +355,8 @@ void Unit::turnStart ()
       myGridInterface->removeTrap();
    }
 
+   isBlocking = false;
+
    xPosToMoveTo = positionX;
    yPosToMoveTo = positionY;
 }

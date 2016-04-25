@@ -66,7 +66,9 @@ bool Grid::isEmpty ( int myX, int myY, int x, int y )
       return true;
    }
 
-   return getCell( x, y ).isEmpty();
+   Tile& tile = getCell( x, y );
+
+   return ( tile.isEmpty() || tile.isTrapped() );
 }
 
 bool Grid::isTrapped ( int x, int y )
