@@ -71,67 +71,9 @@ void DxFramework::shutdown ()
    directInputShutdown();
 }
 
-/**
- ** Draws a surface to the screen using StretchRect
- **/
-void DxFramework::DrawSurface ( LPDIRECT3DSURFACE9 dest,
-				  float x, float y,
-				  LPDIRECT3DSURFACE9 source )
-{
-	// get width/height from source surface
-	D3DSURFACE_DESC desc;
-	source->GetDesc( &desc );
-
-	// create rects for drawing
-	RECT source_rect = { 0, 0, ( long )desc.Width, ( long )desc.Height };
-	RECT dest_rect = { ( long )x, ( long )y, ( long )x + desc.Width, ( long )y + desc.Height };
-
-	// draw the source surface onto the dest
-	d3ddev->StretchRect( source, &source_rect, dest, &dest_rect, D3DTEXF_NONE );
-}
-
-/**
- ** Loads a bitmap file into a surface
- **/
-LPDIRECT3DSURFACE9 DxFramework::LoadSurface ( string filename )
-{
-	LPDIRECT3DSURFACE9 image = NULL;
-
-	// get width and height from bitmap file
-	D3DXIMAGE_INFO info;
-	HRESULT result = D3DXGetImageInfoFromFile( filename.c_str(), &info );
-	if ( result != D3D_OK ) return NULL;
-
-	// create surface
-	result = d3ddev->CreateOffscreenPlainSurface(
-		info.Width,			// width of the surface
-		info.Height,		// height of the surface
-		D3DFMT_X8R8G8B8,	// surface format
-		D3DPOOL_DEFAULT,		// memory pool to use
-		&image,				// pointer to the surface
-		NULL );				// reserved (always NULL)
-
-	if ( result != D3D_OK ) return NULL;
-
-	// load surface from file into newly created surface
-	result = D3DXLoadSurfaceFromFile(
-		image,						// destination surface
-		NULL,						// destination palette
-		NULL,						// destination rectangle
-		filename.c_str(),			// source filename
-		NULL,						// source rectangle
-		D3DX_DEFAULT,				// controls how image is filtered
-		D3DCOLOR_XRGB( 0, 0, 0 ),	// for transparency (0 for none)
-		NULL );						// source inage info (usually NULL)
-
-	// make sure file was loaded okay
-	if ( result != D3D_OK ) return NULL;
-
-	return image;
-}
 
 
-bool DxFramework::LoadTexture ( DxTexture& dxTex, string filename, D3DCOLOR transcolor )
+bool DxFramework::loadTexture ( DxTexture& dxTex, string filename, D3DCOLOR transcolor )
 {
 	LPDIRECT3DTEXTURE9 texture = NULL;
 
@@ -166,7 +108,7 @@ bool DxFramework::LoadTexture ( DxTexture& dxTex, string filename, D3DCOLOR tran
 }
 
 
-D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
+D3DXVECTOR2 DxFramework::getBitmapSize ( string filename )
 {
 	D3DXIMAGE_INFO info;
 	D3DXVECTOR2 size = D3DXVECTOR2( 0.0f, 0.0f );
@@ -182,7 +124,7 @@ D3DXVECTOR2 DxFramework::GetBitmapSize ( string filename )
 }
 
 
-void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, float scaling, D3DXVECTOR2 scaleCenter, D3DCOLOR color)
+void DxFramework::spriteDraw ( DxTexture& texture, int destx, int desty, float scaling, D3DXVECTOR2 scaleCenter, D3DCOLOR color)
 {
 	D3DXVECTOR3 position( ( float )destx, ( float )desty, 0 );
 
@@ -209,18 +151,6 @@ void DxFramework::Sprite_Draw_Frame ( DxTexture& texture, int destx, int desty, 
    spriteobj->Draw( texture.texture(), &rect, &center3, &position, color );
 }
 
-
-void DxFramework::Sprite_Animate ( int &frame, int startframe, int endframe, int direction, int &starttime, int delay )
-{
-	if ( ( int )GetTickCount() > starttime + delay )
-	{
-		starttime = GetTickCount();
-
-		frame += direction;
-		if ( frame > endframe ) frame = startframe;
-		if ( frame < startframe ) frame = endframe;
-	}
-}
 
 //----------------------------------------------------------------------
 // DIRECT INPUT FUNCTIONS

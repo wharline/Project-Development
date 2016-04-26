@@ -45,47 +45,47 @@ bool GameManager::gameInit (int boardsize)
    bool result;
 
    // load player1's sprite images
-   result = LoadTexture( linebackerImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Linebacker1.png" );
+   result = loadTexture( linebackerImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Linebacker1.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( paintballerImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Paintballer1.png" );
+   result = loadTexture( paintballerImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Paintballer1.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( artistImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Artist1.png" );
+   result = loadTexture( artistImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Artist1.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( pranksterImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Trapper1.png" );
+   result = loadTexture( pranksterImage1, "../Assets/BPB_-_SpriteCharacters01/BPB - Trapper1.png" );
    if ( !result )
       return false;
 
    
    // load player2's sprite images
-   result = LoadTexture( linebackerImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Linebacker2.png" );
+   result = loadTexture( linebackerImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Linebacker2.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( paintballerImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Paintballer2.png" );
+   result = loadTexture( paintballerImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Paintballer2.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( artistImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Artist2.png" );
+   result = loadTexture( artistImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Artist2.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( pranksterImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Trapper2.png" );
+   result = loadTexture( pranksterImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Trapper2.png" );
    if ( !result )
       return false;
 
 
    // load the tile images
-   result = LoadTexture( filledTileImage, "../Assets/BPB_-_Terrain01/BPB - FilledSpace01.png" );
+   result = loadTexture( filledTileImage, "../Assets/BPB_-_Terrain01/BPB - FilledSpace01.png" );
    if ( !result )
       return false;
 
-   result = LoadTexture( emptyTileImage, "../Assets/BPB_-_Terrain01/BPB - EmptySpace01.png" );
+   result = loadTexture( emptyTileImage, "../Assets/BPB_-_Terrain01/BPB - EmptySpace01.png" );
    if ( !result )
       return false;
 
@@ -245,7 +245,7 @@ void GameManager::gameRun ()
          {
             DxTexture& tileTex = m_grid.getTileTexture( r, c );
 
-            Sprite_Draw_Frame( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor, D3DXVECTOR2( 0, 0 ), m_grid.tileColor( r, c ) );
+            spriteDraw( tileTex, r * tileTex.width(), c * tileTex.height(), scaleFactor, D3DXVECTOR2( 0, 0 ), m_grid.tileColor( r, c ) );
          }
       }
 
@@ -254,7 +254,7 @@ void GameManager::gameRun ()
       {
          Unit& unit = player1Units.at( i );
 
-         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor, D3DXVECTOR2( 0, 0 ) );
+         spriteDraw( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor, D3DXVECTOR2( 0, 0 ) );
       }
 
       // draw player2's units
@@ -262,9 +262,10 @@ void GameManager::gameRun ()
       {
          Unit& unit = player2Units.at( i );
 
-         Sprite_Draw_Frame( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor, D3DXVECTOR2( 0, 0 ) );
+         spriteDraw( unit.texture(), unit.getXPos(), unit.getYPos(), scaleFactor, D3DXVECTOR2( 0, 0 ) );
       }
 
+      // show the side menu
       switch ( myTurn )
       {
       case player1:
@@ -276,23 +277,6 @@ void GameManager::gameRun ()
       default:
          break;
       }
-
-
-      //// draw text
-      //RECT rect = { (long)( myBoardSize * tileSize.x * scaleFactor + 10 ), 10, (long)( winWidth() - 10 ), winHeight() - 10 };
-      //D3DCOLOR white = D3DCOLOR_XRGB( 255, 255, 255 );
-
-      //switch ( myTurn )
-      //{
-      //case player1:
-      //   fontArial24->DrawText( NULL, displayPlayer1.c_str(), displayPlayer1.length(), &rect, DT_CENTER, white );
-      //   break;
-      //case player2:
-      //   fontArial24->DrawText( NULL, displayPlayer2.c_str(), displayPlayer2.length(), &rect, DT_CENTER, white );
-      //   break;
-      //default:
-      //   break;
-      //}
 
       // stop drawing
       hr = spriteInterface()->End();
@@ -309,6 +293,7 @@ void GameManager::gameRun ()
 
 void GameManager::gameExit ()
 {
+   // clear all units and release all images and fonts
    player1Units.clear();
    player2Units.clear();
 
@@ -815,7 +800,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       D3DXVECTOR2 center( (float)( selectedUnit->texture().width() )/2 + destx,
                           (float)( selectedUnit->texture().height() )/2 + desty );
 
-      Sprite_Draw_Frame( selectedUnit->texture(), destx, desty, scale, center );
+      spriteDraw( selectedUnit->texture(), destx, desty, scale, center );
 
    }
    else
@@ -867,12 +852,12 @@ void GameManager::displaySidebar ( vector<Unit>& player )
    case player1:
       displayText += "BLUE TEAM\n---------\nUnits Remaining\n\n";
 
-      Sprite_Draw_Frame( linebackerImage1, destx, desty + offset, 2, center );
+      spriteDraw( linebackerImage1, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( paintballerImage1, destx, desty + offset, 2, center );
+      spriteDraw( paintballerImage1, destx, desty + offset, 2, center );
 
       destx -= xOffset;
       center.x -= xOffset;
@@ -880,24 +865,24 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       desty += yOffset;
       center.y += yOffset;
 
-      Sprite_Draw_Frame( artistImage1, destx, desty + offset, 2, center );
+      spriteDraw( artistImage1, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( pranksterImage1, destx, desty + offset, 2, center );
+      spriteDraw( pranksterImage1, destx, desty + offset, 2, center );
 
 
       break;
    case player2:
       displayText += "ORANGE TEAM\n---------\nUnits Remaining\n\n";
 
-      Sprite_Draw_Frame( linebackerImage2, destx, desty + offset, 2, center );
+      spriteDraw( linebackerImage2, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( paintballerImage2, destx, desty + offset, 2, center );
+      spriteDraw( paintballerImage2, destx, desty + offset, 2, center );
 
       destx -= xOffset;
       center.x -= xOffset;
@@ -905,12 +890,12 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       desty += yOffset;
       center.y += yOffset;
 
-      Sprite_Draw_Frame( artistImage2, destx, desty + offset, 2, center );
+      spriteDraw( artistImage2, destx, desty + offset, 2, center );
 
       destx += xOffset;
       center.x += xOffset;
 
-      Sprite_Draw_Frame( pranksterImage2, destx, desty + offset, 2, center );
+      spriteDraw( pranksterImage2, destx, desty + offset, 2, center );
 
       break;
    default:
