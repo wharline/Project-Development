@@ -294,7 +294,7 @@ LPD3DXFONT DxFramework::makeFont ( string name, int size )
       ""                      // font name
    };
 
-   strcpy( desc.FaceName, name.c_str() );
+   strcpy_s( desc.FaceName, name.c_str() );
    D3DXCreateFontIndirect( d3ddev, &desc, &font );
    return font;
 }

@@ -454,9 +454,10 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             result = m_grid.isPointInReachableTiles( otherUnit->getGridXPos(), otherUnit->getGridYPos() );
             if ( result )
             {
+               // initiate the linebacker's special move and deselect him.
                selectedUnit->linebackerSpecial();
 
-               // reset movement and attack and selected units
+               // deselect units
                selectedUnitMove = false;
                showAttackRange = false;
                showSpecialRange = false;
@@ -477,7 +478,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             otherUnit = selectUnit( enemyPlayer );
             if ( !otherUnit )
             {
-               // reset movement and attack
+               // no enemy unit was selected, so reset movement and attack for paintballer unit
                selectedUnitMove = false;
                showAttackRange = false;
                showSpecialRange = false;
@@ -490,7 +491,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             {
                selectedUnit->paintballerSpecial( otherUnit );
 
-               // reset movement and attack and selected units
+               // special was successful so deselect units
                selectedUnitMove = false;
                showAttackRange = false;
                showSpecialRange = false;
@@ -510,7 +511,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             otherUnit = selectUnit( player );
             if ( !otherUnit )
             {
-               // reset movement and attack
+               // no unit to heal so reset movement and attack
                selectedUnitMove = false;
                showAttackRange = false;
                showSpecialRange = false;
@@ -523,7 +524,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             {
                selectedUnit->artistSpecial( otherUnit );
 
-               // reset movement and attack and selected units
+               // healing was successful so deselect units
                selectedUnitMove = false;
                showAttackRange = false;
                showSpecialRange = false;
@@ -547,7 +548,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             {
                selectedUnit->pranksterSpecial( space.x, space.y );
 
-               // reset movement and attack and selected units
+               // tile was trapped so deselect units
                selectedUnitMove = false;
                showAttackRange = false;
                showSpecialRange = false;
@@ -750,17 +751,17 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       displayText += "\n\n\n\n\n\n\n\n\n\n";
       // add in health
       char n[256];
-      sprintf( n, "%d\n\n", selectedUnit->getHealth() );
+      sprintf_s( n, "%d\n\n", selectedUnit->getHealth() );
       displayText += "Health: ";
       displayText += n;
       
       // add in attack power
-      sprintf( n, "%d    ", selectedUnit->getAttackPower() );
+      sprintf_s( n, "%d    ", selectedUnit->getAttackPower() );
       displayText += "Atk: ";
       displayText += n;
 
       // add in movement range
-      sprintf( n, "%d\n\n", selectedUnit->getMoveRange() );
+      sprintf_s( n, "%d\n\n", selectedUnit->getMoveRange() );
       displayText += "Mov: ";
       displayText += n;
 
@@ -920,19 +921,19 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       }
    }
 
-   sprintf( n, "      x %d", numOfLinebackers );
+   sprintf_s( n, "      x %d", numOfLinebackers );
    displayText += n;
    displayText += "              ";
    
-   sprintf( n, "x %d", numOfPaintballers );
+   sprintf_s( n, "x %d", numOfPaintballers );
    displayText += n;
    displayText += "\n\n\n";
 
-   sprintf( n, "      x %d", numOfArtists );
+   sprintf_s( n, "      x %d", numOfArtists );
    displayText += n;
    displayText += "              ";
 
-   sprintf( n, "x %d", numOfPranksters );
+   sprintf_s( n, "x %d", numOfPranksters );
    displayText += n;
    
    // display text
