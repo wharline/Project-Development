@@ -342,12 +342,18 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
       return;
    }
 
-   // check if the player's turn is over
+   // check if the player's turn is over if it's not the start of the turn
    bool turnOver = true;
+   if ( myTurnStart )
+   {
+      turnOver = false;
+   }
    for ( int i = 0; i < (int)player.size(); i++ )
    {
-      turnOver = turnOver && player.at( i ).isLocked();
+      turnOver &= player.at( i ).isLocked();
    }
+
+   // if the turn is over, switch turns
    if ( turnOver )
    {
       // turn is now over
@@ -634,7 +640,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
       }
       else
       {
-         // check that the keys are not being held before setting it to false
+         // check that the keys are not being held before setting whether the key is pressed to false
          if ( !keyDown( VK_W ) && !keyDown( VK_D ) && !keyDown( VK_A ) && !keyDown( VK_S ) && !keyDown( VK_SPACE ) )
          {
             keyPressed = false;

@@ -276,8 +276,8 @@ void Unit::paintballerSpecial ( Unit* otherUnit )
 {
    if ( !locked && myClass == paintballer )
    {
-      if ( otherUnit->positionX >= this->positionX + specialRange || otherUnit->positionX <= this->positionX - specialRange ||
-           otherUnit->positionY >= this->positionY + specialRange || otherUnit->positionY <= this->positionY - specialRange )
+      if ( otherUnit->positionX <= this->positionX + specialRange || otherUnit->positionX >= this->positionX - specialRange ||
+           otherUnit->positionY <= this->positionY + specialRange || otherUnit->positionY >= this->positionY - specialRange )
       {
          otherUnit->takeDamage( attackDamage );
          finishMovement();
@@ -289,8 +289,8 @@ void Unit::artistSpecial ( Unit* otherUnit )
 {
    if ( !locked && myClass == artist )
    {
-      if ( otherUnit->positionX >= this->positionX + specialRange || otherUnit->positionX <= this->positionX - specialRange ||
-           otherUnit->positionY >= this->positionY + specialRange || otherUnit->positionY <= this->positionY - specialRange )
+      if ( otherUnit->positionX <= this->positionX + specialRange || otherUnit->positionX >= this->positionX - specialRange ||
+           otherUnit->positionY <= this->positionY + specialRange || otherUnit->positionY >= this->positionY - specialRange )
       {
          otherUnit->healDamage( 5 );
          finishMovement();
