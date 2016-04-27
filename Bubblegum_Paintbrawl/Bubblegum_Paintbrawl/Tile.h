@@ -14,7 +14,8 @@ public:
 		occupied,
 		blocked,
 		empty,
-		trapped
+		trapped,
+      occupiedTrap,
 	};
 
 public:
@@ -31,9 +32,9 @@ public:
 
 	bool canPassThrough ( int allegiance );
 	bool isEmpty () { return myState == empty; }
-	bool isOccupied () { return myState == occupied; }
+	bool isOccupied () { return ( myState == occupied || myState == occupiedTrap ); }
 	bool isBlocked () { return myState == blocked; }
-	bool isTrapped () { return myState == trapped; }
+	bool isTrapped () { return ( myState == trapped || myState == occupiedTrap ); }
 	void setTrap ( int trapLevel );
 
 

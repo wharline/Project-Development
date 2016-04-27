@@ -232,6 +232,7 @@ void GameManager::gameRun ()
    }
 
 
+
    // render
    if ( SUCCEEDED( dxDevice()->BeginScene() ) )
    {
@@ -941,6 +942,22 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
    sprintf_s( n, "x %d", numOfPranksters );
    displayText += n;
+
+      // FOR DEBUGGING PRANKSTER SPECIAL
+   for ( int r = 0; r < myBoardSize; r++ )
+   {
+      for ( int c = 0; c < myBoardSize; c++ )
+      {
+         bool b = m_grid.isTrapped( r, c );
+         if ( b )
+         {
+            char s[256];
+            sprintf_s( s, "\n\nTrapped at: %d, %d", r, c );
+            displayText += s;
+         }
+      }
+   }
+
    
    // display text
    fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER | DT_WORDBREAK, D3DCOLOR_XRGB( 255, 255, 255 ) );

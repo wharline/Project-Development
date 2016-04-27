@@ -302,8 +302,8 @@ void Unit::pranksterSpecial ( int x, int y )
 {
    if ( !locked && myClass == prankster )
    {
-      if ( x >= positionX + specialRange || x <= positionX - specialRange ||
-          y >= positionY + specialRange || y <= positionY - specialRange )
+      if ( x <= positionX + specialRange || x >= positionX - specialRange ||
+           y <= positionY + specialRange || y >= positionY - specialRange )
       {
          myGridInterface->setTrap( x, y, 1 );
          finishMovement();

@@ -39,11 +39,13 @@ void Tile::setYPos ( int y )
 
 void Tile::setState ( TileState state, int allegiance )
 {
-	myState = state;
+   if ( myState == trapped && state == occupied )
+      myState = occupiedTrap;
 
 	switch ( myState )
    {
    case occupied:
+   case occupiedTrap:
       occupiedAllegiance = allegiance;
       break;
    case blocked:
