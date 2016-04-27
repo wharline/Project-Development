@@ -45,6 +45,11 @@ bool DxFramework::init (int boardsize)
       return false;
    }
 
+   if ( !gamePreInit() )
+   {
+      return false;
+   }
+
    return true;
 }
 
@@ -62,11 +67,15 @@ void DxFramework::update ()
 void DxFramework::shutdown ()
 {
    gameExit();
+   gameShutdown();
    
-	if ( d3ddev ) d3ddev->Release();
-	if ( d3d ) d3d->Release();
-
    directInputShutdown();
+
+	if ( d3ddev )
+      d3ddev->Release();
+
+	if ( d3d )
+      d3d->Release();
 }
 
 

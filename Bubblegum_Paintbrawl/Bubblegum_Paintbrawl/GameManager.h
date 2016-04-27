@@ -18,9 +18,11 @@ public:
    GameManager ();
    ~GameManager ();
 
+   bool gamePreInit ();
    bool gameInit (int boardsize);
    void gameRun ();
    void gameExit ();
+   void gameShutdown ();
 
    // input true to force turn to end.  Otherwise it checks if it's naturally the end of the turn.
    bool endTurn ( bool force = false );
@@ -91,9 +93,6 @@ private:
    bool selectedUnitMove;
    bool showAttackRange;
    bool showSpecialRange;
-
-   string displayPlayer1;
-   string displayPlayer2;
 };
 
 #endif

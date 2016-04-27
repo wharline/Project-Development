@@ -20,29 +20,8 @@ GameManager::~GameManager ()
 {
 }
 
-bool GameManager::gameInit (int boardsize)
+bool GameManager::gamePreInit ()
 {
-   selectedUnit = NULL;
-   enemyUnit = NULL;
-
-   fontArial24 = NULL;
-
-
-   myTurnStart = true;
-
-   keyPressed = false;
-
-   selectedUnitMove = false;
-   showAttackRange = false;
-   showSpecialRange = false;
-
-   myTurn = player1;
-
-   myGameIsOver = false;
-
-   displayPlayer1 = "It is Player 1's turn.";
-   displayPlayer2 = "It is Player 2's turn.";
-
    bool result;
 
    // load player1's sprite images
@@ -98,6 +77,25 @@ bool GameManager::gameInit (int boardsize)
    // load fonts
    fontArial24 = makeFont( "Arial", 24 );
 
+   return true;
+}
+
+bool GameManager::gameInit (int boardsize)
+{
+   selectedUnit = NULL;
+   enemyUnit = NULL;
+
+   myTurnStart = true;
+
+   keyPressed = false;
+
+   selectedUnitMove = false;
+   showAttackRange = false;
+   showSpecialRange = false;
+
+   myTurn = player1;
+
+   myGameIsOver = false;
 
    // initialize grid
    myBoardSize = boardsize;
@@ -217,9 +215,12 @@ bool GameManager::initPlayer2 ()
 
 void GameManager::gameRun ()
 {
-   // if game has not been initialized, exit
+   // if game has not been initialized, draw splash screen and exit out of gameRun()
    if ( !initialized )
+   {
+      
       return;
+   }
 
    // iterate through all units for each player and determine if all are dead.
    // if all are dead, that player lost.
@@ -305,6 +306,11 @@ void GameManager::gameExit ()
    player1Units.clear();
    player2Units.clear();
 
+   m_grid.shutdown();
+}
+
+void GameManager::gameShutdown ()
+{
    releaseTexture( linebackerImage1.texture() );
    releaseTexture( paintballerImage1.texture() );
    releaseTexture( artistImage1.texture() );
@@ -319,8 +325,6 @@ void GameManager::gameExit ()
    releaseTexture( emptyTileImage.texture() );
 
    releaseFont( fontArial24 );
-
-   m_grid.shutdown();
 }
 
 void GameManager::releaseTexture ( LPDIRECT3DTEXTURE9& texture )

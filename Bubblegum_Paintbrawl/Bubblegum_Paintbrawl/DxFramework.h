@@ -14,9 +14,11 @@ public:
    DxFramework () {}
    virtual ~DxFramework () {}
 
+   virtual bool gamePreInit () { return true; }
    virtual bool gameInit (int boardsize) = 0;
    virtual void gameRun () = 0;
    virtual void gameExit () = 0;
+   virtual void gameShutdown () = 0;
    
    virtual bool fullscreen () { return false; }
 
