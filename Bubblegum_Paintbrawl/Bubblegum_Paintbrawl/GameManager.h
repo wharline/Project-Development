@@ -22,6 +22,9 @@ public:
    void gameRun ();
    void gameExit ();
 
+   // input true to force turn to end.  Otherwise it checks if it's naturally the end of the turn.
+   bool endTurn ( bool force = false );
+
    int winWidth () { return 1024; }
    int winHeight () { return 728; }
 
@@ -37,7 +40,13 @@ private:
 
    void displaySidebar ( vector<Unit>& player );
 
+   void releaseTexture ( LPDIRECT3DTEXTURE9& texture );
+   void releaseFont ( LPD3DXFONT& font );
+
+
 private:
+   bool initialized;
+
    vector<Unit> player1Units;
    vector<Unit> player2Units;
 

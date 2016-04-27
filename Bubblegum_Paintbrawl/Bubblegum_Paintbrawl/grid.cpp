@@ -99,7 +99,12 @@ void Grid::removeTrap ()
       for ( int c = 0; c < m_colNum; c++ )
       {
          if ( getCell( r, c ).isOccupied() )
-            getCell( r, c ).removeTrap();
+         {
+            Tile& tile = getCell( r, c );
+            // set tile color to indicate that the unit was trapped
+            tile.setColor( D3DCOLOR_XRGB( 255, 100, 100 ) );
+            tile.removeTrap();
+         }
       }
    }
 }

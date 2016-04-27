@@ -190,13 +190,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wmId)
 		{
       case ID_FILE_NEWGAME:
-         game.gameExit();
-         game.gameInit( boardSize );
          break;
       case ID_FILE_LOADGAME:
 
          break;
       case ID_FILE_SAVEGAME:
+         break;
+
+      case ID_NEWGAME_32X32:
+         game.gameExit();
+         game.gameInit( 32 );
+         break;
+
+      case ID_NEWGAME_16X16:
+         game.gameExit();
+         game.gameInit( 16 );
+         break;
+
+      case ID_GAME_ENDTURN:
+         game.endTurn( true );
          break;
 
 		case IDM_ABOUT:

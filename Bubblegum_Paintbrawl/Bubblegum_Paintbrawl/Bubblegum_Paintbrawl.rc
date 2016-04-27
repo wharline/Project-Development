@@ -43,19 +43,24 @@ IDI_SMALL               ICON                    "small.ico"
 
 IDC_BUBBLEGUM_PAINTBRAWL MENU 
 BEGIN
-    POPUP "&File"
+    POPUP "File"
     BEGIN
+        POPUP "New Game"
+        BEGIN
+            MENUITEM "32 x 32",                     ID_NEWGAME_32X32
+            MENUITEM "16 x 16",                     ID_NEWGAME_16X16
+        END
+        MENUITEM "Save Game",                   ID_FILE_SAVEGAME
+        MENUITEM "Load Game",                   ID_FILE_LOADGAME
         MENUITEM "E&xit",                       IDM_EXIT
     END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About ...",                  IDM_ABOUT
     END
-    POPUP "File"
+    POPUP "Game"
     BEGIN
-        MENUITEM "New Game",                    ID_FILE_NEWGAME
-        MENUITEM "Save Game",                   ID_FILE_SAVEGAME
-        MENUITEM "Load Game",                   ID_FILE_LOADGAME
+        MENUITEM "End Turn",                    ID_GAME_ENDTURN
     END
 END
 

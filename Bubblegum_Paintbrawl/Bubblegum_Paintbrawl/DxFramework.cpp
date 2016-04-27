@@ -45,16 +45,14 @@ bool DxFramework::init (int boardsize)
       return false;
    }
 
-	if ( !gameInit(boardsize) )
-      return false;
-
    return true;
 }
 
 void DxFramework::update ()
 {
    // make sure the Direct3D device is valid
-	if ( !d3ddev ) return;
+	if ( !d3ddev )
+      return;
 
    directInputUpdate();
 

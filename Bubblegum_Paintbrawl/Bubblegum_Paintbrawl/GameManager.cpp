@@ -13,6 +13,7 @@ using namespace std;
 
 GameManager::GameManager ()
 {
+   initialized = false;
 }
 
 GameManager::~GameManager ()
@@ -118,6 +119,8 @@ bool GameManager::gameInit (int boardsize)
    initPlayers( &player1Units, player1 );
    initPlayers( &player2Units, player2 );
 
+   initialized = true;
+
    return true;
 }
 
@@ -214,6 +217,10 @@ bool GameManager::initPlayer2 ()
 
 void GameManager::gameRun ()
 {
+   // if game has not been initialized, exit
+   if ( !initialized )
+      return;
+
    // iterate through all units for each player and determine if all are dead.
    // if all are dead, that player lost.
    if ( myTurn == player1 )
@@ -298,22 +305,38 @@ void GameManager::gameExit ()
    player1Units.clear();
    player2Units.clear();
 
-   linebackerImage1.texture()->Release();
-   paintballerImage1.texture()->Release();
-   artistImage1.texture()->Release();
-   pranksterImage1.texture()->Release();
+   releaseTexture( linebackerImage1.texture() );
+   releaseTexture( paintballerImage1.texture() );
+   releaseTexture( artistImage1.texture() );
+   releaseTexture( pranksterImage1.texture() );
 
-   linebackerImage2.texture()->Release();
-   paintballerImage2.texture()->Release();
-   artistImage2.texture()->Release();
-   pranksterImage2.texture()->Release();
+   releaseTexture( linebackerImage2.texture() );
+   releaseTexture( paintballerImage2.texture() );
+   releaseTexture( artistImage2.texture() );
+   releaseTexture( pranksterImage2.texture() );
 
-   filledTileImage.texture()->Release();
-   emptyTileImage.texture()->Release();
+   releaseTexture( filledTileImage.texture() );
+   releaseTexture( emptyTileImage.texture() );
 
-   fontArial24->Release();
+   releaseFont( fontArial24 );
 
    m_grid.shutdown();
+}
+
+void GameManager::releaseTexture ( LPDIRECT3DTEXTURE9& texture )
+{
+   if ( texture )
+   {
+      texture->Release();
+   }
+}
+
+void GameManager::releaseFont ( LPD3DXFONT& font )
+{
+   if ( font )
+   {
+      font->Release();
+   }
 }
 
 // The full encompassment of a single players turn
@@ -343,50 +366,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
       return;
    }
 
-   // check if the player's turn is over if it's not the start of the turn
-   bool turnOver = true;
-   if ( myTurnStart )
-   {
-      turnOver = false;
-   }
-   for ( int i = 0; i < (int)player.size(); i++ )
-   {
-      turnOver &= player.at( i ).isLocked();
-   }
-
-   // if the turn is over, switch turns
-   if ( turnOver )
-   {
-      // turn is now over
-      if ( myTurn == player1 )
-      {
-         myTurn = player2;
-      }
-      else
-      {
-         myTurn = player1;
-      }
-   }
-
-   // unlock all units for the player at beginning of turn
-   if ( myTurnStart )
-   {
-      for ( int i = 0; i < (int)player.size(); i++ )
-      {
-         player.at( i ).turnStart();
-      }
-   }
-
-   // set the start of turn for the next player
-   if ( turnOver )
-   {
-      myTurnStart = true;
-   }
-   else
-   {
-      myTurnStart = false;
-   }
-
+   endTurn();
 
    // select a unit
    if ( mouseButton( 0 ) )
@@ -651,7 +631,75 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
       // when space is pressed, check surrounding region for units to attack
       // range is displayed in red
       // left click on an enemy unit to attack, right click on a space to activate special
+   }
 }
+
+bool GameManager::endTurn ( bool force )
+{
+   // get the player whose turn it is
+   vector<Unit>* player = NULL;
+
+   if ( myTurn == player1 )
+   {
+      player = &player1Units;
+   }
+   else
+   {
+      player = &player2Units;
+   }
+
+
+   // check if the player's turn is over if it's not the start of the turn
+   bool turnOver = true;
+   if ( myTurnStart )
+   {
+      turnOver = false;
+   }
+   for ( int i = 0; i < (int)player->size(); i++ )
+   {
+      // if forcing the turn to end, use finishMovement() to lock all units for that player
+      if ( force )
+      {
+         player->at( i ).finishMovement();
+      }
+
+      turnOver &= player->at( i ).isLocked();
+   }
+
+   // if the turn is over, switch turns
+   if ( turnOver )
+   {
+      // turn is now over
+      if ( myTurn == player1 )
+      {
+         myTurn = player2;
+      }
+      else
+      {
+         myTurn = player1;
+      }
+   }
+
+   // unlock all units for the player at beginning of turn
+   if ( myTurnStart )
+   {
+      for ( int i = 0; i < (int)player->size(); i++ )
+      {
+         player->at( i ).turnStart();
+      }
+   }
+
+   // set the start of turn for the next player
+   if ( turnOver )
+   {
+      myTurnStart = true;
+   }
+   else
+   {
+      myTurnStart = false;
+   }
+
+   return true;
 }
 
 Unit* GameManager::selectUnit ( vector<Unit>& player )
@@ -942,22 +990,6 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
    sprintf_s( n, "x %d", numOfPranksters );
    displayText += n;
-
-      // FOR DEBUGGING PRANKSTER SPECIAL
-   for ( int r = 0; r < myBoardSize; r++ )
-   {
-      for ( int c = 0; c < myBoardSize; c++ )
-      {
-         bool b = m_grid.isTrapped( r, c );
-         if ( b )
-         {
-            char s[256];
-            sprintf_s( s, "\n\nTrapped at: %d, %d", r, c );
-            displayText += s;
-         }
-      }
-   }
-
    
    // display text
    fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER | DT_WORDBREAK, D3DCOLOR_XRGB( 255, 255, 255 ) );
