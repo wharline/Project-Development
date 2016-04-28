@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include <cassert>
 #include <string>
+#include <Commdlg.h>
 
 using namespace std;
 
@@ -213,12 +214,43 @@ bool GameManager::initPlayer2 ()
    return true;
 }
 
+void GameManager::preInitGameRun ()
+{
+   HRESULT hr = dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+   if ( hr != D3D_OK )
+   {
+      OutputDebugString( "Clear didn't work.\n" );
+   }
+
+
+   // render
+   if ( SUCCEEDED( dxDevice()->BeginScene() ) )
+   {
+      // start drawing
+      spriteInterface()->Begin( D3DXSPRITE_ALPHABLEND );
+
+      // draw splash screen
+
+
+      // stop drawing
+      hr = spriteInterface()->End();
+      hr = dxDevice()->EndScene();
+      dxDevice()->Present( NULL, NULL, NULL, NULL );
+   }
+
+   // quit game by pressing esc
+   if ( keyDown( VK_ESCAPE ) )
+   {
+      quitGame();
+   }
+}
+
 void GameManager::gameRun ()
 {
    // if game has not been initialized, draw splash screen and exit out of gameRun()
    if ( !initialized )
    {
-      
+      preInitGameRun();
       return;
    }
 
@@ -341,6 +373,46 @@ void GameManager::releaseFont ( LPD3DXFONT& font )
    {
       font->Release();
    }
+}
+
+string GameManager::getFileName ()
+{
+   BOOL b;
+   string filename;
+   char buffer [ MAX_PATH ] = {0};
+
+   OPENFILENAME ofn;
+   memset( &ofn, 0, sizeof(ofn));
+   ofn.lStructSize   = sizeof( ofn );
+   ofn.lpstrFilter   = "Level Files\0*.level\0All files\0*.*\0\0";
+   ofn.nFilterIndex  = 1;
+   ofn.lpstrFile     = buffer;
+   ofn.nMaxFile      = MAX_PATH;
+   ofn.lpstrInitialDir = "..\\Assets\\Levels";
+   ofn.lpstrTitle    = "Select a Level File to load!";
+   ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
+   b = GetOpenFileName( &ofn );
+   if ( b )
+   {
+      filename = ofn.lpstrFile;
+   }
+   else
+   {
+      filename = "";
+   }
+
+   return filename;
+}
+
+bool GameManager::loadLevel ()
+{
+   string filename;
+
+   filename = getFileName();
+
+   // TODO: do something with txt file here
+
+   return true;
 }
 
 // The full encompassment of a single players turn

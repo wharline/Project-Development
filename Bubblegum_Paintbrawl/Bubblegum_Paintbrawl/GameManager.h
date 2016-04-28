@@ -20,9 +20,13 @@ public:
 
    bool gamePreInit ();
    bool gameInit (int boardsize);
+   void preInitGameRun();
    void gameRun ();
    void gameExit ();
    void gameShutdown ();
+
+   string getFileName ();
+   bool loadLevel ();
 
    // input true to force turn to end.  Otherwise it checks if it's naturally the end of the turn.
    bool endTurn ( bool force = false );

@@ -192,7 +192,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       case ID_FILE_NEWGAME:
          break;
       case ID_FILE_LOADGAME:
-
+         game.loadLevel();
          break;
       case ID_FILE_SAVEGAME:
          break;
