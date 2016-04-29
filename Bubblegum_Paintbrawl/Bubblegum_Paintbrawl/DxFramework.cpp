@@ -155,7 +155,10 @@ void DxFramework::spriteDraw ( DxTexture& texture, int destx, int desty, float s
    if ( FAILED( hr ) )
       OutputDebugString( "Transform failed.\n" );
 
-   spriteobj->Draw( texture.texture(), &rect, &center3, &position, color );
+   hr = spriteobj->Draw( texture.texture(), &rect, &center3, &position, color );
+
+   if ( FAILED( hr ) )
+      OutputDebugString( "Draw failed.\n" );
 }
 
 

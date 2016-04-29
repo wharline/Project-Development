@@ -178,8 +178,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
-	PAINTSTRUCT ps;
-	HDC hdc;
 
 	switch (message)
 	{
@@ -195,6 +193,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          game.loadLevel();
          break;
       case ID_FILE_SAVEGAME:
+         game.saveLevel();
          break;
 
       case ID_NEWGAME_32X32:
@@ -211,6 +210,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          game.endTurn( true );
          break;
 
+      case ID_HELP_HOWTOPLAY:
+         // controls dialog box
+         break;
+
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
@@ -220,11 +223,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
-		break;
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		// TODO: Add any drawing code here...
-		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);

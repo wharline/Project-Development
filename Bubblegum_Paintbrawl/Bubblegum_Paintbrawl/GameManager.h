@@ -25,8 +25,10 @@ public:
    void gameExit ();
    void gameShutdown ();
 
+   // functions for level file management
    string getFileName ();
    bool loadLevel ();
+   bool saveLevel ();
 
    // input true to force turn to end.  Otherwise it checks if it's naturally the end of the turn.
    bool endTurn ( bool force = false );
@@ -68,6 +70,8 @@ private:
 
    DxTexture filledTileImage;
    DxTexture emptyTileImage;
+
+   DxTexture splashScreen;
 
    LPD3DXFONT fontArial24;
 

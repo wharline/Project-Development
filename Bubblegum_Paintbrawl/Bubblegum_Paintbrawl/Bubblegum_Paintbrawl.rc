@@ -57,6 +57,7 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "&About ...",                  IDM_ABOUT
+        MENUITEM "How To Play",                 ID_HELP_HOWTOPLAY
     END
     POPUP "Game"
     BEGIN

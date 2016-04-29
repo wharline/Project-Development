@@ -75,6 +75,11 @@ bool GameManager::gamePreInit ()
    tileSize.x = (float)emptyTileImage.width();
    tileSize.y = (float)emptyTileImage.height();
 
+   // load splash screen
+   result = loadTexture( splashScreen, "../Assets/Splash_Screen/splatter.png" );
+   if ( !result )
+      return false;
+
    // load fonts
    fontArial24 = makeFont( "Arial", 24 );
 
@@ -216,7 +221,7 @@ bool GameManager::initPlayer2 ()
 
 void GameManager::preInitGameRun ()
 {
-   HRESULT hr = dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
+   HRESULT hr = dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 240, 250, 250 ), 1.0f, 0 );
    if ( hr != D3D_OK )
    {
       OutputDebugString( "Clear didn't work.\n" );
@@ -230,7 +235,20 @@ void GameManager::preInitGameRun ()
       spriteInterface()->Begin( D3DXSPRITE_ALPHABLEND );
 
       // draw splash screen
+      spriteDraw( splashScreen, 0, 0, ( (float)winWidth() / (float)splashScreen.width() ), D3DXVECTOR2( 0, 0 ) );
 
+      float scale = 3.0f;
+
+      // draw units for splash screen
+      spriteDraw( linebackerImage1, 0, (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( 0, winHeight() - ( linebackerImage1.height() * scale ) ) );
+      spriteDraw( paintballerImage1, linebackerImage1.width() * 2, (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( 0, winHeight() - ( linebackerImage1.height() * scale ) ) );
+      spriteDraw( artistImage1, linebackerImage1.width() * 4, (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( 0, winHeight() - ( linebackerImage1.height() * scale ) ) );
+      spriteDraw( pranksterImage1, linebackerImage1.width() * 6, (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( 0, winHeight() - ( linebackerImage1.height() * scale ) ) );
+
+      spriteDraw( linebackerImage2, (int)( winWidth() - ( linebackerImage2.width() * scale ) ), (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( winWidth() - ( linebackerImage2.width() * scale ), winHeight() - ( linebackerImage1.height() * scale ) ) );
+      spriteDraw( paintballerImage2, (int)( winWidth() - ( ( linebackerImage2.width() * scale ) + linebackerImage2.width() * 2 ) ), (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( winWidth() - ( linebackerImage2.width() * scale ), winHeight() - ( linebackerImage1.height() * scale ) ) );
+      spriteDraw( artistImage2, (int)( winWidth() - ( ( linebackerImage2.width() * scale ) + linebackerImage2.width() * 4 ) ), (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( winWidth() - ( linebackerImage2.width() * scale ), winHeight() - ( linebackerImage1.height() * scale ) ) );
+      spriteDraw( pranksterImage2, (int)( winWidth() - ( ( linebackerImage2.width() * scale ) + linebackerImage2.width() * 6 ) ), (int)( winHeight() - ( linebackerImage1.height() * scale ) ), scale, D3DXVECTOR2( winWidth() - ( linebackerImage2.width() * scale ), winHeight() - ( linebackerImage1.height() * scale ) ) );
 
       // stop drawing
       hr = spriteInterface()->End();
@@ -384,7 +402,7 @@ string GameManager::getFileName ()
    OPENFILENAME ofn;
    memset( &ofn, 0, sizeof(ofn));
    ofn.lStructSize   = sizeof( ofn );
-   ofn.lpstrFilter   = "Level Files\0*.level\0All files\0*.*\0\0";
+   ofn.lpstrFilter   = "Level Files\0*.level\0\0";
    ofn.nFilterIndex  = 1;
    ofn.lpstrFile     = buffer;
    ofn.nMaxFile      = MAX_PATH;
@@ -411,6 +429,35 @@ bool GameManager::loadLevel ()
    filename = getFileName();
 
    // TODO: do something with txt file here
+
+   return true;
+}
+
+bool GameManager::saveLevel ()
+{
+   BOOL b;
+   string filename;
+   char buffer [ MAX_PATH ] = {0};
+
+   OPENFILENAME ofn;
+   memset( &ofn, 0, sizeof(ofn));
+   ofn.lStructSize   = sizeof( ofn );
+   ofn.lpstrFilter   = "Level Files\0*.level\0\0";
+   ofn.nFilterIndex  = 1;
+   ofn.lpstrFile     = buffer;
+   ofn.nMaxFile      = MAX_PATH;
+   ofn.lpstrInitialDir = "..\\Assets\\Saves";
+   ofn.lpstrTitle    = "Save a level!";
+   ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
+   b = GetSaveFileName( &ofn );
+   if ( b )
+   {
+      filename = ofn.lpstrFile;
+   }
+   else
+   {
+      filename = "";
+   }
 
    return true;
 }
