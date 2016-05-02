@@ -211,7 +211,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          break;
 
       case ID_HELP_HOWTOPLAY:
-         // controls dialog box
+         // display how to play dialob box.
+         DialogBox( hInst, MAKEINTRESOURCE( IDD_HOWTOPLAY ), hWnd, About );
          break;
 
 		case IDM_ABOUT:

@@ -94,6 +94,20 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
+IDD_HOWTOPLAY DIALOGEX 0, 0, 316, 219
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "How To Play"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,131,198,50,14
+    LTEXT           "Click on a unit to select it.  A selected unit will be surrounded by a green area indicating how far it can move.",IDC_STATIC,7,7,291,22,0,WS_EX_ACCEPTFILES
+    LTEXT           "Use W, A, S, D to select a path for the unit to move.  The side panel will show how many spaces left you can move.",IDC_STATIC,7,38,286,24
+    LTEXT           "Press SPACE to move to the space at the end of your path.  A red area will be shown indicating your attack range.  Click on an enemy unit within this range to attack it and end that unit's turn.",IDC_STATIC,7,63,294,30
+    LTEXT           "Instead of clicking an enemy unit after moving, you can also press SPACE again to end that unit's turn on that spot.",IDC_STATIC,7,102,295,22
+    LTEXT           "You can also press S after moving to activate that unit's special move.  The special move is described in the side panel.  Click on a unit within the purple area to use your special on that unit.",IDC_STATIC,7,129,294,31
+    LTEXT           "If you want to end your turn early, click END TURN in the GAME menu at the top of the screen.",IDC_STATIC,7,163,294,26
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -109,6 +123,14 @@ BEGIN
         RIGHTMARGIN, 163
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
+    END
+
+    IDD_HOWTOPLAY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 212
     END
 END
 #endif    // APSTUDIO_INVOKED
