@@ -1276,9 +1276,88 @@ bool GameManager::writeFile ( string fileName )
 
       for ( int column = 0; column < myBoardSize; column++ )
       {
-         if ( m_grid.isEmpty( column, row, column, row ) )
+         Tile::TileState state = m_grid.getTileState( column, row );
+
+         //enum TileState
+         //{
+	        // occupied,
+	        // blocked,
+	        // empty,
+	        // trapped,
+         //   occupiedTrap,
+         //};
+
+         switch ( state )
          {
+         case Tile::empty:
             fileWrite << "0 ";
+            break;
+         case Tile::trapped:
+            break;
+         case Tile::occupied:
+            // get unit type that's occupying space
+
+            // search player1's units
+            for ( int i = 0; i < (int)player1Units.size(); i++ )
+            {
+               if ( column == player1Units.at( i ).getGridXPos() && row == player1Units.at( i ).getGridYPos() )
+               {
+                  Unit::ClassType classType = player1Units.at( i ).getClassType();
+
+                  switch ( classType )
+                  {
+                  case Unit::linebacker:
+                     fileWrite << "1 ";
+                     break;
+                  case Unit::paintballer:
+                     fileWrite << "2 ";
+                     break;
+                  case Unit::artist:
+                     fileWrite << "3 ";
+                     break;
+                  case Unit::prankster:
+                     fileWrite << "4 ";
+                     break;
+                  default:
+                     break;
+                  }
+               }
+            }
+
+            // search player2's units
+            for ( int i = 0; i < (int)player2Units.size(); i ++ )
+            {
+               if ( column == player2Units.at( i ).getGridXPos() && row == player2Units.at( i ).getGridYPos() )
+               {
+                  Unit::ClassType classType = player2Units.at( i ).getClassType();
+
+                  switch ( classType )
+                  {
+                  case Unit::linebacker:
+                     fileWrite << "A ";
+                     break;
+                  case Unit::paintballer:
+                     fileWrite << "B ";
+                     break;
+                  case Unit::artist:
+                     fileWrite << "C ";
+                     break;
+                  case Unit::prankster:
+                     fileWrite << "D ";
+                     break;
+                  default:
+                     break;
+                  }
+               }
+            }
+
+            break;
+         case Tile::blocked:
+            break;
+         case Tile::occupiedTrap:
+            break;
+         default:
+            break;
          }
       }
    }

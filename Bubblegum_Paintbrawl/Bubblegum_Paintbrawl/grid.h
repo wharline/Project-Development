@@ -50,6 +50,8 @@ public:
 
    D3DCOLOR tileColor ( int x, int y );
 
+   Tile::TileState getTileState ( int x, int y );
+
 
 	// private methods
 private:

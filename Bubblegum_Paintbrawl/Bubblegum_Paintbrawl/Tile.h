@@ -42,6 +42,7 @@ public:
 	void removeTrap ();
 
 	void setState ( TileState state, int allegiance = -1 );
+   TileState getState () { return myState; }
 
    DxTexture& texture () { return *mySprite; }
    D3DCOLOR color () { return myColor; }

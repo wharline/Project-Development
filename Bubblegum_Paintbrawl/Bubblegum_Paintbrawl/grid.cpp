@@ -252,3 +252,10 @@ void Grid::unitDied ( int x, int y, int allegiance )
 {
    getCell( x, y ).setState( Tile::blocked, allegiance );
 }
+
+Tile::TileState Grid::getTileState ( int x, int y )
+{
+   Tile& tile = getCell( x, y );
+
+   return tile.getState();
+}
