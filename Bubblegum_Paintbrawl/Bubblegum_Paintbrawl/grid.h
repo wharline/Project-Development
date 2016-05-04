@@ -50,7 +50,9 @@ public:
 
    D3DCOLOR tileColor ( int x, int y );
 
+   // these are for loading and saving games
    Tile::TileState getTileState ( int x, int y );
+   void setTileState ( int x, int y, Tile::TileState state );
 
 
 	// private methods

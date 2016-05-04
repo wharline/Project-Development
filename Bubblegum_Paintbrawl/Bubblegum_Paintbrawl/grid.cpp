@@ -259,3 +259,10 @@ Tile::TileState Grid::getTileState ( int x, int y )
 
    return tile.getState();
 }
+
+void Grid::setTileState ( int x, int y, Tile::TileState state )
+{
+   Tile& tile = getCell( x, y );
+
+   tile.setState( state );
+}

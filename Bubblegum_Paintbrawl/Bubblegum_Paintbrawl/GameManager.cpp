@@ -1237,6 +1237,17 @@ bool GameManager::parseFile(string fileName)
                   unit.init( &m_grid, Unit::prankster, player1, column, row, 10, pranksterImage1 );
                   player1Units.push_back( unit );
                   break;
+
+               // tile states
+               case 'T':
+                  m_grid.setTileState( column, row, Tile::trapped );
+                  break;
+               case 'X':
+                  m_grid.setTileState( column, row, Tile::blocked );
+                  break;
+               case 'O':
+                  m_grid.setTileState( column, row, Tile::occupiedTrap );
+                  break;
                default:
                   break;
                }
@@ -1289,11 +1300,15 @@ bool GameManager::writeFile ( string fileName )
 
          switch ( state )
          {
+
          case Tile::empty:
             fileWrite << "0 ";
             break;
+
          case Tile::trapped:
+            fileWrite << "T ";
             break;
+
          case Tile::occupied:
             // get unit type that's occupying space
 
@@ -1352,10 +1367,15 @@ bool GameManager::writeFile ( string fileName )
             }
 
             break;
+
          case Tile::blocked:
+            fileWrite << "X ";
             break;
+
          case Tile::occupiedTrap:
+            fileWrite << "O ";
             break;
+
          default:
             break;
          }
