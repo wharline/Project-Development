@@ -1199,42 +1199,51 @@ bool GameManager::parseFile(string fileName)
                }
 
                Unit unit;
+               int health = -1;
+
+               if ( fileReadIn.peek() == ',' )
+               {
+                  fileReadIn.ignore( 1, ',' );
+                  fileReadIn >> health;
+               }
+
+
 
                switch(ID)
                {
                // player 2 units
                case 'A':
-                  unit.init( &m_grid, Unit::linebacker, player2, column, row, 15, linebackerImage2 );
+                  unit.init( &m_grid, Unit::linebacker, player2, column, row, ( health == -1 ? 15 : health ), linebackerImage2 );
                   player2Units.push_back( unit );
                   break;
                case 'B':
-                  unit.init( &m_grid, Unit::paintballer, player2, column, row, 5, paintballerImage2 );
+                  unit.init( &m_grid, Unit::paintballer, player2, column, row, ( health == -1 ? 5 : health ), paintballerImage2 );
                   player2Units.push_back( unit );
                   break;
                case 'C':
-                  unit.init( &m_grid, Unit::artist, player2, column, row, 10, artistImage2 );
+                  unit.init( &m_grid, Unit::artist, player2, column, row, ( health == -1 ? 10 : health ), artistImage2 );
                   player2Units.push_back( unit );
                   break;
                case 'D':
-                  unit.init( &m_grid, Unit::prankster, player2, column, row, 10, pranksterImage2 );
+                  unit.init( &m_grid, Unit::prankster, player2, column, row, ( health == -1 ? 10 : health ), pranksterImage2 );
                   player2Units.push_back( unit );
                   break;
                
                // player 1 units
                case '1':
-                  unit.init( &m_grid, Unit::linebacker, player1, column, row, 15, linebackerImage1 );
+                  unit.init( &m_grid, Unit::linebacker, player1, column, row, ( health == -1 ? 15 : health ), linebackerImage1 );
                   player1Units.push_back( unit );
                   break;
                case '2':
-                  unit.init( &m_grid, Unit::paintballer, player1, column, row, 5, paintballerImage1 );
+                  unit.init( &m_grid, Unit::paintballer, player1, column, row, ( health == -1 ? 5 : health ), paintballerImage1 );
                   player1Units.push_back( unit );
                   break;
                case '3':
-                  unit.init( &m_grid, Unit::artist, player1, column, row, 10, artistImage1 );
+                  unit.init( &m_grid, Unit::artist, player1, column, row, ( health == -1 ? 10 : health ), artistImage1 );
                   player1Units.push_back( unit );
                   break;
                case '4':
-                  unit.init( &m_grid, Unit::prankster, player1, column, row, 10, pranksterImage1 );
+                  unit.init( &m_grid, Unit::prankster, player1, column, row, ( health == -1 ? 10 : health ), pranksterImage1 );
                   player1Units.push_back( unit );
                   break;
 
@@ -1251,6 +1260,13 @@ bool GameManager::parseFile(string fileName)
                default:
                   break;
                }
+
+               // if a unit is dead, set the tile underneath it to be blocked
+               if ( health == 0 )
+               {
+                  m_grid.setTileState( column, row, Tile::blocked );
+               }
+
             }
          }
       }
@@ -1310,6 +1326,7 @@ bool GameManager::writeFile ( string fileName )
             break;
 
          case Tile::occupied:
+         case Tile::blocked:
             // get unit type that's occupying space
 
             // search player1's units
@@ -1322,16 +1339,16 @@ bool GameManager::writeFile ( string fileName )
                   switch ( classType )
                   {
                   case Unit::linebacker:
-                     fileWrite << "1 ";
+                     fileWrite << "1," << player1Units.at( i ).getHealth() << " ";
                      break;
                   case Unit::paintballer:
-                     fileWrite << "2 ";
+                     fileWrite << "2," << player1Units.at( i ).getHealth() << " ";
                      break;
                   case Unit::artist:
-                     fileWrite << "3 ";
+                     fileWrite << "3," << player1Units.at( i ).getHealth() << " ";
                      break;
                   case Unit::prankster:
-                     fileWrite << "4 ";
+                     fileWrite << "4," << player1Units.at( i ).getHealth() << " ";
                      break;
                   default:
                      break;
@@ -1349,16 +1366,16 @@ bool GameManager::writeFile ( string fileName )
                   switch ( classType )
                   {
                   case Unit::linebacker:
-                     fileWrite << "A ";
+                     fileWrite << "A," << player2Units.at( i ).getHealth() << " ";
                      break;
                   case Unit::paintballer:
-                     fileWrite << "B ";
+                     fileWrite << "B," << player2Units.at( i ).getHealth() << " ";
                      break;
                   case Unit::artist:
-                     fileWrite << "C ";
+                     fileWrite << "C," << player2Units.at( i ).getHealth() << " ";
                      break;
                   case Unit::prankster:
-                     fileWrite << "D ";
+                     fileWrite << "D," << player2Units.at( i ).getHealth() << " ";
                      break;
                   default:
                      break;
@@ -1366,10 +1383,6 @@ bool GameManager::writeFile ( string fileName )
                }
             }
 
-            break;
-
-         case Tile::blocked:
-            fileWrite << "X ";
             break;
 
          case Tile::occupiedTrap:

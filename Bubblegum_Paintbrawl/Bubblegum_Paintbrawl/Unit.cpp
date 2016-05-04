@@ -70,6 +70,9 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
 
    myGridInterface->moveToSpace( positionX, positionY, positionX, positionY, myAllegiance );
 
+   if ( currentHealth <= 0 )
+      unitDie();
+
    return true;
 }
 
@@ -363,6 +366,7 @@ void Unit::turnStart ()
 
 void Unit::unitDie ()
 {
+   currentHealth = 0;
    dead = true;
    locked = true;
    myGridInterface->unitDied( positionX, positionY, myAllegiance );
