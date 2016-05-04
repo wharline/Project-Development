@@ -99,6 +99,8 @@ bool GameManager::gameInit (int boardsize)
    showAttackRange = false;
    showSpecialRange = false;
 
+   winningPlayer = -1;
+
    myTurn = player1;
 
    myGameIsOver = false;
@@ -480,11 +482,11 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 
       if ( deadPlayer == player1 )
       {
-         MessageBox( 0, "Player 1 has lost", "Game Over", 0 );
+         winningPlayer = player2;
       }
       else
       {
-         MessageBox( 0, "Player 2 has lost", "Game Over", 0 );
+         winningPlayer = player1;
       }
       return;
    }
@@ -903,7 +905,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
    // get unit's name
    Unit::ClassType classType = Unit::none;
    
-   if ( selectedUnit )
+   if ( selectedUnit && winningPlayer < 0 )
    {
       classType = selectedUnit->getClassType();
 
@@ -982,9 +984,23 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       spriteDraw( selectedUnit->texture(), destx, desty, scale, center );
 
    }
-   else
+   else if ( winningPlayer < 0 )
    {
       displayText += "PLAYER TURN\n-------------------\n\n\n";
+   }
+   else
+   {
+      switch ( winningPlayer )
+      {
+      case player1:
+         displayText += "Player 1 Wins!!!\n\n\n";
+         break;
+      case player2:
+         displayText += "Player 2 Wins!!!\n\n\n";
+         break;
+      default:
+         break;
+      }
    }
 
    // add in team name and remaining units

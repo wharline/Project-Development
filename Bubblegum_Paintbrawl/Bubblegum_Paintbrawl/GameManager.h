@@ -101,6 +101,8 @@ private:
    bool selectedUnitMove;
    bool showAttackRange;
    bool showSpecialRange;
+
+   int winningPlayer;
 };
 
 #endif
