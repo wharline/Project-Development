@@ -90,7 +90,6 @@ bool GameManager::gamePreInit ()
 
 bool GameManager::gameInit (int boardsize)
 {
-   parseFile("../Assets/Levels/GameMap1.txt" );
    selectedUnit = NULL;
    enemyUnit = NULL;
 
@@ -110,8 +109,8 @@ bool GameManager::gameInit (int boardsize)
    myGameIsOver = false;
 
    // initialize grid
-   myBoardSize = boardsize;
-   m_grid.init( myBoardSize, myBoardSize );
+   //myBoardSize = boardsize;
+   //m_grid.init( myBoardSize, myBoardSize );
 
    // Adjust scale to screen size
    if ( winWidth() < winHeight() )
@@ -126,8 +125,8 @@ bool GameManager::gameInit (int boardsize)
    myStartPranksterNum = 1;
 
    // initialize each player's units
-   initPlayers( &player1Units, player1 );
-   initPlayers( &player2Units, player2 );
+   //initPlayers( &player1Units, player1 );
+   //initPlayers( &player2Units, player2 );
 
    initialized = true;
 
@@ -399,8 +398,9 @@ void GameManager::releaseFont ( LPD3DXFONT& font )
    }
 }
 
-string GameManager::getFileName ()
+bool GameManager::loadLevel ()
 {
+   // get file
    BOOL b;
    string filename;
    char buffer [ MAX_PATH ] = {0};
@@ -419,24 +419,19 @@ string GameManager::getFileName ()
    if ( b )
    {
       filename = ofn.lpstrFile;
+
+      // parse the file and load if successful
+      parseFile( filename );
+
+      return true;
    }
    else
    {
       filename = "";
+
+      return false;
    }
 
-   return filename;
-}
-
-bool GameManager::loadLevel ()
-{
-   string filename;
-
-   filename = getFileName();
-
-   // TODO: do something with txt file here
-
-   return true;
 }
 
 bool GameManager::saveLevel ()
@@ -456,16 +451,20 @@ bool GameManager::saveLevel ()
    ofn.lpstrTitle    = "Save a level!";
    ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
    b = GetSaveFileName( &ofn );
+
    if ( b )
    {
       filename = ofn.lpstrFile;
+
+      // write to the file if successful
+      writeFile( filename );
+      return true;
    }
    else
    {
       filename = "";
+      return false;
    }
-
-   return true;
 }
 
 // The full encompassment of a single players turn
@@ -474,6 +473,9 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 
    // don't allow a player to take a turn if the game is over
    if ( myGameIsOver )
+      return;
+
+   if ( player.empty() )
       return;
 
    // Check if player has lost
@@ -1167,29 +1169,79 @@ bool GameManager::parseFile(string fileName)
 
       if( check == "@MapDims" )
       {
-         fileReadIn >> myBoardSize;  
+         fileReadIn >> myBoardSize;
+
+         if ( myBoardSize <= 16 )
+         {
+            myBoardSize = 16;
+         }
+         else
+         {
+            myBoardSize = 32;
+         }
+
+         m_grid.init( myBoardSize, myBoardSize );
       }
 
       if(check == "@Map")
       {
-         //for(int row = 0; row < myBoardSize; row++)
-         //{
-         //   for(int column = 0; column < myBoardSize; column++)
-         //   {
-         //      int ID;
+         for(int row = 0; row < myBoardSize; row++)
+         {
+            for(int column = 0; column < myBoardSize; column++)
+            {
+               char ID;
 
-         //      fileReadIn >> ID;
+               fileReadIn >> ID;
 
-         //      switch(ID)
-         //      {
-         //      case 0:
-         //         ::OutputDebugString("Found a Guy!");
-         //         break;
-         //      default:
-         //         break;
-         //      }
-         //   }
-         //}
+               if ( fileReadIn.fail() )
+               {
+                  OutputDebugString( "Read in of map data failed!\n" );
+               }
+
+               Unit unit;
+
+               switch(ID)
+               {
+               // player 2 units
+               case 'A':
+                  unit.init( &m_grid, Unit::linebacker, player2, column, row, 15, linebackerImage2 );
+                  player2Units.push_back( unit );
+                  break;
+               case 'B':
+                  unit.init( &m_grid, Unit::paintballer, player2, column, row, 5, paintballerImage2 );
+                  player2Units.push_back( unit );
+                  break;
+               case 'C':
+                  unit.init( &m_grid, Unit::artist, player2, column, row, 10, artistImage2 );
+                  player2Units.push_back( unit );
+                  break;
+               case 'D':
+                  unit.init( &m_grid, Unit::prankster, player2, column, row, 10, pranksterImage2 );
+                  player2Units.push_back( unit );
+                  break;
+               
+               // player 1 units
+               case '1':
+                  unit.init( &m_grid, Unit::linebacker, player1, column, row, 15, linebackerImage1 );
+                  player1Units.push_back( unit );
+                  break;
+               case '2':
+                  unit.init( &m_grid, Unit::paintballer, player1, column, row, 5, paintballerImage1 );
+                  player1Units.push_back( unit );
+                  break;
+               case '3':
+                  unit.init( &m_grid, Unit::artist, player1, column, row, 10, artistImage1 );
+                  player1Units.push_back( unit );
+                  break;
+               case '4':
+                  unit.init( &m_grid, Unit::prankster, player1, column, row, 10, pranksterImage1 );
+                  player1Units.push_back( unit );
+                  break;
+               default:
+                  break;
+               }
+            }
+         }
       }
 
       if(check == "@end")
@@ -1198,5 +1250,43 @@ bool GameManager::parseFile(string fileName)
       }
    }
    fileReadIn.close();
+   return true;
+}
+
+bool GameManager::writeFile ( string fileName )
+{
+   ofstream fileWrite( fileName.c_str(), ios_base::trunc );
+
+   if ( fileWrite.fail() )
+      return false;
+
+   fileWrite << "@Turn" << "\t\t" << numOfTurnsTaken << "\n\n";
+
+   if ( fileWrite.fail() )
+      return false;
+
+   fileWrite << "@MapDims" << "\t\t" << myBoardSize << "\n\n";
+
+   fileWrite << "@Map";
+
+   for ( int row = 0; row < myBoardSize; row++ )
+   {
+      // put each row on a new line
+      fileWrite << "\n";
+
+      for ( int column = 0; column < myBoardSize; column++ )
+      {
+         if ( m_grid.isEmpty( column, row, column, row ) )
+         {
+            fileWrite << "0 ";
+         }
+      }
+   }
+
+   fileWrite << "\n\n";
+
+   fileWrite << "@end";
+
+   fileWrite.close();
    return true;
 }

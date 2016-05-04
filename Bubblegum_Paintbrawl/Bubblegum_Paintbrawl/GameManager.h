@@ -26,10 +26,10 @@ public:
    void gameShutdown ();
 
    // functions for level file management
-   string getFileName ();
    bool loadLevel ();
    bool saveLevel ();
-   bool parseFile(string fileName);
+   bool parseFile( string fileName );
+   bool writeFile( string fileName );
 
    // input true to force turn to end.  Otherwise it checks if it's naturally the end of the turn.
    bool endTurn ( bool force = false );
