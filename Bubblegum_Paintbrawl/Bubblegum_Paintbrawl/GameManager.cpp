@@ -151,7 +151,7 @@ bool GameManager::initPlayer1 ()
    for ( int i = 0; i < myStartLinebackerNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::linebacker, player1, i, myBoardSize - 3 - 1, linebackerImage1 );
+      unit.init( &m_grid, Unit::linebacker, player1, i, myBoardSize - 3 - 1, 15, linebackerImage1 );
       player1Units.push_back( unit );
    }
 
@@ -159,7 +159,7 @@ bool GameManager::initPlayer1 ()
    for ( int i = 0; i < myStartPaintballerNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::paintballer, player1, i, myBoardSize - 2 - 1, paintballerImage1 );
+      unit.init( &m_grid, Unit::paintballer, player1, i, myBoardSize - 2 - 1, 5, paintballerImage1 );
       player1Units.push_back( unit );
    }
 
@@ -167,7 +167,7 @@ bool GameManager::initPlayer1 ()
    for ( int i = 0; i < myStartArtistNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::artist, player1, i, myBoardSize - 1 - 1, artistImage1 );
+      unit.init( &m_grid, Unit::artist, player1, i, myBoardSize - 1 - 1, 10, artistImage1 );
       player1Units.push_back( unit );
    }
 
@@ -175,7 +175,7 @@ bool GameManager::initPlayer1 ()
    for ( int i = 0; i < myStartPranksterNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::prankster, player1, i, myBoardSize - 1, pranksterImage1 );
+      unit.init( &m_grid, Unit::prankster, player1, i, myBoardSize - 1, 10, pranksterImage1 );
       player1Units.push_back( unit );
    }
 
@@ -191,7 +191,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartLinebackerNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::linebacker, player2, myBoardSize - i - 1, 0, linebackerImage2 );
+      unit.init( &m_grid, Unit::linebacker, player2, myBoardSize - i - 1, 0, 15, linebackerImage2 );
       player2Units.push_back( unit );
    }
 
@@ -199,7 +199,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartPaintballerNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::paintballer, player2, myBoardSize - i - 1, 1, paintballerImage2 );
+      unit.init( &m_grid, Unit::paintballer, player2, myBoardSize - i - 1, 1, 5, paintballerImage2 );
       player2Units.push_back( unit );
    }
 
@@ -207,7 +207,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartArtistNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::artist, player2, myBoardSize - i - 1, 2, artistImage2 );
+      unit.init( &m_grid, Unit::artist, player2, myBoardSize - i - 1, 2, 10, artistImage2 );
       player2Units.push_back( unit );
    }
 
@@ -215,7 +215,7 @@ bool GameManager::initPlayer2 ()
    for ( int i = 0; i < myStartPranksterNum; i++ )
    {
       Unit unit;
-      unit.init( &m_grid, Unit::prankster, player2, myBoardSize - i - 1, 3, pranksterImage2 );
+      unit.init( &m_grid, Unit::prankster, player2, myBoardSize - i - 1, 3, 10, pranksterImage2 );
       player2Units.push_back( unit );
    }
 

@@ -34,7 +34,7 @@ public:
 	~Unit ();
 
    // pInterface is a pointer to the map.
-	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image );
+	bool init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, int health, DxTexture& image );
 	
    // these are called by the GameManager (i.e. the player)
    void unitSelected ();
@@ -70,10 +70,10 @@ public:
    int getGridYPos () { return positionY; }
 
 private:
-   bool initLinebacker ( int x, int y );
-	bool initPaintballer ( int x, int y );
-	bool initArtist ( int x, int y );
-   bool initPrankster ( int x, int y );
+   bool initLinebacker ( int x, int y, int health );
+	bool initPaintballer ( int x, int y, int health );
+	bool initArtist ( int x, int y, int health );
+   bool initPrankster ( int x, int y, int health );
 
   	void takeDamage ( int damage );
    void healDamage ( int amountToHeal );

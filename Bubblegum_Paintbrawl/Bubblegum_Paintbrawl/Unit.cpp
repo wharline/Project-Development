@@ -36,7 +36,7 @@ Unit::Unit ()
 Unit::~Unit ()
 {
 }
-bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, DxTexture& image )
+bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance, int x, int y, int health, DxTexture& image )
 {
    bool result;
 
@@ -53,16 +53,16 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
    switch ( myClass )
    {
    case linebacker:
-      result = initLinebacker(x, y);
+      result = initLinebacker(x, y, health );
       break;
    case paintballer:
-      result = initPaintballer( x, y);
+      result = initPaintballer( x, y, health);
       break;
    case artist:
-      result = initArtist( x, y);
+      result = initArtist( x, y, health);
       break;
    case prankster:
-      result = initPrankster( x, y );
+      result = initPrankster( x, y, health );
       break;
    default:
       break;
@@ -73,12 +73,12 @@ bool Unit::init ( GridInterface* pInterface, ClassType unitClass, int allegiance
    return true;
 }
 
-bool Unit::initLinebacker ( int x, int y )
+bool Unit::initLinebacker ( int x, int y, int health )
 {
    maxMove = 3;
    currentMove = maxMove;
    maxHealth = 15;
-   currentHealth = maxHealth;
+   currentHealth = health;
    attackDamage = 10;
    attackRange = 1;
    specialRange = 0;
@@ -86,12 +86,12 @@ bool Unit::initLinebacker ( int x, int y )
    return true;
 }
 
-bool Unit::initPaintballer ( int x, int y )
+bool Unit::initPaintballer ( int x, int y, int health )
 {
    maxMove = 5;
    currentMove = maxMove;
    maxHealth = 5;
-   currentHealth = maxHealth;
+   currentHealth = health;
    attackDamage = 5;
    attackRange = 1;
    specialRange = 2;
@@ -99,12 +99,12 @@ bool Unit::initPaintballer ( int x, int y )
    return true;
 }
 
-bool Unit::initArtist ( int x, int y )
+bool Unit::initArtist ( int x, int y, int health )
 {
    maxMove = 5;
    currentMove = maxMove;
    maxHealth = 10;
-   currentHealth = maxHealth;
+   currentHealth = health;
    attackDamage = 5;
    attackRange = 1;
    specialRange = 1;
@@ -112,12 +112,12 @@ bool Unit::initArtist ( int x, int y )
    return true;
 }
 
-bool Unit::initPrankster ( int x, int y )
+bool Unit::initPrankster ( int x, int y, int health )
 {
    maxMove = 5;
    currentMove = maxMove;
    maxHealth = 10;
-   currentHealth = maxHealth;
+   currentHealth = health;
    attackDamage = 5;
    attackRange = 1;
    specialRange = 1;
