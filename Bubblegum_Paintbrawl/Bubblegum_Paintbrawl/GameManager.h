@@ -29,6 +29,7 @@ public:
    string getFileName ();
    bool loadLevel ();
    bool saveLevel ();
+   bool parseFile(string fileName);
 
    // input true to force turn to end.  Otherwise it checks if it's naturally the end of the turn.
    bool endTurn ( bool force = false );

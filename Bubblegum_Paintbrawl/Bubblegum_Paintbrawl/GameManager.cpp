@@ -3,6 +3,8 @@
 #include <cassert>
 #include <string>
 #include <Commdlg.h>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -42,7 +44,7 @@ bool GameManager::gamePreInit ()
    if ( !result )
       return false;
 
-   
+
    // load player2's sprite images
    result = loadTexture( linebackerImage2, "../Assets/BPB_-_SpriteCharacters02/BPB - Linebacker2.png" );
    if ( !result )
@@ -88,6 +90,7 @@ bool GameManager::gamePreInit ()
 
 bool GameManager::gameInit (int boardsize)
 {
+   parseFile("../Assets/Levels/GameMap1.txt" );
    selectedUnit = NULL;
    enemyUnit = NULL;
 
@@ -468,7 +471,7 @@ bool GameManager::saveLevel ()
 // The full encompassment of a single players turn
 void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 {
-   
+
    // don't allow a player to take a turn if the game is over
    if ( myGameIsOver )
       return;
@@ -514,7 +517,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             selectedUnit->cancelPath();
          }
          selectedUnit = selectUnit( player );
-         
+
          // show unit's movement range
          if ( selectedUnit )
          {
@@ -725,9 +728,9 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             {
                bool result = selectedUnit->activateSpecial();
                showSpecialRange = result;
-               
+
             }
-            
+
          }
          else if ( keyDown( VK_SPACE ) )
          {
@@ -876,7 +879,7 @@ Unit* GameManager::selectUnit ( vector<Unit>& player )
 
 POINT GameManager::selectSpace ()
 {
-      // get mouse position
+   // get mouse position
    POINT mPos;
 
    mPos = mousePos();
@@ -915,7 +918,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
    // get unit's name
    Unit::ClassType classType = Unit::none;
-   
+
    if ( selectedUnit && winningPlayer < 0 )
    {
       classType = selectedUnit->getClassType();
@@ -945,7 +948,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       sprintf_s( n, "%d\n\n", selectedUnit->getHealth() );
       displayText += "Health: ";
       displayText += n;
-      
+
       // add in attack power
       sprintf_s( n, "%d    ", selectedUnit->getAttackPower() );
       displayText += "Atk: ";
@@ -958,7 +961,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
       // add in special ability name and description
       displayText += "Special: ";
-            
+
       switch ( classType )
       {
       case Unit::linebacker:
@@ -990,7 +993,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
 
       D3DXVECTOR2 center( (float)( selectedUnit->texture().width() )/2 + destx,
-                          (float)( selectedUnit->texture().height() )/2 + desty );
+         (float)( selectedUnit->texture().height() )/2 + desty );
 
       spriteDraw( selectedUnit->texture(), destx, desty, scale, center );
 
@@ -1027,7 +1030,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
    desty = (int)( winHeight() - ( tileSize.y * 2 * 4 ) );
 
    D3DXVECTOR2 center( (float)( linebackerImage1.width() )/2 + destx,
-                         (float)( linebackerImage1.height() )/2 + desty );
+      (float)( linebackerImage1.height() )/2 + desty );
 
    switch ( classType )
    {
@@ -1130,7 +1133,7 @@ void GameManager::displaySidebar ( vector<Unit>& player )
    sprintf_s( n, "      x %d", numOfLinebackers );
    displayText += n;
    displayText += "              ";
-   
+
    sprintf_s( n, "x %d", numOfPaintballers );
    displayText += n;
    displayText += "\n\n\n";
@@ -1141,7 +1144,59 @@ void GameManager::displaySidebar ( vector<Unit>& player )
 
    sprintf_s( n, "x %d", numOfPranksters );
    displayText += n;
-   
+
    // display text
    fontArial24->DrawText( NULL, displayText.c_str(), displayText.length(), &displayRect, DT_CENTER | DT_WORDBREAK, D3DCOLOR_XRGB( 255, 255, 255 ) );
+}
+
+bool GameManager::parseFile(string fileName)
+{
+   ifstream fileReadIn;
+   int temp = 0;
+   int temp2 = 0;
+   string check = "";
+   bool endFile = false;
+   
+   fileReadIn.open( fileName.c_str(), std::ifstream::in );
+
+   while( !endFile )
+   {
+      fileReadIn >>  check;
+
+      
+
+      if( check == "@MapDims" )
+      {
+         fileReadIn >> myBoardSize;  
+      }
+
+      if(check == "@Map")
+      {
+         //for(int row = 0; row < myBoardSize; row++)
+         //{
+         //   for(int column = 0; column < myBoardSize; column++)
+         //   {
+         //      int ID;
+
+         //      fileReadIn >> ID;
+
+         //      switch(ID)
+         //      {
+         //      case 0:
+         //         ::OutputDebugString("Found a Guy!");
+         //         break;
+         //      default:
+         //         break;
+         //      }
+         //   }
+         //}
+      }
+
+      if(check == "@end")
+      {	
+         endFile = true;
+      }
+   }
+   fileReadIn.close();
+   return true;
 }
