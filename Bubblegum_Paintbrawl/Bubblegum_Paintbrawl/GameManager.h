@@ -13,7 +13,7 @@ using namespace std;
 class GameManager : public DxFramework
 {
 public:
-   enum PlayerTurn { player1, player2 };
+   enum PlayerTurn { player1, player2, none };
 
    GameManager ();
    ~GameManager ();
@@ -103,6 +103,8 @@ private:
    bool showSpecialRange;
 
    int winningPlayer;
+
+   int numOfTurnsTaken;
 };
 
 #endif

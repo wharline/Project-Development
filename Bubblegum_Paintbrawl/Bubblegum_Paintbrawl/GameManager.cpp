@@ -100,6 +100,7 @@ bool GameManager::gameInit (int boardsize)
    showSpecialRange = false;
 
    winningPlayer = -1;
+   numOfTurnsTaken = 0;
 
    myTurn = player1;
 
@@ -468,19 +469,27 @@ bool GameManager::saveLevel ()
 void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 {
    
+   // don't allow a player to take a turn if the game is over
+   if ( myGameIsOver )
+      return;
+
    // Check if player has lost
    bool allUnitsDead = true;
    for ( int i = 0; i < (int)player.size(); i++ )
    {
       allUnitsDead = allUnitsDead && player.at( i ).isDead();
    }
-   if ( allUnitsDead && !myGameIsOver )
+   if ( ( allUnitsDead && !myGameIsOver ) || ( numOfTurnsTaken >= 10 ) )
    {
       // what to do on gameover event
       myGameIsOver = true;
       int deadPlayer = player.at( 0 ).checkAllegiance();
 
-      if ( deadPlayer == player1 )
+      if ( numOfTurnsTaken >= 10 )
+      {
+         winningPlayer = none;
+      }
+      else if ( deadPlayer == player1 )
       {
          winningPlayer = player2;
       }
@@ -529,6 +538,7 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
                   selectedUnitMove = false;
                   showAttackRange = false;
                   selectedUnit = NULL;
+                  numOfTurnsTaken = 0;
                }
             }
          }
@@ -802,6 +812,7 @@ bool GameManager::endTurn ( bool force )
       else
       {
          myTurn = player1;
+         numOfTurnsTaken++;
       }
    }
 
@@ -993,12 +1004,13 @@ void GameManager::displaySidebar ( vector<Unit>& player )
       switch ( winningPlayer )
       {
       case player1:
-         displayText += "Player 1 Wins!!!\n\n\n";
+         displayText += "Player 1 Wins!!!\n-------------------\n\n\n";
          break;
       case player2:
-         displayText += "Player 2 Wins!!!\n\n\n";
+         displayText += "Player 2 Wins!!!\n-------------------\n\n\n";
          break;
       default:
+         displayText += "No Winners...\n-------------------\n\n\n";
          break;
       }
    }
