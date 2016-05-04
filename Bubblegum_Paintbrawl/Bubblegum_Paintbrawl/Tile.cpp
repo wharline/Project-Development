@@ -41,6 +41,8 @@ void Tile::setState ( TileState state, int allegiance )
 {
    if ( myState == trapped && state == occupied )
       myState = occupiedTrap;
+   else
+      myState = state;
 
 	switch ( myState )
    {
