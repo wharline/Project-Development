@@ -412,7 +412,7 @@ bool GameManager::loadLevel ()
    ofn.nFilterIndex  = 1;
    ofn.lpstrFile     = buffer;
    ofn.nMaxFile      = MAX_PATH;
-   ofn.lpstrInitialDir = "..\\Assets\\Levels";
+   ofn.lpstrInitialDir = "..\\Assets\\Saves";
    ofn.lpstrTitle    = "Select a Level File to load!";
    ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
    b = GetOpenFileName( &ofn );
