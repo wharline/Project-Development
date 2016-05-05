@@ -93,6 +93,7 @@ bool GameManager::gameInit (int boardsize)
    selectedUnit = NULL;
    enemyUnit = NULL;
 
+   
    myTurnStart = true;
 
    keyPressed = false;
@@ -286,6 +287,7 @@ void GameManager::gameRun ()
    if ( myTurn == player2 )
    {
       playerTurn( player2Units, player1Units );
+      numOfTurnsTaken++;
    }
 
    HRESULT hr = dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
@@ -1165,7 +1167,10 @@ bool GameManager::parseFile(string fileName)
    {
       fileReadIn >>  check;
 
-      
+      if( check == "@Turn" )
+      {
+         fileReadIn >> numOfTurnsTaken;
+      }
 
       if( check == "@MapDims" )
       {
