@@ -1169,6 +1169,15 @@ bool GameManager::parseFile(string fileName)
 
       if( check == "@Turn" )
       {
+         int turn;
+         fileReadIn >> turn;
+
+         turn -= 1;
+         myTurn = ( turn == 0 ? player1 : player2 );
+      }
+
+      if ( check == "@TurnsTaken" )
+      {
          fileReadIn >> numOfTurnsTaken;
       }
 
@@ -1292,7 +1301,9 @@ bool GameManager::writeFile ( string fileName )
    if ( fileWrite.fail() )
       return false;
 
-   fileWrite << "@Turn" << "\t\t" << numOfTurnsTaken << "\n\n";
+   fileWrite << "@Turn" << "\t\t" << myTurn + 1 << "\n\n";
+
+   fileWrite << "@TurnsTaken" << "\t\t" << numOfTurnsTaken << "\n\n";
 
    if ( fileWrite.fail() )
       return false;
