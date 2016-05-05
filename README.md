@@ -1,2 +1,8 @@
-# Project-Development
-Game for project development class
+Bubblegum Paintbrawl
+
+To Install:
+
+Unzip the Bubblegum_Paintbrawl.zip file in the latest release.
+Make sure both folders are in the same folder/directory.
+
+Execute the Bubblegum_Paintbrawl.exe in the Release folder.
