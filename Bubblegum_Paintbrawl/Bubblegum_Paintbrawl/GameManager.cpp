@@ -1384,6 +1384,8 @@ bool GameManager::loadLevel ()
    }
    else
    {
+      gameExit();
+
       parseFile( "../Assets/Levels/TestMap16.level" );
 
       return result;

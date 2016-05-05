@@ -37,11 +37,16 @@ bool Grid::init ( int rowNum, int colNum )
 
 void Grid::shutdown ()
 {
+   if ( !m_grid )
+      return;
+
    for ( int r = 0; r < m_rowNum; r++ )
    {
       delete[] m_grid[r];
+      m_grid[r] = NULL;
    }
    delete[] m_grid;
+   m_grid = NULL;
 }
 
 bool Grid::canPassThrough ( int x, int y, int allegiance )
