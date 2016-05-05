@@ -287,7 +287,6 @@ void GameManager::gameRun ()
    if ( myTurn == player2 )
    {
       playerTurn( player2Units, player1Units );
-      numOfTurnsTaken++;
    }
 
    HRESULT hr = dxDevice()->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 1.0f, 0 );
