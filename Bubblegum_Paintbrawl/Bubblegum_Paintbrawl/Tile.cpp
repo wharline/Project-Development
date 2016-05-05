@@ -39,12 +39,13 @@ void Tile::setYPos ( int y )
 
 void Tile::setState ( TileState state, int allegiance )
 {
-   if ( myState == trapped && state == occupied )
-      myState = occupiedTrap;
-   else
-      myState = state;
+   if ( myState == blocked )
+      return;
 
-	switch ( myState )
+   if ( myState == trapped && state == occupied )
+      state = occupiedTrap;
+
+	switch ( state )
    {
    case occupied:
    case occupiedTrap:
@@ -52,7 +53,7 @@ void Tile::setState ( TileState state, int allegiance )
       break;
    case blocked:
       occupiedAllegiance = allegiance;
-      myColor = D3DCOLOR_XRGB( 0, 0, 255 );
+      setColor( D3DCOLOR_XRGB( 0, 0, 255 ) );
       break;
    case empty:
       occupiedAllegiance = -1;
@@ -62,6 +63,8 @@ void Tile::setState ( TileState state, int allegiance )
    default:
       break;
    }
+
+   myState = state;
 }
 
 bool Tile::canPassThrough ( int allegiance )
