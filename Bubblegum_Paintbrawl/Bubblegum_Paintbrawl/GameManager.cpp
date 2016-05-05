@@ -399,75 +399,6 @@ void GameManager::releaseFont ( LPD3DXFONT& font )
    }
 }
 
-bool GameManager::loadLevel ()
-{
-   // get file
-   BOOL b;
-   string filename;
-   char buffer [ MAX_PATH ] = {0};
-
-   OPENFILENAME ofn;
-   memset( &ofn, 0, sizeof(ofn));
-   ofn.lStructSize   = sizeof( ofn );
-   ofn.lpstrFilter   = "Level Files\0*.level\0\0";
-   ofn.nFilterIndex  = 1;
-   ofn.lpstrFile     = buffer;
-   ofn.nMaxFile      = MAX_PATH;
-   ofn.lpstrInitialDir = "..\\Assets\\Saves";
-   ofn.lpstrTitle    = "Select a Level File to load!";
-   ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
-   b = GetOpenFileName( &ofn );
-   if ( b )
-   {
-      filename = ofn.lpstrFile;
-
-      // parse the file and load if successful
-      parseFile( filename );
-
-      return true;
-   }
-   else
-   {
-      filename = "";
-
-      return false;
-   }
-
-}
-
-bool GameManager::saveLevel ()
-{
-   BOOL b;
-   string filename;
-   char buffer [ MAX_PATH ] = {0};
-
-   OPENFILENAME ofn;
-   memset( &ofn, 0, sizeof(ofn));
-   ofn.lStructSize   = sizeof( ofn );
-   ofn.lpstrFilter   = "Level Files\0*.level\0\0";
-   ofn.nFilterIndex  = 1;
-   ofn.lpstrFile     = buffer;
-   ofn.nMaxFile      = MAX_PATH;
-   ofn.lpstrInitialDir = "..\\Assets\\Saves";
-   ofn.lpstrTitle    = "Save a level!";
-   ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
-   b = GetSaveFileName( &ofn );
-
-   if ( b )
-   {
-      filename = ofn.lpstrFile;
-
-      // write to the file if successful
-      writeFile( filename );
-      return true;
-   }
-   else
-   {
-      filename = "";
-      return false;
-   }
-}
-
 // The full encompassment of a single players turn
 void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
 {
@@ -1166,6 +1097,10 @@ bool GameManager::parseFile(string fileName)
    {
       fileReadIn >>  check;
 
+      // check if file is bad
+      if ( fileReadIn.eof() )
+         return false;
+
       if( check == "@Turn" )
       {
          int turn;
@@ -1320,15 +1255,6 @@ bool GameManager::writeFile ( string fileName )
       {
          Tile::TileState state = m_grid.getTileState( column, row );
 
-         //enum TileState
-         //{
-	        // occupied,
-	        // blocked,
-	        // empty,
-	        // trapped,
-         //   occupiedTrap,
-         //};
-
          switch ( state )
          {
 
@@ -1416,4 +1342,84 @@ bool GameManager::writeFile ( string fileName )
 
    fileWrite.close();
    return true;
+}
+
+bool GameManager::loadLevel ()
+{
+   // get file
+   BOOL b;
+   string filename;
+   char buffer [ MAX_PATH ] = {0};
+
+   bool result = false;
+
+   OPENFILENAME ofn;
+   memset( &ofn, 0, sizeof(ofn));
+   ofn.lStructSize   = sizeof( ofn );
+   ofn.lpstrFilter   = "Level Files\0*.level\0\0";
+   ofn.nFilterIndex  = 1;
+   ofn.lpstrFile     = buffer;
+   ofn.nMaxFile      = MAX_PATH;
+   ofn.lpstrInitialDir = "..\\Assets\\Saves";
+   ofn.lpstrTitle    = "Select a Level File to load!";
+   ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
+   b = GetOpenFileName( &ofn );
+   if ( b )
+   {
+      filename = ofn.lpstrFile;
+
+      // parse the file and load if successful
+      result = parseFile( filename );
+   }
+   else
+   {
+      filename = "";
+
+      result = false;
+   }
+
+   if ( result )
+   {
+      return result;
+   }
+   else
+   {
+      parseFile( "../Assets/Levels/TestMap16.level" );
+
+      return result;
+   }
+
+}
+
+bool GameManager::saveLevel ()
+{
+   BOOL b;
+   string filename;
+   char buffer [ MAX_PATH ] = {0};
+
+   OPENFILENAME ofn;
+   memset( &ofn, 0, sizeof(ofn));
+   ofn.lStructSize   = sizeof( ofn );
+   ofn.lpstrFilter   = "Level Files\0*.level\0\0";
+   ofn.nFilterIndex  = 1;
+   ofn.lpstrFile     = buffer;
+   ofn.nMaxFile      = MAX_PATH;
+   ofn.lpstrInitialDir = "..\\Assets\\Saves";
+   ofn.lpstrTitle    = "Save a level!";
+   ofn.Flags = OFN_PATHMUSTEXIST | OFN_ENABLESIZING | OFN_FORCESHOWHIDDEN | OFN_NOCHANGEDIR | OFN_SHAREAWARE;
+   b = GetSaveFileName( &ofn );
+
+   if ( b )
+   {
+      filename = ofn.lpstrFile;
+
+      // write to the file if successful
+      writeFile( filename );
+      return true;
+   }
+   else
+   {
+      filename = "";
+      return false;
+   }
 }
