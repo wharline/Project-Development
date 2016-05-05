@@ -1095,11 +1095,11 @@ bool GameManager::parseFile(string fileName)
 
    while( !endFile )
    {
-      fileReadIn >>  check;
-
       // check if file is bad
       if ( fileReadIn.eof() )
          return false;
+
+      fileReadIn >>  check;
 
       if( check == "@Turn" )
       {
