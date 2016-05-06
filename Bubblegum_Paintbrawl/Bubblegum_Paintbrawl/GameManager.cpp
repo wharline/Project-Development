@@ -82,6 +82,10 @@ bool GameManager::gamePreInit ()
    if ( !result )
       return false;
 
+   result = loadTexture( title, "../Assets/Splash_Screen/TitleLogo copy.png" );
+   if ( !result )
+      return false;
+
    // load fonts
    fontArial24 = makeFont( "Arial", 24 );
 
@@ -242,6 +246,7 @@ void GameManager::preInitGameRun ()
 
       // draw splash screen
       spriteDraw( splashScreen, 0, 0, ( (float)winWidth() / (float)splashScreen.width() ), D3DXVECTOR2( 0, 0 ) );
+      spriteDraw( title, 0, 0, ( (float)winWidth() / (float)title.width() ), D3DXVECTOR2( 0, 0 ) );
 
       float scale = 3.0f;
 

@@ -73,6 +73,7 @@ private:
    DxTexture emptyTileImage;
 
    DxTexture splashScreen;
+   DxTexture title;
 
    LPD3DXFONT fontArial24;
 
