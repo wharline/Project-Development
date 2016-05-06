@@ -200,13 +200,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
       case ID_NEWGAME_32X32:
          game.gameExit();
-         game.parseFile("../Assets/Levels/TestMap32.level" );
+         game.parseFile("../Assets/Levels/Levels/TestMap32.level" );
          game.gameInit( 32 );
          break;
 
       case ID_NEWGAME_16X16:
          game.gameExit();
-         game.parseFile("../Assets/Levels/TestMap16.level" );
+         game.parseFile("../Assets/Levels/Levels/TestMap16.level" );
          game.gameInit( 16 );
          break;
 
