@@ -39,7 +39,13 @@ void Tile::setYPos ( int y )
 
 void Tile::setState ( TileState state, int allegiance )
 {
+   // if tile is blocked, don't allow state change
    if ( myState == blocked )
+      return;
+
+   // if a unit is trapped on the tile, don't allow state change
+   // setting state to occupied signifies that trap is gone
+   if ( ( myState == occupiedTrap || myState == trapped ) && state != occupied )
       return;
 
    if ( myState == trapped && state == occupied )
@@ -56,9 +62,11 @@ void Tile::setState ( TileState state, int allegiance )
       setColor( D3DCOLOR_XRGB( 0, 0, 255 ) );
       break;
    case empty:
-      occupiedAllegiance = -1;
+      setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
+      occupiedAllegiance = allegiance;
       break;
    case trapped:
+      setColor( D3DCOLOR_XRGB( 255, 100, 100 ) );
       break;
    default:
       break;
@@ -83,7 +91,7 @@ void Tile::setTrap ( int trapLevel )
 {
    myTrapLevel = trapLevel;
 
-   myState = trapped;
+   setState( trapped );
 }
 
 void Tile::removeTrap ()
@@ -91,7 +99,7 @@ void Tile::removeTrap ()
 	if ( myTrapLevel > 0 )
 		myTrapLevel--;
 	if ( myTrapLevel == 0 )
-		myState = occupied;
+		setState( occupied );
 }
 
 bool Tile::isAccessible(int allegiance)
@@ -114,5 +122,10 @@ bool Tile::loadTileImages ( DxTexture& emptyTile, DxTexture& filledTile )
 void Tile::setColor ( D3DCOLOR color )
 {
    if ( myState != blocked )
+   {
+      if ( myColor == D3DCOLOR_XRGB( 255, 100, 100 ) )
+         OutputDebugString("Changed trapped tile color.\n");
+
       myColor = color;
+   }
 }

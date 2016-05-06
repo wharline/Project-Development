@@ -106,8 +106,6 @@ void Grid::removeTrap ()
          if ( getCell( r, c ).isOccupied() )
          {
             Tile& tile = getCell( r, c );
-            // set tile color to indicate that the unit was trapped
-            tile.setColor( D3DCOLOR_XRGB( 255, 100, 100 ) );
             tile.removeTrap();
          }
       }
@@ -190,7 +188,7 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
          Tile& tile = getCell( r, c );
          if ( !tile.isBlocked() )
          {
-            tile.setColor( D3DCOLOR_XRGB( 255, 255, 255 ) );
+            tile.setState( Tile::empty );
          }
       }
    }
