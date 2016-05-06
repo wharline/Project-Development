@@ -43,6 +43,9 @@ void Tile::setState ( TileState state, int allegiance )
    if ( myState == blocked )
       return;
 
+   if ( state == blocked )
+      myState = state;
+
    // if a unit is trapped on the tile, don't allow state change
    // setting state to occupied signifies that trap is gone
    if ( ( myState == occupiedTrap || myState == trapped ) && state != occupied )
@@ -121,6 +124,10 @@ bool Tile::loadTileImages ( DxTexture& emptyTile, DxTexture& filledTile )
 
 void Tile::setColor ( D3DCOLOR color )
 {
+   if ( myState == blocked )
+   {
+      myColor = D3DCOLOR_XRGB( 0, 0, 255 );
+   }
    if ( myState == empty || myState == occupied )
    {
       if ( myColor == D3DCOLOR_XRGB( 255, 100, 100 ) )
