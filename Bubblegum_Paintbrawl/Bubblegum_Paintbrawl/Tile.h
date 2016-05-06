@@ -47,8 +47,10 @@ public:
    DxTexture& texture () { return *mySprite; }
    D3DCOLOR color ();
    void toggleSelected ( bool on );
+   void toggleShowRange ( bool on );
 
    void setColor ( D3DCOLOR color );
+   void setRangeColor ( D3DCOLOR color );
 
    static bool loadTileImages ( DxTexture& emptyTile, DxTexture& filledTile );
 
@@ -62,8 +64,10 @@ private:
 
 	DxTexture* mySprite;
    D3DCOLOR myColor;
+   D3DCOLOR rangeColor;
 
    bool selected;
+   bool showRange;
 
    // tile images
    static DxTexture ourEmptyTile;

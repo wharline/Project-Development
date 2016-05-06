@@ -143,6 +143,10 @@ D3DCOLOR Tile::color ()
    {
       return D3DCOLOR_XRGB( 100, 100, 100 );
    }
+   else if ( showRange )
+   {
+      return rangeColor;
+   }
    else
    {
       return myColor;
@@ -155,4 +159,17 @@ void Tile::toggleSelected ( bool on )
       selected = true;
    else
       selected = false;
+}
+
+void Tile::setRangeColor ( D3DCOLOR color )
+{
+   rangeColor = color;
+}
+
+void Tile::toggleShowRange ( bool on )
+{
+   if ( on )
+      showRange = true;
+   else
+      showRange = false;
 }

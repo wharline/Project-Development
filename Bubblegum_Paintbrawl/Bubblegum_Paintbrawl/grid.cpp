@@ -187,6 +187,7 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
       {
          Tile& tile = getCell( r, c );
          tile.toggleSelected( false );
+         tile.toggleShowRange( false );
          if ( !tile.isBlocked() )
          {
             tile.setState( Tile::empty );
@@ -207,7 +208,8 @@ void Grid::showRange ( int x, int y, int range, int allegiance, D3DCOLOR color )
    {
       Tile& tile = getCell( reachableTiles.at( i ).x, reachableTiles.at( i ).y );
 
-      tile.setColor( color );
+      tile.setRangeColor( color );
+      tile.toggleShowRange( true );
    }
 }
 
