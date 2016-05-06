@@ -45,7 +45,8 @@ public:
    TileState getState () { return myState; }
 
    DxTexture& texture () { return *mySprite; }
-   D3DCOLOR color () { return myColor; }
+   D3DCOLOR color ();
+   void toggleSelected ( bool on );
 
    void setColor ( D3DCOLOR color );
 
@@ -61,6 +62,8 @@ private:
 
 	DxTexture* mySprite;
    D3DCOLOR myColor;
+
+   bool selected;
 
    // tile images
    static DxTexture ourEmptyTile;

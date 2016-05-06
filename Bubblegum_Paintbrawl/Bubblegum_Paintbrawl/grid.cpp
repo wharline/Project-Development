@@ -186,6 +186,7 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
       for ( int c = 0; c < m_colNum; c++ )
       {
          Tile& tile = getCell( r, c );
+         tile.toggleSelected( false );
          if ( !tile.isBlocked() )
          {
             tile.setState( Tile::empty );
@@ -248,7 +249,7 @@ void Grid::spaceSelected ( int x, int y )
    if ( y < 0 || y >= m_colNum )
       return;
 
-   getCell( x, y ).setColor( D3DCOLOR_XRGB( 100, 100, 100 ) );
+   getCell( x, y ).toggleSelected( true );
 }
 
 void Grid::unitDied ( int x, int y, int allegiance )

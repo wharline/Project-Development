@@ -121,11 +121,31 @@ bool Tile::loadTileImages ( DxTexture& emptyTile, DxTexture& filledTile )
 
 void Tile::setColor ( D3DCOLOR color )
 {
-   if ( myState != blocked )
+   if ( myState == empty || myState == occupied )
    {
       if ( myColor == D3DCOLOR_XRGB( 255, 100, 100 ) )
          OutputDebugString("Changed trapped tile color.\n");
 
       myColor = color;
    }
+}
+
+D3DCOLOR Tile::color ()
+{
+   if ( selected )
+   {
+      return D3DCOLOR_XRGB( 100, 100, 100 );
+   }
+   else
+   {
+      return myColor;
+   }
+}
+
+void Tile::toggleSelected ( bool on )
+{
+   if ( on )
+      selected = true;
+   else
+      selected = false;
 }
