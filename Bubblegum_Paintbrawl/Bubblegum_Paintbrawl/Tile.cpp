@@ -14,6 +14,10 @@ Tile::Tile ()
 
    myTrapLevel = 0;
    occupiedAllegiance = -1;
+
+   selected = false;
+   showRange = false;
+
 }
 
 Tile::~Tile ()

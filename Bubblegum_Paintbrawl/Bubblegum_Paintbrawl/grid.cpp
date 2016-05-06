@@ -188,10 +188,6 @@ void Grid::moveToSpace ( int oldX, int oldY, int newX, int newY, int allegiance 
          Tile& tile = getCell( r, c );
          tile.toggleSelected( false );
          tile.toggleShowRange( false );
-         if ( !tile.isBlocked() )
-         {
-            tile.setState( Tile::empty );
-         }
       }
    }
 }

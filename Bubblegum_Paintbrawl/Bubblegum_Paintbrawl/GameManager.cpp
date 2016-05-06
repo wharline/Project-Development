@@ -1282,6 +1282,8 @@ bool GameManager::writeFile ( string fileName )
       {
          Tile::TileState state = m_grid.getTileState( column, row );
 
+         bool unitOnTile = false;
+
          switch ( state )
          {
 
@@ -1303,6 +1305,8 @@ bool GameManager::writeFile ( string fileName )
                if ( column == player1Units.at( i ).getGridXPos() && row == player1Units.at( i ).getGridYPos() )
                {
                   Unit::ClassType classType = player1Units.at( i ).getClassType();
+
+                  unitOnTile = true;
 
                   switch ( classType )
                   {
@@ -1331,6 +1335,8 @@ bool GameManager::writeFile ( string fileName )
                {
                   Unit::ClassType classType = player2Units.at( i ).getClassType();
 
+                  unitOnTile = true;
+
                   switch ( classType )
                   {
                   case Unit::linebacker:
@@ -1351,10 +1357,11 @@ bool GameManager::writeFile ( string fileName )
                }
             }
 
-            break;
+            if ( !unitOnTile )
+            {
+               fileWrite << "X ";
+            }
 
-         case Tile::occupiedTrap:
-            fileWrite << "O ";
             break;
 
          default:
