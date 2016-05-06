@@ -192,7 +192,7 @@ void Unit::cancelPath ()
    myGridInterface->moveToSpace( positionX, positionY, positionX, positionY, myAllegiance );
 }
 
-bool Unit::potentialMove ()
+bool Unit::potentialMove ( bool& trapped )
 {
    if ( !locked && myGridInterface->isEmpty( positionX, positionY, xPosToMoveTo, yPosToMoveTo ) )
    {
@@ -201,6 +201,12 @@ bool Unit::potentialMove ()
 
       positionX = xPosToMoveTo;
       positionY = yPosToMoveTo;
+
+      if ( myGridInterface->isTrapped( positionX, positionY ) )
+      {
+         trapped = finishMovement();
+         return trapped;
+      }
 
       // show the attack range.  Therefore, pass in the enemy's allegiance
       // (if it equals zero, pass in one. If it equals one, pass in zero)

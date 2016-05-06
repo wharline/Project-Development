@@ -40,7 +40,7 @@ public:
    void unitSelected ();
 	bool selectPath ( Direction dir );
    void cancelPath ();
-   bool potentialMove ();
+   bool potentialMove ( bool& trapped );
    bool finishMovement ();
 	bool attack ( Unit* enemyUnit );
    bool activateSpecial ();

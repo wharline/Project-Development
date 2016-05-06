@@ -452,6 +452,14 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
          }
          selectedUnit = selectUnit( player );
 
+         if ( selectedUnit )
+         {
+            if ( selectedUnit->isLocked() )
+            {
+               selectedUnit = NULL;
+            }
+         }
+
          // show unit's movement range
          if ( selectedUnit )
          {
@@ -671,9 +679,20 @@ void GameManager::playerTurn ( vector<Unit>& player, vector<Unit>& enemyPlayer )
             // move unit to potential position to see attack range
             if ( !selectedUnitMove )
             {
-               bool result = selectedUnit->potentialMove();
-               selectedUnitMove = result;
-               showAttackRange = result;
+               bool trapped = false;
+               bool result = selectedUnit->potentialMove( trapped );
+               if ( trapped )
+               {
+                  selectedUnitMove = false;
+                  showAttackRange = false;
+                  showSpecialRange = false;
+                  selectedUnit = NULL;
+               }
+               else
+               {
+                  selectedUnitMove = result;
+                  showAttackRange = result;
+               }
             }
             // finish movement
             else
