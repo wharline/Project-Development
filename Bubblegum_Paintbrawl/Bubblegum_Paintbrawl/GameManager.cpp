@@ -385,6 +385,9 @@ void GameManager::gameShutdown ()
    releaseTexture( filledTileImage.texture() );
    releaseTexture( emptyTileImage.texture() );
 
+   releaseTexture( splashScreen.texture() );
+   releaseTexture( title.texture() );
+
    releaseFont( fontArial24 );
 }
 
